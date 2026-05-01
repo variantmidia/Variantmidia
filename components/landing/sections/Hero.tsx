@@ -57,6 +57,15 @@ export function Hero() {
               </Button>
             </Link>
           </div>
+
+          <div className="relative -mx-5 mt-10 h-[300px] overflow-hidden sm:-mx-6 sm:h-[380px] lg:hidden">
+            <img
+              src="/images/estatua-justica.webp"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-full w-full max-w-[560px] select-none object-contain object-bottom opacity-[0.88] grayscale contrast-[1.18] brightness-[0.92] saturate-0 drop-shadow-[0_24px_42px_rgba(22,27,31,0.2)]"
+            />
+          </div>
         </div>
       </Container>
     </Section>
