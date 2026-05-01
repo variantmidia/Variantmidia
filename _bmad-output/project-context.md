@@ -1,7 +1,7 @@
 ---
 project_name: "variant-media"
 user_name: "Johny"
-date: "2026-04-30"
+date: "2026-05-01"
 sections_completed:
   - technology_stack
   - primary_sources
@@ -47,7 +47,7 @@ Leia nesta ordem antes de continuar:
 
 ## Current Implementation State
 
-A landing ja esta implementada ate o Epic 06.
+A landing esta implementada e passou por uma rodada posterior de refinamento visual, reducao de secoes e ajuste de narrativa.
 
 Epics concluidos nesta linha de trabalho:
 
@@ -55,8 +55,8 @@ Epics concluidos nesta linha de trabalho:
 - Epic 01 Shell Components: `Container`, `Section`, `Eyebrow`, `MonoLabel`, `Button`, `Card`, `BrandMark`, `Chevron`, `Header` e `Footer`.
 - Epic 02 Hero: hero principal com CTA, tipografia do design system e chevron.
 - Epic 03 Content Sections: `Credibility`, `Pain`, `Operation`, `PainCard` e `BenefitCard`.
-- Epic 04 Method System: `Method` e `DiagnosticFlow`.
-- Epic 05 AI Section: `AISection` e `TechPanel`, unica faixa dark da landing alem do footer.
+- Epic 04 Method System: conteudo de metodo foi consolidado dentro de `Operation`.
+- Epic 05 AI Section: secao independente removida para reduzir extensao da landing; parte operacional foi preservada em `Operation`.
 - Epic 06 Trust Conversion: `Differentials`, `Objections`, `ProofPlaceholder`, `FAQ` nativo e `FinalCTA`.
 - Epic 07 Polish/QA: metadata/OG, acessibilidade, QA visual obrigatório e validação técnica final.
 
@@ -66,9 +66,7 @@ Epics concluidos nesta linha de trabalho:
 - `<Hero />`
 - `<Credibility />`
 - `<Pain />`
-- `<Method />`
 - `<Operation />`
-- `<AISection />`
 - `<Differentials />`
 - `<Objections />`
 - `<FAQ />`
@@ -77,9 +75,8 @@ Epics concluidos nesta linha de trabalho:
 
 Anchors reais existentes:
 
-- `#metodo`
 - `#gargalos`
-- `#tecnologia`
+- `#operacao`
 - `#diferenciais`
 - `#faq`
 - `#cta-final`
@@ -109,9 +106,7 @@ Secoes:
 - `components/landing/sections/Hero.tsx`
 - `components/landing/sections/Credibility.tsx`
 - `components/landing/sections/Pain.tsx`
-- `components/landing/sections/Method.tsx`
 - `components/landing/sections/Operation.tsx`
-- `components/landing/sections/AISection.tsx`
 - `components/landing/sections/Differentials.tsx`
 - `components/landing/sections/Objections.tsx`
 - `components/landing/sections/FAQ.tsx`
@@ -149,8 +144,11 @@ Assets publicados pelo Next:
 
 Decisoes aplicadas:
 
-- `Header` usa a logo horizontal light oficial:
+- `Header` usa a logo horizontal light oficial em fundo claro:
   - `src="/logos/horizontal-light.svg"`
+  - `alt="Variant Media"`
+- `Header` troca para a logo horizontal dark oficial quando passa sobre secoes dark:
+  - `src="/logos/horizontal-dark.svg"`
   - `alt="Variant Media"`
 - `Footer` usa a logo horizontal dark oficial:
   - `src="/logos/horizontal-dark.svg"`
@@ -170,7 +168,9 @@ Decisoes aplicadas:
 - Nao transformar a pagina em dashboard SaaS.
 - Nao exagerar em dark mode, neon, 3D, blur/glassmorphism ou motion decorativo.
 - Fundo claro e ciano/grafite devem dominar; paineis escuros so pontualmente.
-- A unica secao dark da landing, alem do footer, e `AISection` em `#tecnologia`.
+- Secoes dark atuais: `Pain` em `#gargalos`, `Differentials` e footer.
+- `Section` marca automaticamente secoes `variant="dark"` com `data-nav-theme="dark"`.
+- `Header` detecta essas secoes no scroll/resize e ajusta logo, links, CTA e menu mobile para contraste claro.
 - Cards usam borda fina e radius baixo.
 - Componentes visuais ficam em `components/landing/`.
 - Secoes ficam em `components/landing/sections/`.
@@ -187,6 +187,7 @@ Decisoes aplicadas:
 - `Container` controla largura maxima `1240px`.
 - `Button` renderiza `span` para funcionar bem quando envolvido por `Link` ou `a`.
 - `Header` e client component porque controla menu mobile e estado de scroll.
+- `Header` tambem controla estado `onDarkSection` por intersecao simples com secoes `data-nav-theme="dark"`.
 - `Footer` e server component.
 - `FAQItem` usa `<details>` e `<summary>` nativos, sem `"use client"`.
 - `FinalCTA` usa `next/link` e `Button`, sem formulario.
@@ -215,9 +216,9 @@ Proximo trabalho recomendado:
 1. Enviar este pacote para revisão externa no Claude.
 2. Pedir revisão focada em regressões visuais, coerência com posicionamento, responsividade e claims sem prova.
 3. Preservar a composicao atual por secoes e a centralizacao de copy em `lib/content.ts`.
-4. Preservar `Header` com `horizontal-light.svg`, `Footer` com `horizontal-dark.svg` e a primeira dobra conforme aprovada pelo usuário.
+4. Preservar `Header` com troca light/dark conforme fundo, `Footer` com `horizontal-dark.svg` e a primeira dobra conforme aprovada pelo usuário.
 5. Se houver ajustes, alterar arquivos pontuais e rodar `npm test` e `npm run build`.
 
 Estado de retomada em uma frase:
 
-> Landing implementada e validada ate Epic 07; proximo passo e revisão externa, mantendo logos oficiais, copy centralizada, Hero/Header aprovados e a regra de nao publicar claims sem prova.
+> Landing implementada e validada apos refinamento visual; proximo passo e revisão externa, mantendo logos oficiais, copy centralizada, Hero/Header responsivo ao fundo e a regra de nao publicar claims sem prova.

@@ -28,7 +28,11 @@ export function Section({
   }[padding];
 
   return (
-    <section id={id} className={cn("relative", bg, py, className)}>
+    <section
+      id={id}
+      data-nav-theme={variant === "dark" ? "dark" : undefined}
+      className={cn("relative", bg, py, className)}
+    >
       {children}
     </section>
   );
