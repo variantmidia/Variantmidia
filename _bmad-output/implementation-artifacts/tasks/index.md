@@ -22,3 +22,6 @@ Fonte principal: `_bmad-output/planning-artifacts/prd.md`
 - Usar copy centralizada em `lib/content.ts`.
 - Construir visual primeiro, funcionalidade leve depois, e QA por último.
 
+## Stories prontas para implementação direta
+
+- **Epic 05 / US-01 [VISUAL] Criar TechPanel:** [epic-05-us-01-techpanel.md](../stories/epic-05-us-01-techpanel.md)

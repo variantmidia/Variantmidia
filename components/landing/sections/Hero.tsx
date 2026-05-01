@@ -3,13 +3,13 @@ import Link from "next/link";
 import { Button } from "@/components/landing/Button";
 import { Chevron } from "@/components/landing/Chevron";
 import { Container } from "@/components/landing/Container";
-import { MonoLabel } from "@/components/landing/MonoLabel";
 import { Section } from "@/components/landing/Section";
 import { content } from "@/lib/content";
 
 export function Hero() {
   const { hero } = content;
-  const [line3Start, line3End] = hero.title.line3.split(" ");
+  const [line3Start, ...line3Rest] = hero.title.line3.split(" ");
+  const line3End = line3Rest.join(" ");
 
   return (
     <Section
@@ -17,16 +17,20 @@ export function Hero() {
       padding="tight"
       className="min-h-[calc(100svh-28px)] overflow-hidden py-0 lg:min-h-[calc(100svh-40px)]"
     >
-      <Chevron className="pointer-events-none absolute right-[-80vw] top-[-22vw] block h-[160vw] w-[160vw] origin-center rotate-[10deg] opacity-[0.14] sm:right-[-68vw] sm:top-[-18vw] sm:h-[150vw] sm:w-[150vw] lg:hidden" />
-      <Chevron tone="strong" className="pointer-events-none absolute right-[-28vw] top-[-34vw] hidden h-[105vw] w-[105vw] origin-center rotate-[10deg] opacity-[0.78] lg:block xl:right-[-25vw]" />
+      <Chevron animated className="pointer-events-none absolute right-[-80vw] top-[-22vw] block h-[160vw] w-[160vw] origin-center rotate-[10deg] opacity-[0.14] sm:right-[-68vw] sm:top-[-18vw] sm:h-[150vw] sm:w-[150vw] lg:hidden" />
+      <Chevron animated tone="strong" className="pointer-events-none absolute right-[-28vw] top-[-34vw] z-0 hidden h-[105vw] w-[105vw] origin-center rotate-[10deg] opacity-[0.62] lg:block xl:right-[-25vw]" />
 
-      <Container className="relative flex min-h-[calc(100svh-28px)] items-center pb-8 pt-28 sm:pb-10 sm:pt-32 lg:min-h-[calc(100svh-40px)] lg:pb-12 lg:pt-28 xl:pb-14">
+      <img
+        src="/images/estatua-justica.webp"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-[-28vh] right-[-18vw] z-[1] hidden h-[118vh] max-h-[1120px] w-auto select-none object-contain opacity-[0.88] grayscale contrast-[1.18] brightness-[0.92] saturate-0 drop-shadow-[0_28px_48px_rgba(22,27,31,0.22)] lg:block xl:right-[-13vw] 2xl:right-[-8vw]"
+      />
+
+      <Container className="relative flex min-h-[calc(100svh-28px)] items-center pb-8 pt-28 sm:pb-10 sm:pt-32 lg:min-h-[calc(100svh-40px)] lg:-translate-x-8 lg:pb-12 lg:pt-28 xl:-translate-x-12 xl:pb-14">
         <div className="relative z-base w-full max-w-[820px] text-left">
           <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
             <p className="vm-eyebrow">{hero.eyebrow}</p>
-            <MonoLabel className="min-w-0 max-w-full whitespace-normal text-vm-muted-3">
-              {hero.rule}
-            </MonoLabel>
           </div>
 
           <h1 className="vm-display mt-6 max-w-[800px] text-left text-[38px] font-medium leading-[1.04] tracking-[0] max-[360px]:text-[34px] sm:mt-7 sm:text-[52px] lg:text-[70px]">

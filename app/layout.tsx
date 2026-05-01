@@ -25,9 +25,17 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Variant Media | Assessoria de performance juridica",
+  title: "Variant Media | Assessoria de performance jurídica",
   description:
-    "Assessoria de performance juridica para diagnosticar gargalos de oferta, demanda e conversao em escritorios de advocacia."
+    "A Variant Media ajuda escritórios de advocacia a diagnosticar gargalos de oferta, demanda e conversão para atrair, qualificar e converter melhores oportunidades.",
+  openGraph: {
+    title: "Variant Media | Assessoria de performance jurídica",
+    description:
+      "Diagnóstico de gargalos de oferta, demanda e conversão para escritórios de advocacia.",
+    siteName: "Variant Media",
+    locale: "pt_BR",
+    type: "website"
+  }
 };
 
 export default function RootLayout({
@@ -40,7 +48,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${inter.variable} ${jetBrainsMono.variable} ${fraunces.variable}`}
     >
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

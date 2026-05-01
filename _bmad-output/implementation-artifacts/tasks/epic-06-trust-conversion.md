@@ -22,10 +22,15 @@
 **Dependências Externas:** Nenhuma.
 
 **Checklist de Execução:**
-- [ ] Renderizar 6 diferenciais.
-- [ ] Seção tem `id="diferenciais"`.
-- [ ] Lista usa divisores editoriais.
-- [ ] Não usar grid pesado sem necessidade.
+- [x] Renderizar 6 diferenciais.
+- [x] Seção tem `id="diferenciais"`.
+- [x] Lista usa divisores editoriais.
+- [x] Não usar grid pesado sem necessidade.
+
+**Notas de Validação:**
+- `DifferentialItem` foi criado como item editorial com divisor, numeração e texto escaneável.
+- `Differentials` consome `content.differentials.items` e renderiza os seis itens do conteúdo central.
+- `app/page.tsx` passou a usar `<Differentials />` no lugar do placeholder inline.
 
 ---
 
@@ -52,11 +57,16 @@
 **Dependências Externas:** Nenhuma.
 
 **Checklist de Execução:**
-- [ ] Renderizar 3 objeções.
-- [ ] Usar aspas ou tratamento editorial com moderação.
-- [ ] Não publicar claims sem prova.
-- [ ] `ProofPlaceholder` indica que provas reais entram depois de validação.
-- [ ] Seção reduz ceticismo antes do CTA final.
+- [x] Renderizar 3 objeções.
+- [x] Usar aspas ou tratamento editorial com moderação.
+- [x] Não publicar claims sem prova.
+- [x] `ProofPlaceholder` indica que provas reais entram depois de validação.
+- [x] Seção reduz ceticismo antes do CTA final.
+
+**Notas de Validação:**
+- `ObjectionCard`, `ProofPlaceholder` e `Objections` foram criados.
+- A seção consome `content.objections.items` e `content.objections.proof`.
+- O placeholder não publica números, cases ou claims; comunica que provas reais entram apenas após validação.
 
 ---
 
@@ -82,11 +92,16 @@
 **Dependências Externas:** Nenhuma.
 
 **Checklist de Execução:**
-- [ ] FAQ usa `<details>` e `<summary>`.
-- [ ] Seção tem `id="faq"`.
-- [ ] Funciona sem JS custom.
-- [ ] Foco e teclado funcionam nativamente.
-- [ ] Textos vêm de `lib/content.ts`.
+- [x] FAQ usa `<details>` e `<summary>`.
+- [x] Seção tem `id="faq"`.
+- [x] Funciona sem JS custom.
+- [x] Foco e teclado funcionam nativamente.
+- [x] Textos vêm de `lib/content.ts`.
+
+**Notas de Validação:**
+- `FAQItem` usa elementos nativos `<details>` e `<summary>`, sem `"use client"`.
+- `FAQ` consome `content.faq.items` e preserva múltiplas perguntas abertas.
+- O foco fica no `summary`, aproveitando comportamento nativo de teclado.
 
 ---
 
@@ -113,9 +128,13 @@
 - `components/landing/Button`
 
 **Checklist de Execução:**
-- [ ] Seção tem `id="cta-final"`.
-- [ ] CTA principal é `Agendar diagnóstico`.
-- [ ] CTA secundário é `Falar com a equipe`.
-- [ ] Microcopy aparece.
-- [ ] Não há formulário fake.
+- [x] Seção tem `id="cta-final"`.
+- [x] CTA principal é `Agendar diagnóstico`.
+- [x] CTA secundário é `Falar com a equipe`.
+- [x] Microcopy aparece.
+- [x] Não há formulário fake.
 
+**Notas de Validação:**
+- `FinalCTA` foi criado com `next/link`, `Button`, CTA principal, CTA secundário e microcopy.
+- Como ainda não há URL real de contato, os destinos ficam centralizados em `lib/content.ts` e não apontam para `#contato` inexistente.
+- A seção não cria formulário fake.

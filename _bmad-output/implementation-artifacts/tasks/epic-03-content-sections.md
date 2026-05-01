@@ -102,6 +102,8 @@
 
 ## US-03 [VISUAL] Implementar Operation
 
+**Status:** review
+
 **Descrição:** Criar seção "O que muda na operação" com cinco benefícios numerados, mostrando resultado prático sem promessa garantida.
 
 **Cenários de Uso:**
@@ -124,7 +126,24 @@
 - `components/landing/MonoLabel`
 
 **Checklist de Execução:**
-- [ ] Renderizar 5 benefícios.
-- [ ] Numerar benefícios de `01` a `05`.
-- [ ] Não prometer resultado garantido.
-- [ ] Layout é escaneável no mobile.
+- [x] Renderizar 5 benefícios.
+- [x] Numerar benefícios de `01` a `05`.
+- [x] Não prometer resultado garantido.
+- [x] Layout é escaneável no mobile.
+
+**Notas de Validação:**
+- `BenefitCard` foi criado em `components/landing/BenefitCard.tsx` como card numerado reutilizando `Card` e `MonoLabel`.
+- `Operation` foi criada em `components/landing/sections/Operation.tsx`, consumindo `content.operation` e renderizando os cinco benefícios oficiais.
+- `app/page.tsx` passou a renderizar `<Operation />` após `Pain`, mantendo a seção em fundo claro conforme o ritmo previsto no design system.
+- A cobertura smoke foi ampliada para validar o novo componente, a seção, a presença dos cinco benefícios e a numeração `01` a `05`.
+- Validação técnica: `npm test` e `npm run build`.
+
+**File List:**
+- `components/landing/BenefitCard.tsx`
+- `components/landing/sections/Operation.tsx`
+- `app/page.tsx`
+- `tests/smoke.mjs`
+- `_bmad-output/implementation-artifacts/tasks/epic-03-content-sections.md`
+
+**Change Log:**
+- 2026-04-30: US-03 [VISUAL] implementada com seção `Operation`, `BenefitCard`, 5 benefícios numerados e cobertura smoke.

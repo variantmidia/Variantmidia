@@ -2,6 +2,9 @@
 
 ## US-01 [VISUAL] Criar TechPanel
 
+**Status:** review  
+**Story:** [epic-05-us-01-techpanel.md](../stories/epic-05-us-01-techpanel.md)
+
 **Descrição:** Implementar `TechPanel` como painel escuro pontual da seção de IA, com triagem inicial, follow-up e resumo/contexto. O painel deve parecer bastidor operacional, não produto de chatbot.
 
 **Cenários de Uso:**
@@ -21,11 +24,29 @@
 - `@/lib/cn`
 
 **Checklist de Execução:**
-- [ ] Painel usa fundo dark do design system.
-- [ ] Renderiza Triagem inicial, Follow-up e Resumo/contexto.
-- [ ] Usa indicadores discretos.
-- [ ] Não comunica dados reais.
-- [ ] Não parece produto de chatbot.
+- [x] Painel usa fundo dark do design system.
+- [x] Renderiza Triagem inicial, Follow-up e Resumo/contexto.
+- [x] Usa indicadores discretos.
+- [x] Não comunica dados reais.
+- [x] Não parece produto de chatbot.
+
+**Notas de Validação:**
+- `TechPanel` foi criado em `components/landing/TechPanel.tsx` com `<aside>`, `MonoLabel`, `cn` e header de bastidor operacional.
+- `TechPanel` foi integrado na seção dark `#tecnologia` existente em `app/page.tsx`, para a mudança aparecer na landing nesta mesma sessão.
+- O painel renderiza os três estágios previstos: `Triagem inicial`, `Follow-up` e `Resumo e contexto`.
+- Os indicadores são sinais ilustrativos, sem números de conversão, tempo médio, lead qualificado, status ao vivo ou qualquer dado real.
+- A cobertura smoke foi ampliada para validar existência do componente, tokens dark, textos obrigatórios e ausência de métricas reais.
+- Validação técnica: `npm test` e `npm run build`.
+
+**File List:**
+- `components/landing/TechPanel.tsx`
+- `app/page.tsx`
+- `tests/smoke.mjs`
+- `_bmad-output/implementation-artifacts/tasks/epic-05-ai-section.md`
+- `_bmad-output/implementation-artifacts/stories/epic-05-us-01-techpanel.md`
+
+**Change Log:**
+- 2026-04-30: US-01 [VISUAL] implementada com `TechPanel` dark, estágios operacionais, integração na seção `#tecnologia` e cobertura smoke.
 
 ---
 
@@ -53,11 +74,18 @@
 - `components/landing/Container`
 
 **Checklist de Execução:**
-- [ ] Seção tem `id="tecnologia"`.
-- [ ] É a única seção dark da landing além do footer.
-- [ ] Título diz que tecnologia apoia atendimento.
-- [ ] Copy evita hype.
-- [ ] Contraste em fundo dark é adequado.
+- [x] Seção tem `id="tecnologia"`.
+- [x] É a única seção dark da landing além do footer.
+- [x] Título diz que tecnologia apoia atendimento.
+- [x] Copy evita hype.
+- [x] Contraste em fundo dark é adequado.
+
+**Notas de Validação:**
+- `AISection` foi criada em `components/landing/sections/AISection.tsx` e concentra a seção `#tecnologia`.
+- `app/page.tsx` passou a renderizar apenas `<AISection />`, sem bloco dark inline.
+- A copy vem de `lib/content.ts`, incluindo os três blocos práticos de IA: triagem inicial, follow-up e resumo/contexto.
+- `TechPanel` foi mantido como apoio visual da landing, mas sem linguagem de dashboard/SaaS: removeu `Ao vivo`, barras de progresso e pseudo-métrica.
+- A seção dark continua sendo pontual na landing; fora dela, apenas o footer usa fundo dark.
 
 ---
 
@@ -81,8 +109,14 @@
 **Dependências Externas:** Nenhuma.
 
 **Checklist de Execução:**
-- [ ] Texto dark passa contraste AA.
-- [ ] Painel não estoura em mobile.
-- [ ] A seção não vira dark mode dominante.
-- [ ] Motion respeita `prefers-reduced-motion`.
+- [x] Texto dark passa contraste AA.
+- [x] Painel não estoura em mobile.
+- [x] A seção não vira dark mode dominante.
+- [x] Motion respeita `prefers-reduced-motion`.
 
+**Notas de Validação:**
+- O token `--vm-panel-muted` foi elevado para melhorar contraste de textos secundários no fundo dark.
+- `AISection` ganhou contenção de overflow, grid responsivo com `minmax(0,...)`, blocos em 3 colunas no tablet e volta para coluna no desktop junto do painel.
+- `TechPanel` recebeu `w-full`, `min-w-0`, limite de largura em desktop, colunas responsivas e redução de tracking em textos monoespaçados no mobile.
+- Animação e transições do painel agora usam `motion-reduce:animate-none` e `motion-reduce:transition-none`, além da regra global de `prefers-reduced-motion`.
+- A seção segue sendo uma única faixa dark pontual da landing, com borda sutil e sem ampliar o dark mode para outras seções.

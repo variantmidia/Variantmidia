@@ -1,9 +1,8 @@
 export const content = {
   nav: {
     links: [
-      { label: "Método", href: "#metodo" },
       { label: "Gargalos", href: "#gargalos" },
-      { label: "Tecnologia", href: "#tecnologia" },
+      { label: "Operação", href: "#operacao" },
       { label: "Diferenciais", href: "#diferenciais" },
       { label: "FAQ", href: "#faq" }
     ],
@@ -15,13 +14,13 @@ export const content = {
     title: {
       strike: "Mais marketing",
       line2: "não resolve.",
-      line3: "Resolve diagnosticar",
+      line3: "se não encontrar",
       accent: "o gargalo certo."
     },
     sub: "A Variant Media identifica onde seu escritório está perdendo receita — na oferta, demanda ou conversão — e estrutura um processo claro para transformar oportunidades em contratos.",
     cta: {
       primary: { label: "Agendar diagnóstico", href: "#cta-final" },
-      secondary: { label: "Entender o método", href: "#metodo" }
+      secondary: { label: "Ver operação", href: "#operacao" }
     }
   },
   credibility: {
@@ -114,8 +113,22 @@ export const content = {
   ai: {
     eyebrow: "Tecnologia com critério",
     title: "Tecnologia entra para apoiar o atendimento, não para virar protagonista da marca.",
-    body: "A IA faz sentido quando melhora triagem, follow-up, velocidade de resposta e organização do atendimento — sem parecer robótica nem quebrar a experiência do potencial cliente.",
-    closing: "IA humanizada não é efeito especial. É operação melhor desenhada."
+    body: "Automação faz sentido quando melhora triagem, follow-up, velocidade de resposta e organização do atendimento — sem parecer impessoal nem quebrar a experiência do potencial cliente.",
+    blocks: [
+      {
+        title: "Triagem inicial",
+        body: "Identifica contexto, urgência e aderência antes da agenda do sócio ficar tomada por contatos sem potencial."
+      },
+      {
+        title: "Follow-up",
+        body: "Mantém o lead aquecido quando ele ainda está decidindo com quem fechar."
+      },
+      {
+        title: "Resumo e contexto",
+        body: "O escritório recebe a conversa organizada, com mais clareza para conduzir a próxima etapa."
+      }
+    ],
+    closing: "Atendimento inteligente não é efeito especial. É operação melhor desenhada."
   },
   differentials: {
     title: "Por que isso é diferente de contratar uma agência genérica.",
@@ -138,7 +151,7 @@ export const content = {
       },
       {
         title: "Tecnologia com critério",
-        body: "Automação e IA entram para corrigir gargalo real, não para vender modernidade."
+        body: "Automação entra para corrigir gargalo real, não para vender modernidade."
       },
       {
         title: "Conversa de negócio",
@@ -160,11 +173,16 @@ export const content = {
           "Não existe estratégia jurídica de copiar e colar. A jornada de compra muda conforme a área, o ticket, a urgência e o tipo de cliente que o escritório quer atrair."
       },
       {
-        objection: "Não quero uma IA que pareça robô para os meus clientes.",
+        objection: "Não quero automação que pareça robô para os meus clientes.",
         response:
           "A tecnologia precisa proteger a experiência, não empobrecer a relação. O objetivo é responder melhor, qualificar melhor e organizar melhor o atendimento."
       }
-    ]
+    ],
+    proof: {
+      label: "Prova validada",
+      title: "Resultados e depoimentos entram aqui apenas quando houver lastro real.",
+      body: "Este espaço fica reservado para cases, feedbacks ou números que possam ser comprovados antes da publicação. Sem claim inflado, sem estatística decorativa."
+    }
   },
   faq: {
     title: "Perguntas frequentes",
@@ -196,7 +214,7 @@ export const content = {
     body: "Se hoje você sente que a receita depende demais de indicação, que o atendimento perde lead, ou que o comercial ainda funciona mais no improviso do que no método, vale começar pelo diagnóstico.",
     cta: {
       primary: { label: "Agendar diagnóstico", href: "#cta-final" },
-      secondary: { label: "Falar com a equipe", href: "#contato" }
+      secondary: { label: "Falar com a equipe", href: "#cta-final" }
     },
     micro: "Conversa objetiva. Sem pacote empurrado. Sem promessa fácil."
   }

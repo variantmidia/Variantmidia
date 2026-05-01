@@ -30,7 +30,7 @@ export function Header() {
           : "border-white/45 bg-vm-bg-alt/38 shadow-[0_1px_0_rgba(255,255,255,.55)_inset]"
       )}
     >
-      <div className="mx-auto flex h-[68px] w-full max-w-[1240px] items-center justify-between gap-5 px-5 sm:px-6 lg:px-8 xl:px-12">
+      <div className="mx-auto flex h-[68px] w-full max-w-[min(100%,1680px)] items-center justify-between gap-5 px-5 sm:px-6 lg:px-8 xl:px-10">
         <Link href="/" aria-label="Variant Media - inicio" className="flex min-w-0 items-center">
           <img
             src="/logos/horizontal-light.svg"
@@ -73,6 +73,7 @@ export function Header() {
 
       <div
         id="mobile-menu"
+        hidden={!menuOpen}
         className={cn(
           "mx-5 overflow-hidden rounded-sm border border-vm-line-cool/80 bg-vm-bg-alt/88 shadow-vm backdrop-blur-2xl transition-all duration-default lg:hidden",
           menuOpen ? "mb-4 max-h-96 opacity-100" : "max-h-0 border-transparent opacity-0"

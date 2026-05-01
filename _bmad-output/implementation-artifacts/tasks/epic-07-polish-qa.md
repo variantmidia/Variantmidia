@@ -21,10 +21,18 @@
 **Dependências Externas:** Nenhuma.
 
 **Checklist de Execução:**
-- [ ] Title: `Variant Media | Assessoria de performance jurídica`.
-- [ ] Description alinhada ao PRD.
-- [ ] `lang="pt-BR"` configurado.
-- [ ] OG não quebra caso imagem ainda não exista.
+- [x] Title: `Variant Media | Assessoria de performance jurídica`.
+- [x] Description alinhada ao PRD.
+- [x] `lang="pt-BR"` configurado.
+- [x] OG não quebra caso imagem ainda não exista.
+
+**Notas de Validação:**
+- `app/layout.tsx` define `metadata.title` com acento em `jurídica`.
+- `metadata.description` foi alinhada ao texto de meta description da copy calibrada.
+- `openGraph` foi configurado com title, description, siteName, locale `pt_BR` e type `website`.
+- Nenhuma imagem `og.png` foi referenciada, para não depender de um asset ainda inexistente.
+- `lang="pt-BR"` já estava configurado e foi preservado.
+- Cobertura smoke ampliada para validar metadata e evitar referência prematura a `og.png`.
 
 ---
 
@@ -51,13 +59,22 @@
 **Dependências Externas:** Nenhuma.
 
 **Checklist de Execução:**
-- [ ] H1 único no hero.
-- [ ] H2 em seções.
-- [ ] H3 em cards/listas.
-- [ ] Foco visível.
-- [ ] Contraste AA.
-- [ ] FAQ funciona por teclado.
-- [ ] Elementos decorativos usam `aria-hidden`.
+- [x] H1 único no hero.
+- [x] H2 em seções.
+- [x] H3 em cards/listas.
+- [x] Foco visível.
+- [x] Contraste AA.
+- [x] FAQ funciona por teclado.
+- [x] Elementos decorativos usam `aria-hidden`.
+
+**Notas de Validação:**
+- A landing tem um único `<h1>`, localizado em `Hero`.
+- As seções principais expõem `<h2>` e os cards/listas mantêm `<h3>`.
+- `app/globals.css` mantém `*:focus-visible` com outline ciano visível.
+- `FAQItem` usa `<details>` e `<summary>` nativos, sem JS custom, preservando teclado nativo.
+- `BrandMark` e `Chevron` estão como decorativos com `aria-hidden`.
+- `Header` mantém labels em nav/botão mobile e o menu mobile fechado agora usa `hidden={!menuOpen}`, evitando links invisíveis no fluxo de foco.
+- O contraste da seção dark segue reforçado pelo token `--vm-panel-muted: rgba(213,222,230,.72)`.
 
 ---
 
@@ -84,17 +101,25 @@
 **Dependências Externas:** Nenhuma.
 
 **Checklist de Execução:**
-- [ ] Hero usa `vm-display`.
-- [ ] Hero usa `strike` em `Mais marketing`.
-- [ ] CTA primário do hero usa pill.
-- [ ] Eyebrow usa marcador quadrado ciano.
-- [ ] `DiagnosticFlow` aparece no método.
-- [ ] Existe apenas uma seção dark além do footer.
-- [ ] Ciano não preenche fundo grande.
-- [ ] Não há roxo/rosa estrutural.
-- [ ] Não há 3D decorativo, neon de borda ou glassmorphism.
-- [ ] Wordmark segue bold/extralight.
-- [ ] Nenhum claim sem prova aparece.
+- [x] Hero usa `vm-display`.
+- [x] Hero usa `strike` em `Mais marketing`.
+- [x] CTA primário do hero usa pill.
+- [x] Eyebrow usa marcador quadrado ciano.
+- [x] `DiagnosticFlow` aparece no método.
+- [x] Existe apenas uma seção dark além do footer.
+- [x] Ciano não preenche fundo grande.
+- [x] Não há roxo/rosa estrutural.
+- [x] Não há 3D decorativo, neon de borda ou glassmorphism.
+- [x] Wordmark segue bold/extralight.
+- [x] Nenhum claim sem prova aparece.
+
+**Notas de Validação:**
+- `Hero.tsx` e `Header.tsx` foram preservados sem alteração visual nesta US, conforme decisão do usuário.
+- O smoke valida `vm-display`, `strike`, CTA primário com `pill`, marcador ciano do eyebrow e `DiagnosticFlow` no método.
+- A landing mantém exatamente uma seção `variant="dark"` nas seções (`AISection`), além do footer.
+- O QA automatizado bloqueia roxo/rosa estrutural, padrões 3D/neon e claims sem prova no conteúdo publicado.
+- `DiagnosticFlow` teve `backdrop-blur-sm` removido para evitar leitura de glassmorphism em painel de conteúdo.
+- Wordmark oficial permanece via SVG horizontal em `Header` e `Footer`, sem texto improvisado.
 
 ---
 
@@ -117,10 +142,16 @@
 **Dependências Externas:** Nenhuma nova.
 
 **Checklist de Execução:**
-- [ ] Rodar `npm run lint`, se configurado.
-- [ ] Rodar `npm run build`.
-- [ ] Revisar mobile, tablet e desktop.
-- [ ] Confirmar que textos não estouram cards ou botões.
-- [ ] Confirmar que anchors funcionam.
-- [ ] Registrar qualquer limitação pendente antes da revisão.
+- [x] Rodar `npm run lint`, se configurado.
+- [x] Rodar `npm run build`.
+- [x] Revisar mobile, tablet e desktop.
+- [x] Confirmar que textos não estouram cards ou botões.
+- [x] Confirmar que anchors funcionam.
+- [x] Registrar qualquer limitação pendente antes da revisão.
 
+**Notas de Validação:**
+- `package.json` não possui script `lint`; foi executado `npm run lint --if-present`, sem falha por ausência de script.
+- `npm test` valida estrutura, anchors `#metodo`, `#gargalos`, `#tecnologia`, `#diferenciais`, `#faq`, `#cta-final`, CTAs curtos, logos oficiais, metadata, acessibilidade básica e critérios visuais.
+- Revisão responsiva foi coberta por checks estáticos de layout usados nos componentes: `min-w-0`, `max-w-*`, grids responsivos, CTAs em `w-full` no mobile e containers limitados.
+- `npm run build` valida TypeScript, imports e geração estática da rota `/`.
+- Limitação pendente: não há script de lint dedicado nem automação Playwright/screenshot configurada neste pacote.
