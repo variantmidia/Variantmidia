@@ -1,3 +1,5 @@
+const whatsappHref = "https://wa.me/5511912112227?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e....";
+
 export const content = {
   nav: {
     links: [
@@ -6,7 +8,7 @@ export const content = {
       { label: "Diferenciais", href: "#diferenciais" },
       { label: "FAQ", href: "#faq" }
     ],
-    cta: { label: "Agendar diagnóstico", href: "#cta-final" }
+    cta: { label: "Agendar diagnóstico", href: whatsappHref }
   },
   hero: {
     eyebrow: "Performance jurídica",
@@ -19,7 +21,7 @@ export const content = {
     },
     sub: "A Variant Media identifica onde seu escritório está perdendo receita — na oferta, demanda ou conversão — e estrutura um processo claro para transformar oportunidades em contratos.",
     cta: {
-      primary: { label: "Agendar diagnóstico", href: "#cta-final" },
+      primary: { label: "Agendar diagnóstico", href: whatsappHref },
       secondary: { label: "Ver operação", href: "#operacao" }
     }
   },
@@ -213,8 +215,8 @@ export const content = {
     title: "O próximo passo não é aumentar o ruído. É diagnosticar o gargalo certo.",
     body: "Se hoje você sente que a receita depende demais de indicação, que o atendimento perde lead, ou que o comercial ainda funciona mais no improviso do que no método, vale começar pelo diagnóstico.",
     cta: {
-      primary: { label: "Agendar diagnóstico", href: "#cta-final" },
-      secondary: { label: "Falar com a equipe", href: "#cta-final" }
+      primary: { label: "Agendar diagnóstico", href: whatsappHref },
+      secondary: { label: "Falar com a equipe", href: whatsappHref }
     },
     micro: "Conversa objetiva. Sem pacote empurrado. Sem promessa fácil."
   }

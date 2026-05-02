@@ -136,9 +136,14 @@ const requiredAnchors = [
   "#gargalos",
   "#operacao",
   "#diferenciais",
-  "#faq",
-  "#cta-final"
+  "#faq"
 ];
+
+const whatsappHref = "https://wa.me/5511912112227?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e....";
+
+if (!content.includes(whatsappHref)) {
+  throw new Error("Centralized content missing WhatsApp CTA href.");
+}
 
 for (const href of requiredAnchors) {
   if (!content.includes(`href: "${href}"`) && !content.includes(`href="${href}"`)) {
@@ -755,7 +760,7 @@ for (const token of [
   }
 }
 
-if (!content.includes('primary: { label: "Agendar diagnóstico", href: "#cta-final" }')) {
+if (!content.includes('primary: { label: "Agendar diagnóstico", href: whatsappHref }')) {
   throw new Error("Final CTA primary destination must be centralized in lib/content.ts.");
 }
 
@@ -1024,7 +1029,7 @@ for (const token of [
 }
 
 for (const token of [
-  'primary: { label: "Agendar diagnóstico", href: "#cta-final" }',
+  'primary: { label: "Agendar diagnóstico", href: whatsappHref }',
   'secondary: { label: "Ver operação", href: "#operacao" }'
 ]) {
   if (!content.includes(token)) {
