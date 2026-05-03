@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Variant Midia - Brand Guidelines para Claude Design</title>
+    <meta
+      name="description"
+      content="Design system visual da Variant Midia: cores da logo, paleta expandida, tipografia, grids, componentes e regras de uso para gerar brand guidelines."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --vm-bg: #f2f4f1;
+        --vm-bg-alt: #f7fafa;
+        --vm-surface: #ffffff;
+        --vm-line: #e2e2d6;
+        --vm-line-cool: #e6eef2;
+        --vm-line-soft: #eff4f6;
+        --vm-ink: #1a1a1a;
+        --vm-ink-2: #101820;
+        --vm-graphite: #2b2b2b;
+        --vm-muted: #5a5a52;
+        --vm-muted-2: #6a6a60;
+        --vm-muted-3: #9a9a90;
+        --vm-cyan: #16d4e8;
+        --vm-cyan-deep: #0fb8cc;
+        --vm-blue: #0b6eff;
+        --vm-blue-deep: #0850bf;
+        --vm-panel: #0e1620;
+        --vm-panel-2: #131c27;
+        --vm-panel-text: #d5dee6;
+        --vm-ok: #1f9d6f;
+        --vm-warn: #c97a1b;
+        --vm-crit: #c03b3b;
+        --vm-live: #34d399;
+        --vm-radius-xs: 4px;
+        --vm-radius-sm: 8px;
+        --vm-radius: 12px;
+        --vm-radius-lg: 16px;
+        --vm-radius-pill: 999px;
+        --vm-shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 4px 12px -6px rgba(16, 24, 32, 0.08);
+        --vm-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 8px 24px -10px rgba(16, 24, 32, 0.18);
+        --vm-shadow-lg: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 30px 60px -40px rgba(11, 24, 38, 0.18);
+        --vm-shadow-cyan: 0 8px 28px -8px rgba(22, 212, 232, 0.45);
+        --vm-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(90deg, rgba(239, 244, 246, 0.72) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(239, 244, 246, 0.72) 1px, transparent 1px),
+          var(--vm-bg);
+        background-size: 64px 64px;
+        color: var(--vm-graphite);
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        font-feature-settings: "ss01", "cv11";
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      img,
+      svg {
+        max-width: 100%;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page {
+        width: min(100%, 1440px);
+        margin: 0 auto;
+        background: rgba(242, 244, 241, 0.86);
+      }
+
+      .container {
+        width: min(100% - clamp(40px, 8vw, 96px), 1240px);
+        margin: 0 auto;
+      }
+
+      .hero {
+        min-height: 92svh;
+        display: grid;
+        align-items: center;
+        padding: clamp(48px, 8vw, 96px) 0 clamp(32px, 6vw, 72px);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.72fr);
+        gap: clamp(32px, 5vw, 72px);
+        align-items: end;
+      }
+
+      .logo-panel {
+        display: grid;
+        gap: 20px;
+        padding: clamp(24px, 4vw, 40px);
+        border: 1px solid var(--vm-line);
+        border-radius: var(--vm-radius-lg);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 250, 250, 0.86)),
+          var(--vm-surface);
+        box-shadow: var(--vm-shadow-lg);
+      }
+
+      .logo-strip {
+        display: grid;
+        place-items: center;
+        min-height: 152px;
+        padding: 28px;
+        border: 1px solid var(--vm-line-cool);
+        border-radius: var(--vm-radius-sm);
+        background: var(--vm-surface);
+      }
+
+      .logo-strip.dark {
+        background:
+          radial-gradient(circle at 24% 12%, rgba(22, 212, 232, 0.16), transparent 34%),
+          var(--vm-panel);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .logo-strip img {
+        width: min(430px, 86%);
+        height: auto;
+        display: block;
+      }
+
+      .eyebrow,
+      .rule {
+        font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        line-height: 1.4;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--vm-muted-2);
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 1px;
+        background: var(--vm-cyan);
+        box-shadow: 0 0 0 3px rgba(22, 212, 232, 0.18);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 10ch;
+        color: var(--vm-ink);
+        font-size: clamp(58px, 11vw, 142px);
+        font-weight: 760;
+        letter-spacing: -0.045em;
+        line-height: 0.91;
+      }
+
+      h1 span {
+        color: var(--vm-cyan-deep);
+        font-family: Georgia, "Times New Roman", serif;
+        font-style: italic;
+        font-weight: 400;
+      }
+
+      .lead {
+        max-width: 58ch;
+        margin-top: 28px;
+        color: var(--vm-muted);
+        font-size: clamp(17px, 1.55vw, 21px);
+        line-height: 1.55;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 36px;
+      }
+
+      .meta-card {
+        min-height: 112px;
+        padding: 18px;
+        border: 1px solid var(--vm-line);
+        border-radius: var(--vm-radius-sm);
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .meta-card strong {
+        display: block;
+        color: var(--vm-ink);
+        font-size: 15px;
+        line-height: 1.25;
+      }
+
+      .meta-card span {
+        display: block;
+        margin-top: 8px;
+        color: var(--vm-muted-2);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      section {
+        padding: clamp(72px, 10vw, 128px) 0;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: clamp(24px, 5vw, 56px);
+        align-items: start;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--vm-ink);
+      }
+
+      .rule {
+        color: var(--vm-ink);
+      }
+
+      h2 {
+        max-width: 16ch;
+        color: var(--vm-ink);
+        font-size: clamp(34px, 5vw, 64px);
+        font-weight: 680;
+        letter-spacing: -0.035em;
+        line-height: 1.02;
+      }
+
+      .section-intro {
+        max-width: 62ch;
+        margin-top: 18px;
+        color: var(--vm-muted);
+        font-size: 17px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        margin-top: 32px;
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid.four {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .card {
+        border: 1px solid var(--vm-line);
+        border-radius: var(--vm-radius-sm);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 250, 250, 0.9)),
+          var(--vm-surface);
+        box-shadow: var(--vm-shadow-sm);
+        overflow: hidden;
+      }
+
+      .card.pad {
+        padding: 22px;
+      }
+
+      .swatch {
+        min-height: 204px;
+        display: grid;
+        align-content: end;
+        border: 1px solid rgba(16, 24, 32, 0.08);
+        border-radius: var(--vm-radius-sm);
+        overflow: hidden;
+        background: var(--swatch);
+        color: var(--text, var(--vm-ink));
+      }
+
+      .swatch-info {
+        padding: 18px;
+        background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.16));
+      }
+
+      .swatch.light .swatch-info {
+        background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.74));
+      }
+
+      .swatch strong,
+      .token-row strong,
+      .component-title {
+        display: block;
+        color: inherit;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .swatch code,
+      .token-row code,
+      pre,
+      .mono {
+        font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      }
+
+      .swatch code {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+        opacity: 0.78;
+      }
+
+      .token-list {
+        display: grid;
+        border: 1px solid var(--vm-line);
+        border-radius: var(--vm-radius-sm);
+        overflow: hidden;
+      }
+
+      .token-row {
+        display: grid;
+        grid-template-columns: 64px minmax(0, 1fr) 140px;
+        gap: 18px;
+        align-items: center;
+        padding: 16px;
+        border-bottom: 1px solid var(--vm-line-soft);
+        background: rgba(255, 255, 255, 0.74);
+      }
+
+      .token-row:last-child {
+        border-bottom: 0;
+      }
+
+      .chip {
+        width: 64px;
+        height: 40px;
+        border: 1px solid rgba(16, 24, 32, 0.12);
+        border-radius: 8px;
+        background: var(--swatch);
+      }
+
+      .token-row p,
+      .component p,
+      .note p,
+      li {
+        color: var(--vm-muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .token-row code {
+        color: var(--vm-muted-2);
+        font-size: 12px;
+      }
+
+      .type-specimen {
+        padding: 28px;
+        border: 1px solid var(--vm-line);
+        border-radius: var(--vm-radius-sm);
+        background: rgba(255, 255, 255, 0.78);
+      }
+
+      .display-specimen {
+        color: var(--vm-ink);
+        font-size: clamp(52px, 7vw, 96px);
+        font-weight: 760;
+        letter-spacing: -0.045em;
+        line-height: 0.94;
+      }
+
+      .serif-accent {
+        color: var(--vm-cyan-deep);
+        font-family: Georgia, "Times New Roman", serif;
+        font-style: italic;
+        font-weight: 400;
+      }
+
+      .component {
+        min-height: 210px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 22px;
+        border: 1px solid var(--vm-line);
+        border-radius: var(--vm-radius-sm);
+        background: rgba(255, 255, 255, 0.76);
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .btn {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 0 20px;
+        border: 1px solid var(--vm-ink);
+        border-radius: var(--vm-radius-pill);
+        background: var(--vm-ink);
+        color: white;
+        font-size: 14px;
+        font-weight: 650;
+        text-decoration: none;
+        transition: transform 180ms var(--vm-ease), box-shadow 180ms var(--vm-ease), background 180ms var(--vm-ease);
+        box-shadow: 0 8px 24px -10px rgba(16, 24, 32, 0.35);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        background: var(--vm-ink-2);
+      }
+
+      .btn.cyan {
+        border-color: var(--vm-cyan);
+        background: var(--vm-cyan);
+        color: var(--vm-ink);
+        box-shadow: var(--vm-shadow-cyan);
+      }
+
+      .btn.ghost {
+        border-color: var(--vm-line-cool);
+        background: transparent;
+        color: var(--vm-ink);
+        box-shadow: none;
+      }
+
+      .module-preview {
+        display: grid;
+        gap: 10px;
+        padding: 18px;
+        border: 1px solid var(--vm-line-cool);
+        border-radius: var(--vm-radius-sm);
+        background:
+          linear-gradient(90deg, rgba(239, 244, 246, 0.8) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(239, 244, 246, 0.8) 1px, transparent 1px),
+          var(--vm-bg-alt);
+        background-size: 32px 32px;
+      }
+
+      .module-line {
+        height: 12px;
+        border-radius: var(--vm-radius-pill);
+        background: var(--vm-line-cool);
+      }
+
+      .module-line.cyan {
+        width: 38%;
+        background: var(--vm-cyan);
+      }
+
+      .module-line.dark {
+        width: 72%;
+        background: var(--vm-graphite);
+      }
+
+      .dark-band {
+        margin-top: 32px;
+        padding: clamp(28px, 5vw, 48px);
+        border-radius: var(--vm-radius-lg);
+        background:
+          radial-gradient(circle at 20% 0%, rgba(22, 212, 232, 0.18), transparent 28%),
+          linear-gradient(135deg, var(--vm-panel), var(--vm-panel-2));
+        color: var(--vm-panel-text);
+      }
+
+      .dark-band h3 {
+        margin: 0;
+        color: white;
+        font-size: clamp(26px, 3vw, 42px);
+        letter-spacing: -0.025em;
+        line-height: 1.08;
+      }
+
+      .dark-band p,
+      .dark-band li {
+        color: rgba(213, 222, 230, 0.78);
+      }
+
+      .quote {
+        padding: 28px;
+        border-left: 4px solid var(--vm-cyan);
+        background: rgba(255, 255, 255, 0.62);
+        color: var(--vm-ink);
+        font-size: clamp(22px, 2.6vw, 34px);
+        font-weight: 640;
+        letter-spacing: -0.025em;
+        line-height: 1.12;
+      }
+
+      .note {
+        padding: 20px;
+        border: 1px solid rgba(22, 212, 232, 0.38);
+        border-radius: var(--vm-radius-sm);
+        background: rgba(22, 212, 232, 0.1);
+      }
+
+      pre {
+        white-space: pre-wrap;
+        margin: 0;
+        padding: 22px;
+        border: 1px solid var(--vm-line-cool);
+        border-radius: var(--vm-radius-sm);
+        background: #101820;
+        color: #d5dee6;
+        font-size: 13px;
+        line-height: 1.55;
+        overflow: auto;
+      }
+
+      .do-dont {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      ul {
+        margin: 16px 0 0;
+        padding-left: 20px;
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      footer {
+        padding: 48px 0;
+        background: var(--vm-panel);
+        color: var(--vm-panel-text);
+      }
+
+      footer .container {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: center;
+      }
+
+      footer img {
+        width: 230px;
+        height: auto;
+      }
+
+      footer p {
+        max-width: 52ch;
+        color: rgba(213, 222, 230, 0.68);
+        font-size: 13px;
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid,
+        .section-head,
+        .grid.two,
+        .grid.three,
+        .grid.four,
+        .do-dont {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: auto;
+        }
+
+        .meta-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .token-row {
+          grid-template-columns: 56px 1fr;
+        }
+
+        .token-row code {
+          grid-column: 2;
+        }
+
+        footer .container {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="eyebrow">Brand guidelines base</span>
+            <h1>Variant <span>Midia</span></h1>
+            <p class="lead">
+              Sistema visual para transformar a landing atual em brand guidelines: marca ciano + grafite,
+              linguagem editorial-operacional, modularidade limpa e acentos de performance usados com controle.
+            </p>
+            <div class="meta-grid">
+              <div class="meta-card">
+                <strong>Direção</strong>
+                <span>70% precisão modular, 20% autoridade editorial, 10% sinal de performance.</span>
+              </div>
+              <div class="meta-card">
+                <strong>Personalidade</strong>
+                <span>Clara, técnica, seca, consultiva. Sem estética de agência genérica.</span>
+              </div>
+              <div class="meta-card">
+                <strong>Uso no Claude</strong>
+                <span>Use este arquivo como briefing visual para gerar brand book, slides e aplicações.</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="logo-panel" aria-label="Versões oficiais do logo">
+            <div class="logo-strip">
+              <img src="../logos/horizontal-light.svg" alt="Variant Midia - logo horizontal grafite com símbolo ciano" />
+            </div>
+            <div class="logo-strip dark">
+              <img src="../public/logos/horizontal-dark.svg" alt="Variant Midia - logo horizontal branco com símbolo ciano" />
+            </div>
+          </aside>
+        </div>
+      </header>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">01 / Cor</span>
+            <div>
+              <h2>Paleta-mãe da marca</h2>
+              <p class="section-intro">
+                A logo usa dois sinais centrais: ciano vivo como assinatura e grafite como massa tipográfica.
+                O site expande isso com fundos quentes, fundos frios, painéis escuros e status restritos.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid four">
+            <div class="swatch" style="--swatch: #16d4e8; --text: #101820">
+              <div class="swatch-info">
+                <strong>Ciano assinatura</strong>
+                <code>#16D4E8</code>
+              </div>
+            </div>
+            <div class="swatch" style="--swatch: #2b2b2b; --text: #ffffff">
+              <div class="swatch-info">
+                <strong>Grafite da logo</strong>
+                <code>#2B2B2B</code>
+              </div>
+            </div>
+            <div class="swatch light" style="--swatch: #f2f4f1; --text: #1a1a1a">
+              <div class="swatch-info">
+                <strong>Fundo quente</strong>
+                <code>#F2F4F1</code>
+              </div>
+            </div>
+            <div class="swatch" style="--swatch: #0e1620; --text: #d5dee6">
+              <div class="swatch-info">
+                <strong>Painel escuro</strong>
+                <code>#0E1620</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div class="card pad">
+              <h3 class="component-title">Regra de uso do ciano</h3>
+              <p>
+                O ciano nunca vira fundo dominante. Ele aparece em símbolo, sublinhado, foco,
+                marcador de seção, estado live, CTA pontual e linhas de movimento.
+              </p>
+            </div>
+            <div class="card pad">
+              <h3 class="component-title">Regra de uso do grafite</h3>
+              <p>
+                O grafite segura a autoridade: wordmark, headlines, botões primários,
+                divisores fortes e contraste em superfícies claras.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">02 / Tokens</span>
+            <div>
+              <h2>Paleta expandida do site</h2>
+              <p class="section-intro">
+                Estes valores vêm dos tokens atuais da landing. Use nomes semânticos no brand book para
+                o Claude Design não transformar a identidade em uma coleção solta de hexadecimais.
+              </p>
+            </div>
+          </div>
+
+          <div class="token-list" style="margin-top: 32px">
+            <div class="token-row">
+              <span class="chip" style="--swatch: #f2f4f1"></span>
+              <div><strong>Background principal</strong><p>Base clara levemente quente. Evita branco puro como campo dominante.</p></div>
+              <code>--vm-bg / #F2F4F1</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #f7fafa"></span>
+              <div><strong>Background frio</strong><p>Alternância de ritmo para hero, método e módulos técnicos.</p></div>
+              <code>--vm-bg-alt / #F7FAFA</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #ffffff"></span>
+              <div><strong>Surface</strong><p>Cards, painéis e módulos de conteúdo. Usar com borda, não com sombra pesada.</p></div>
+              <code>--vm-surface / #FFFFFF</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #e2e2d6"></span>
+              <div><strong>Linha quente</strong><p>Bordas e divisores em fundo principal.</p></div>
+              <code>--vm-line / #E2E2D6</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #e6eef2"></span>
+              <div><strong>Linha fria</strong><p>Bordas sobre fundo frio e módulos técnicos.</p></div>
+              <code>--vm-line-cool / #E6EEF2</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #eff4f6"></span>
+              <div><strong>Linha suave</strong><p>Grid de fundo e divisores muito sutis.</p></div>
+              <code>--vm-line-soft / #EFF4F6</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #1a1a1a"></span>
+              <div><strong>Ink</strong><p>Headlines, botões primários, divisores editoriais e textos de alta prioridade.</p></div>
+              <code>--vm-ink / #1A1A1A</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #5a5a52"></span>
+              <div><strong>Muted</strong><p>Texto secundário, parágrafos de apoio e conteúdo explicativo.</p></div>
+              <code>--vm-muted / #5A5A52</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #9a9a90"></span>
+              <div><strong>Muted 3</strong><p>Placeholder, informação de baixa ênfase e palavras riscadas no hero.</p></div>
+              <code>--vm-muted-3 / #9A9A90</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #0fb8cc"></span>
+              <div><strong>Ciano deep</strong><p>Versão legível do ciano para texto sobre fundo claro.</p></div>
+              <code>--vm-cyan-deep / #0FB8CC</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #0b6eff"></span>
+              <div><strong>Azul apoio</strong><p>Links e CTAs secundários. Uso raro, sem competir com o ciano.</p></div>
+              <code>--vm-blue / #0B6EFF</code>
+            </div>
+            <div class="token-row">
+              <span class="chip" style="--swatch: #d5dee6"></span>
+              <div><strong>Texto de painel</strong><p>Texto principal sobre superfícies escuras.</p></div>
+              <code>--vm-panel-text / #D5DEE6</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">03 / Escala</span>
+            <div>
+              <h2>Escala de cinza funcional</h2>
+              <p class="section-intro">
+                A escala não é neutra pura. Ela alterna grafites frios, cinzas quentes e linhas quase minerais
+                para manter a marca mais consultiva do que tecnológica demais.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid four">
+            <div class="swatch" style="--swatch: #101820; --text: #ffffff"><div class="swatch-info"><strong>Ink 2</strong><code>#101820</code></div></div>
+            <div class="swatch" style="--swatch: #1a1a1a; --text: #ffffff"><div class="swatch-info"><strong>Ink</strong><code>#1A1A1A</code></div></div>
+            <div class="swatch" style="--swatch: #2b2b2b; --text: #ffffff"><div class="swatch-info"><strong>Graphite</strong><code>#2B2B2B</code></div></div>
+            <div class="swatch" style="--swatch: #5a5a52; --text: #ffffff"><div class="swatch-info"><strong>Muted</strong><code>#5A5A52</code></div></div>
+            <div class="swatch light" style="--swatch: #6a6a60; --text: #ffffff"><div class="swatch-info"><strong>Muted 2</strong><code>#6A6A60</code></div></div>
+            <div class="swatch light" style="--swatch: #9a9a90; --text: #1a1a1a"><div class="swatch-info"><strong>Muted 3</strong><code>#9A9A90</code></div></div>
+            <div class="swatch light" style="--swatch: #e2e2d6; --text: #1a1a1a"><div class="swatch-info"><strong>Line</strong><code>#E2E2D6</code></div></div>
+            <div class="swatch light" style="--swatch: #eff4f6; --text: #1a1a1a"><div class="swatch-info"><strong>Line soft</strong><code>#EFF4F6</code></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">04 / Tipo</span>
+            <div>
+              <h2>Tipografia editorial-operacional</h2>
+              <p class="section-intro">
+                O site usa Inter como estrutura principal, JetBrains Mono para labels e Fraunces/serif como
+                acento editorial. Para brand guidelines, mantenha esse trio conceitual.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div class="type-specimen">
+              <span class="eyebrow">Display / hero</span>
+              <p class="display-specimen">Menos ruido, <span class="serif-accent">mais decisao</span>.</p>
+            </div>
+            <div class="type-specimen">
+              <span class="eyebrow">Body / sistema</span>
+              <p style="margin-top: 22px; color: var(--vm-muted); font-size: 18px">
+                Texto corrido em Inter 400, line-height 1.55, medida curta. A marca deve parecer precisa e
+                adulta, sem excesso de adjetivo ou caixa alta fora de labels.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid three">
+            <div class="card pad"><strong>Headlines</strong><p>Inter 600-760, tracking negativo, poucas palavras, grande impacto.</p></div>
+            <div class="card pad"><strong>Labels</strong><p>JetBrains Mono, 11px, uppercase, letter-spacing 0.14em.</p></div>
+            <div class="card pad"><strong>Acento editorial</strong><p>Fraunces ou serif italic, apenas em palavras-chave, nunca em parágrafos longos.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">05 / Layout</span>
+            <div>
+              <h2>Composicao visual</h2>
+              <p class="section-intro">
+                A Variant trabalha com seções largas, grids modulares, divisores editoriais e cards baixos.
+                Containers de seção não devem parecer cards flutuantes.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid three">
+            <div class="component">
+              <div>
+                <span class="eyebrow">Ritmo</span>
+                <h3 class="component-title" style="margin-top: 14px">Seções com respiro</h3>
+              </div>
+              <p>Padding vertical fluido entre 72px e 128px. Conteúdo denso, mas nunca apertado.</p>
+            </div>
+            <div class="component">
+              <div>
+                <span class="eyebrow">Grid</span>
+                <h3 class="component-title" style="margin-top: 14px">Modulo antes de ornamento</h3>
+              </div>
+              <div class="module-preview">
+                <span class="module-line cyan"></span>
+                <span class="module-line dark"></span>
+                <span class="module-line" style="width: 88%"></span>
+                <span class="module-line" style="width: 62%"></span>
+              </div>
+            </div>
+            <div class="component">
+              <div>
+                <span class="eyebrow">Borda</span>
+                <h3 class="component-title" style="margin-top: 14px">Sem sombra dramatica</h3>
+              </div>
+              <p>Cards usam radius 8px, borda fina e sombra curta. O sistema deve parecer operacional.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">06 / UI</span>
+            <div>
+              <h2>Componentes de referência</h2>
+              <p class="section-intro">
+                Estes exemplos traduzem o comportamento visual do site para peças de brand book: botões,
+                cards, réguas editoriais, módulos técnicos e painéis escuros pontuais.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div class="component">
+              <div>
+                <span class="eyebrow">Buttons</span>
+                <h3 class="component-title" style="margin-top: 14px">Ação clara, uma primária por tela</h3>
+              </div>
+              <div class="button-row">
+                <a class="btn" href="#">Primário</a>
+                <a class="btn cyan" href="#">Ciano</a>
+                <a class="btn ghost" href="#">Secundário</a>
+              </div>
+            </div>
+            <div class="component">
+              <div>
+                <span class="eyebrow">Rule header</span>
+                <h3 class="component-title" style="margin-top: 14px">Indice + tema + linha</h3>
+              </div>
+              <div style="border-bottom: 1px solid var(--vm-ink); padding-bottom: 16px">
+                <span class="rule">03 / 11 &nbsp; Dor - Onde a receita vaza</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dark-band">
+            <div class="grid two" style="margin-top: 0; align-items: center">
+              <div>
+                <span class="eyebrow" style="color: rgba(213, 222, 230, 0.72)">Painel escuro pontual</span>
+                <h3 style="margin-top: 16px">IA, bastidor operacional e sinais vivos podem usar D3.</h3>
+              </div>
+              <div class="card pad" style="background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.1)">
+                <p><span style="color: var(--vm-live)">●</span> Status live, métricas de triagem e interfaces de atendimento usam contraste escuro.</p>
+                <p style="margin-top: 12px">Não transformar a marca inteira em dark SaaS.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">07 / Motion</span>
+            <div>
+              <h2>Movimento com função</h2>
+              <p class="section-intro">
+                A diretriz da UI é objetiva: motion explica causa e sequência. Use transform e opacity,
+                150-400ms, com reduced motion sempre respeitado.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid three">
+            <div class="card pad"><strong>Microinteração</strong><p>Hover/focus entre 150ms e 250ms. Botões sobem no máximo 2px.</p></div>
+            <div class="card pad"><strong>Reveal</strong><p>Entrada de seção entre 300ms e 400ms, com stagger curto quando houver lista.</p></div>
+            <div class="card pad"><strong>Evitar</strong><p>Animação de width/height, efeitos decorativos sem informação e loops exagerados.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">08 / Voz</span>
+            <div>
+              <h2>Expressao da marca</h2>
+              <p class="section-intro">
+                O design deve sustentar uma linguagem seca e comercialmente inteligente. Pouco efeito,
+                muita leitura. A marca vende controle, clareza e receita recuperada.
+              </p>
+            </div>
+          </div>
+
+          <div class="quote">
+            Menos promessa de marketing. Mais diagnóstico sobre onde a receita realmente vaza.
+          </div>
+
+          <div class="do-dont" style="margin-top: 24px">
+            <div class="note">
+              <strong>Fazer</strong>
+              <ul>
+                <li>Usar headlines curtas com tensão operacional.</li>
+                <li>Mostrar módulos, fluxos, diagnósticos e evidência visual.</li>
+                <li>Usar o ciano como assinatura de precisão.</li>
+                <li>Preferir fotografia real e bastidores quando houver imagem.</li>
+              </ul>
+            </div>
+            <div class="card pad">
+              <strong>Evitar</strong>
+              <ul>
+                <li>Roxo, neon, gradientes genéricos ou paleta de infoproduto.</li>
+                <li>Martelo, balança, brasão e clichês jurídicos.</li>
+                <li>Cards demais dentro de cards ou seções que parecem dashboard.</li>
+                <li>Copy motivacional, excesso de adjetivo e promessas vagas.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <span class="rule">09 / Claude</span>
+            <div>
+              <h2>Brief pronto para Claude Design</h2>
+              <p class="section-intro">
+                Use este bloco como comando inicial para gerar o brand guidelines completo. Ele resume as
+                decisões visuais e as restrições mais importantes.
+              </p>
+            </div>
+          </div>
+
+          <pre>Crie um brand guidelines completo para a Variant Midia usando este sistema visual:
+
+Marca: consultoria de marketing e operação comercial para escritórios/negócios que precisam diagnosticar onde a receita vaza.
+Personalidade: precisa, seca, operacional, adulta, editorial, sem estética de agência genérica.
+
+Logo:
+- Usar símbolo ciano #16D4E8 e wordmark grafite #2B2B2B em fundos claros.
+- Usar wordmark branca em fundos escuros.
+- Preservar proporção e respiro. Não recriar o símbolo.
+
+Cores:
+- Primárias: #16D4E8 ciano assinatura, #2B2B2B grafite da logo, #1A1A1A ink.
+- Fundos: #F2F4F1 fundo quente principal, #F7FAFA fundo frio alternativo, #FFFFFF surface.
+- Linhas: #E2E2D6 quente, #E6EEF2 fria, #EFF4F6 suave.
+- Texto secundário: #5A5A52, #6A6A60, #9A9A90.
+- Dark pontual: #0E1620, #131C27, texto #D5DEE6.
+- Status restrito: #1F9D6F, #C97A1B, #C03B3B, #34D399.
+
+Tipografia:
+- Inter para estrutura e headlines.
+- JetBrains Mono para labels uppercase pequenos.
+- Fraunces ou serif italic apenas como acento editorial em palavras-chave.
+- Headlines grandes, tracking negativo, line-height apertado.
+- Body 16px+, line-height 1.55.
+
+Layout:
+- Seções amplas, grids modulares, cards baixos com radius 8px, divisores editoriais.
+- Ciano nunca deve virar fundo dominante. Usar em acentos, sublinhados, foco, status live e linhas.
+- Evitar cards dentro de cards, shadows dramáticas, gradientes decorativos e linguagem visual de dashboard SaaS dominante.
+
+Aplicações a criar:
+- Capa de brand book.
+- Página de logo e clear space.
+- Página de paleta com tokens e usos.
+- Página de tipografia.
+- Página de grid, espaçamento e componentes.
+- Página de exemplos: social, proposta comercial, landing section, apresentação e documento institucional.
+
+Direção final:
+70% precisão modular + 20% autoridade editorial + 10% sinal de performance.</pre>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <img src="../public/logos/horizontal-dark.svg" alt="Variant Midia" />
+        <p>
+          Artefato gerado a partir da logo oficial em SVG, dos tokens atuais em CSS e do design system da landing.
+          Uso recomendado: referência para Claude Design criar brand guidelines e aplicações de marca.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
