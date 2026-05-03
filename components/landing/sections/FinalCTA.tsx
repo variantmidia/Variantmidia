@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AtSign } from "lucide-react";
 
 import { Button } from "@/components/landing/Button";
 import { Container } from "@/components/landing/Container";
@@ -38,17 +37,17 @@ export function FinalCTA() {
               </Button>
             </Link>
             <p className="mt-2 inline-flex items-center gap-2 text-[13.5px] leading-[1.5] text-vm-muted lg:mt-1">
-              <AtSign className="size-4 shrink-0 text-vm-cyan-deep" strokeWidth={1.9} />
+              <InstagramGlyph className="size-4 shrink-0 text-vm-cyan-deep" />
               <span>
                 Siga-nos no Instagram:{" "}
-              <Link
-                href="https://instagram.com/variantmidia"
-                target="_blank"
-                rel="noreferrer"
-                className="font-medium text-vm-cyan-deep transition-colors duration-200 ease-vm-out hover:text-vm-cyan"
-              >
-                @variantmidia
-              </Link>
+                <Link
+                  href="https://instagram.com/variantmidia"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-vm-cyan-deep transition-colors duration-200 ease-vm-out hover:text-vm-cyan"
+                >
+                  @variantmidia
+                </Link>
               </span>
             </p>
           </div>
@@ -59,5 +58,21 @@ export function FinalCTA() {
         </p>
       </Container>
     </Section>
+  );
+}
+
+function InstagramGlyph({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" stroke="currentColor" strokeWidth="1.9" />
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.9" />
+      <circle cx="17.2" cy="6.8" r="1.15" fill="currentColor" />
+    </svg>
   );
 }
