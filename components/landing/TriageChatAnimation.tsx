@@ -3,19 +3,19 @@
 import { useEffect, useState } from "react";
 
 const messages = [
-  { from: "user", text: "Ola, gostaria de falar com um advogado trabalhista" },
-  { from: "bot", text: "Oi! Me chamo Debora Borges, advogada trabalhista. Pra te ajudar melhor, qual seu nome e o que esta enfrentando?" },
-  { from: "user", text: "Carlos. Trabalhei 1 ano sem registro e nao depositavam FGTS. Tenho direito?" },
-  { from: "bot", text: "Entendi, Carlos. Pode haver vinculo mesmo sem registro. Voce tinha horario fixo e chefe direto?" },
-  { from: "user", text: "Sim, das 8h as 18h, com chefe direto." },
-  { from: "bot", text: "Recebia salario todo mes? Ainda esta na empresa?" },
-  { from: "user", text: "Recebia no PIX. Sai faz 2 meses." },
-  { from: "bot", text: "Ha indicios de vinculo: registro retroativo, FGTS, ferias e 13o. Tem provas? WhatsApp, comprovantes, testemunhas?" },
+  { from: "user", text: "Olá, gostaria de falar com um advogado trabalhista." },
+  { from: "bot", text: "Oi! Me chamo Débora Borges, advogada trabalhista. Para te ajudar melhor, qual é o seu nome e o que você está enfrentando?" },
+  { from: "user", text: "Carlos. Trabalhei 1 ano sem registro e não depositavam FGTS. Tenho direito?" },
+  { from: "bot", text: "Entendi, Carlos. Pode haver vínculo mesmo sem registro. Você tinha horário fixo e chefe direto?" },
+  { from: "user", text: "Sim, das 8h às 18h, com chefe direto." },
+  { from: "bot", text: "Recebia salário todo mês? Ainda está na empresa?" },
+  { from: "user", text: "Recebia no PIX. Saí faz 2 meses." },
+  { from: "bot", text: "Há indícios de vínculo: registro retroativo, FGTS, férias e 13º. Tem provas? WhatsApp, comprovantes, testemunhas?" },
   { from: "user", text: "Tenho conversas no WhatsApp e os PIX." },
-  { from: "bot", text: "Otimo. Pra analisar com precisao, vamos fazer uma reuniao online. Prefere manha ou tarde?" },
+  { from: "bot", text: "Ótimo. Para analisar com precisão, vamos fazer uma reunião online. Prefere manhã ou tarde?" },
   { from: "user", text: "Tarde." },
-  { from: "bot", text: "Tenho terca 14h ou quarta 15h. Qual fica melhor?" },
-  { from: "user", text: "Quarta as 15h." },
+  { from: "bot", text: "Tenho terça às 14h ou quarta às 15h. Qual fica melhor?" },
+  { from: "user", text: "Quarta às 15h." },
   { from: "bot", text: "Marcado, Carlos! Quarta 15h via Google Meet. Vou te enviar o link em seguida." },
 ] as const;
 
@@ -115,7 +115,7 @@ export function TriageChatAnimation() {
       <div className="triage-phone__header">
         <span className="triage-phone__avatar">DB</span>
         <div>
-          <span className="triage-phone__name">Dra. Debora Borges</span>
+          <span className="triage-phone__name">Dra. Débora Borges</span>
           <span className="triage-phone__online">online</span>
         </div>
       </div>
