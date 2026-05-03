@@ -940,7 +940,7 @@ for (const token of [
   'src="/logos/horizontal-dark.svg"',
   'alt="Variant Media"',
   "max-w-[190px]",
-  "© 2026 Variant Media",
+  "© 2026 Variantmidia",
   "Performance juridica com diagnostico"
 ]) {
   if (!footer.includes(token)) {

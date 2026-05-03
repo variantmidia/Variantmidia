@@ -27,7 +27,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-vm-panel-line pt-6 text-[12px] text-vm-panel-muted">
-          <span>© 2026 Variant Media</span>
+          <span>© 2026 Variantmidia</span>
           <span>Performance jurídica com diagnóstico</span>
         </div>
       </div>
