@@ -8,8 +8,6 @@ import { content } from "@/lib/content";
 
 export function Hero() {
   const { hero } = content;
-  const [line3Start, ...line3Rest] = hero.title.line3.split(" ");
-  const line3End = line3Rest.join(" ");
 
   return (
     <Section
@@ -27,7 +25,7 @@ export function Hero() {
         className="pointer-events-none absolute bottom-[-28vh] right-[-18vw] z-[1] hidden h-[118vh] max-h-[1120px] w-auto select-none object-contain opacity-[0.88] grayscale contrast-[1.18] brightness-[0.92] saturate-0 drop-shadow-[0_28px_48px_rgba(22,27,31,0.22)] lg:block xl:right-[-13vw] 2xl:right-[-8vw]"
       />
 
-      <Container className="relative flex min-h-[calc(100svh-28px)] items-center pb-8 pt-28 sm:pb-10 sm:pt-32 lg:min-h-[calc(100svh-40px)] lg:-translate-x-8 lg:pb-12 lg:pt-28 xl:-translate-x-12 xl:pb-14">
+      <Container className="relative flex min-h-[calc(100svh-28px)] items-center pb-0 pt-28 sm:pb-4 sm:pt-32 lg:min-h-[calc(100svh-40px)] lg:-translate-x-8 lg:pb-12 lg:pt-28 xl:-translate-x-12 xl:pb-14">
         <div className="relative z-base w-full max-w-[820px] text-left">
           <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
             <p className="vm-eyebrow">{hero.eyebrow}</p>
@@ -36,10 +34,7 @@ export function Hero() {
           <h1 className="vm-display mt-6 max-w-[800px] text-left text-[38px] font-medium leading-[1.04] tracking-[0] max-[360px]:text-[34px] sm:mt-7 sm:text-[52px] lg:text-[70px]">
             <span className="strike">{hero.title.strike}</span>
             <span className="block">{hero.title.line2}</span>
-            <span className="block light">
-              <span className="block sm:inline">{line3Start}</span>
-              <span className="block sm:inline sm:before:content-['\00a0']">{line3End}</span>
-            </span>
+            <span className="block light whitespace-nowrap">{hero.title.line3}</span>
             <span className="block accent">{hero.title.accent}</span>
           </h1>
 
@@ -58,12 +53,12 @@ export function Hero() {
             </Link>
           </div>
 
-          <div className="relative -mx-5 mt-10 h-[300px] overflow-hidden sm:-mx-6 sm:h-[380px] lg:hidden">
+          <div className="relative -mx-5 mt-10 h-[360px] overflow-hidden sm:-mx-6 sm:h-[440px] lg:hidden">
             <img
               src="/images/estatua-justica.webp"
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-full w-full max-w-[560px] select-none object-contain object-bottom opacity-[0.88] grayscale contrast-[1.18] brightness-[0.92] saturate-0 drop-shadow-[0_24px_42px_rgba(22,27,31,0.2)]"
+              className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-full w-full max-w-[560px] origin-bottom scale-[1.35] select-none object-contain object-bottom opacity-[0.88] grayscale contrast-[1.18] brightness-[0.92] saturate-0 drop-shadow-[0_24px_42px_rgba(22,27,31,0.2)]"
             />
           </div>
         </div>

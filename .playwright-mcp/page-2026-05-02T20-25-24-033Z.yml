@@ -1,0 +1,343 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Variant Media - inicio" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "Variant Media" [ref=e5]
+      - button "Abrir menu" [ref=e6] [cursor=pointer]:
+        - img [ref=e7]
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic:
+        - img
+      - generic [ref=e11]:
+        - paragraph [ref=e13]: Performance jurídica
+        - heading "Mais marketing não resolve. se não encontrar o gargalo certo." [level=1] [ref=e14]:
+          - generic [ref=e15]: Mais marketing
+          - generic [ref=e16]: não resolve.
+          - generic [ref=e17]: se não encontrar
+          - generic [ref=e18]: o gargalo certo.
+        - paragraph [ref=e19]: A Variant Media identifica onde seu escritório está perdendo receita — na oferta, demanda ou conversão — e estrutura um processo claro para transformar oportunidades em contratos.
+        - generic [ref=e20]:
+          - link "Agendar diagnóstico" [ref=e21] [cursor=pointer]:
+            - /url: https://wa.me/5511912112227?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e....
+            - generic [ref=e22]:
+              - text: Agendar diagnóstico
+              - img [ref=e23]
+          - link "Ver operação" [ref=e25] [cursor=pointer]:
+            - /url: "#operacao"
+            - generic [ref=e26]: Ver operação
+        - generic [ref=e27]:
+          - img
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - text: "02"
+          - generic [ref=e33]: / 08
+        - generic [ref=e35]: CREDIBILIDADE
+        - generic [ref=e37]: Antes da prescrição
+      - generic [ref=e38]:
+        - heading "Não vendemos marketing por pacote. Primeiro entendemos o que está impedindo seu escritório de crescer." [level=2] [ref=e39]:
+          - text: Não vendemos marketing por pacote.
+          - emphasis [ref=e40]: Primeiro entendemos
+          - text: o que está impedindo seu escritório de crescer.
+        - paragraph [ref=e41]: Muitos escritórios não têm falta de ação. Têm demanda ruim, atendimento lento, processo comercial informal e pouca clareza sobre o que realmente gera receita. Isso não se resolve com mais post, mais clique ou mais promessa.
+      - generic [ref=e42]:
+        - article [ref=e44]:
+          - generic [ref=e46]: ↳ Princípio
+          - heading "Diagnóstico antes da prescrição" [level=3] [ref=e47]
+          - paragraph [ref=e48]: Antes de propor qualquer ação, identificamos se o problema está na oferta, na demanda ou na conversão.
+          - img [ref=e49]
+        - article [ref=e54]:
+          - generic [ref=e56]: ↳ Princípio
+          - heading "Especialização em advocacia" [level=3] [ref=e57]
+          - paragraph [ref=e58]: Entendemos as restrições do mercado jurídico, o perfil do cliente e o peso da confiança na decisão de contratar.
+          - img [ref=e59]
+        - article [ref=e64]:
+          - generic [ref=e66]: ↳ Princípio
+          - heading "Foco em faturamento" [level=3] [ref=e67]
+          - paragraph [ref=e68]: Nossa conversa não gira em torno de métrica de vaidade. Gira em torno de previsibilidade, qualificação e receita.
+          - img [ref=e69]
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - text: "03"
+          - generic [ref=e81]: / 08
+        - generic [ref=e83]: DOR
+        - generic [ref=e85]: Onde a receita vaza
+      - generic [ref=e86]:
+        - heading "Quando o escritório cresce no improviso, a receita fica instável." [level=2] [ref=e87]
+        - paragraph [ref=e88]: O problema quase nunca é apenas "falta de marketing". O problema é não saber de onde o cliente vem, quanto tempo o lead espera, onde a conversa trava e por que alguns meses funcionam e outros não.
+      - list [ref=e89]:
+        - listitem [ref=e90]:
+          - generic [ref=e91]: "01"
+          - generic [ref=e92]:
+            - generic [ref=e93]:
+              - heading "Dependência de indicação" [level=3] [ref=e94]
+              - generic [ref=e95]: "[RECORRENTE]"
+            - paragraph [ref=e96]: Se uma ou duas fontes param de indicar, o faturamento sente na hora.
+        - listitem [ref=e97]:
+          - generic [ref=e98]: "02"
+          - generic [ref=e99]:
+            - generic [ref=e100]:
+              - heading "Lead que chega e se perde" [level=3] [ref=e101]
+              - generic [ref=e102]: "[CRÍTICO]"
+            - paragraph [ref=e103]: A pessoa entra em contato, espera, esfria e fecha com quem respondeu primeiro.
+        - listitem [ref=e104]:
+          - generic [ref=e105]: "03"
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - heading "Curioso demais, cliente de menos" [level=3] [ref=e108]
+              - generic [ref=e109]: "[COMUM]"
+            - paragraph [ref=e110]: O escritório perde tempo com quem não tem fit jurídico ou não está pronto para contratar.
+        - listitem [ref=e111]:
+          - generic [ref=e112]: "04"
+          - generic [ref=e113]:
+            - generic [ref=e114]:
+              - heading "Comercial sem método" [level=3] [ref=e115]
+              - generic [ref=e116]: "[SINTOMA]"
+            - paragraph [ref=e117]: Cada sócio vende de um jeito, ninguém sabe o que funciona e o resultado depende de talento individual.
+      - paragraph [ref=e119]:
+        - generic [ref=e122]: Enquanto isso não fica visível,
+        - text: qualquer investimento parece tentativa e erro.
+    - generic [ref=e124]:
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - text: "04"
+          - generic [ref=e127]: / 08
+        - generic [ref=e129]: OPERAÇÃO
+        - generic [ref=e131]: Método e bastidor no mesmo fluxo
+      - generic [ref=e132]:
+        - generic [ref=e133]:
+          - paragraph [ref=e134]: Método
+          - 'heading "Toda perda de receita passa por três pontos: oferta, demanda ou conversão." [level=2] [ref=e135]'
+        - paragraph [ref=e136]: Antes de aumentar investimento, o escritório precisa descobrir onde está vazando receita. O diagnóstico mostra onde está o gargalo. A estratégia vem depois.
+      - generic [ref=e138]:
+        - article [ref=e139]:
+          - text: "01"
+          - heading "Oferta" [level=3] [ref=e140]
+          - paragraph [ref=e142]: Sua proposta está clara, valorizada e alinhada ao tipo de cliente que você quer atrair?
+        - article [ref=e143]:
+          - text: "02"
+          - heading "Demanda" [level=3] [ref=e144]
+          - paragraph [ref=e146]: O escritório está atraindo as pessoas certas, no momento certo, pelos canais certos?
+        - article [ref=e147]:
+          - text: "03"
+          - heading "Conversão" [level=3] [ref=e148]
+          - paragraph [ref=e150]: Os contatos estão sendo atendidos, qualificados e conduzidos com velocidade e método?
+      - generic [ref=e151]:
+        - article [ref=e152]:
+          - generic [ref=e153]:
+            - generic [ref=e154]: "01"
+            - generic [ref=e155]:
+              - heading "Mais previsibilidade" [level=3] [ref=e156]
+              - paragraph [ref=e157]: Você para de começar todo mês do zero.
+            - generic:
+              - img:
+                - generic: Jan
+                - generic: Fev
+                - generic: Mar
+                - generic: Abr
+                - generic: Mai
+                - generic: Jun
+                - generic: Jul
+                - generic: Ago
+        - article [ref=e158]:
+          - generic [ref=e159]:
+            - generic [ref=e160]: "02"
+            - generic [ref=e161]:
+              - heading "Mais qualificação" [level=3] [ref=e162]
+              - paragraph [ref=e163]: Chega menos curioso e mais oportunidade real.
+        - article [ref=e164]:
+          - generic [ref=e165]:
+            - generic [ref=e166]: "03"
+            - generic [ref=e167]:
+              - heading "Mais velocidade" [level=3] [ref=e168]
+              - paragraph [ref=e170]: O lead recebe resposta no timing em que ainda existe intenção de contratar.
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Lead
+                - generic:
+                  - generic: Resposta
+                - generic:
+                  - generic: Agenda
+        - article [ref=e171]:
+          - generic [ref=e172]:
+            - generic [ref=e173]: "04"
+            - generic [ref=e174]:
+              - heading "Mais controle" [level=3] [ref=e175]
+              - paragraph [ref=e176]: Fica mais claro o que está funcionando, o que está travando e onde agir.
+            - generic:
+              - generic:
+                - generic: Topo
+                - generic: "100"
+              - generic:
+                - generic: Meio
+                - generic: "62"
+              - generic:
+                - generic: Base
+                - generic: "28"
+        - article [ref=e177]:
+          - generic [ref=e178]:
+            - generic [ref=e179]: "05"
+            - generic [ref=e180]:
+              - heading "Mais escala" [level=3] [ref=e181]
+              - paragraph [ref=e182]: O crescimento deixa de depender só do sócio estar pessoalmente em tudo.
+            - generic:
+              - img
+    - generic [ref=e185]:
+      - generic [ref=e186]:
+        - generic [ref=e187]:
+          - text: "05"
+          - generic [ref=e188]: / 08
+        - generic [ref=e190]: DIFERENCIAIS
+        - generic [ref=e192]: Por que nos diferenciamos
+      - generic [ref=e193]:
+        - heading "Por que isso é diferente de contratar uma agência genérica." [level=2] [ref=e194]:
+          - text: Por que isso é diferente de contratar uma
+          - emphasis [ref=e195]: agência genérica
+          - text: .
+        - paragraph [ref=e196]: Estratégia jurídica precisa de diagnóstico, leitura comercial e tecnologia aplicada ao ponto certo da operação.
+      - list [ref=e198]:
+        - listitem [ref=e199]:
+          - generic [ref=e200]:
+            - generic [ref=e201]: "01"
+            - heading "Especialização jurídica" [level=3] [ref=e202]
+          - paragraph [ref=e203]: A estratégia parte da realidade de escritórios de advocacia. Isso muda linguagem, qualificação, atendimento e processo comercial.
+        - listitem [ref=e204]:
+          - generic [ref=e205]:
+            - generic [ref=e206]: "02"
+            - heading "Diagnóstico antes de executar" [level=3] [ref=e207]
+          - paragraph [ref=e208]: Não empurramos serviço. Primeiro entendemos onde está o problema.
+        - listitem [ref=e209]:
+          - generic [ref=e210]:
+            - generic [ref=e211]: "03"
+            - heading "Visão de ponta a ponta" [level=3] [ref=e212]
+          - paragraph [ref=e213]: Não olhamos só para anúncios ou para atendimento. Olhamos para a jornada inteira.
+        - listitem [ref=e214]:
+          - generic [ref=e215]:
+            - generic [ref=e216]: "04"
+            - heading "Acompanhamento próximo" [level=3] [ref=e217]
+          - paragraph [ref=e218]: O projeto precisa ter leitura real da operação, conversa direta e decisão rápida. Não apenas relatório bonito.
+        - listitem [ref=e219]:
+          - generic [ref=e220]:
+            - generic [ref=e221]: "05"
+            - heading "Tecnologia com critério" [level=3] [ref=e222]
+          - paragraph [ref=e223]: Automação entra para corrigir gargalo real, não para vender modernidade.
+        - listitem [ref=e224]:
+          - generic [ref=e225]:
+            - generic [ref=e226]: "06"
+            - heading "Conversa de negócio" [level=3] [ref=e227]
+          - paragraph [ref=e228]: Nosso parâmetro é faturamento, previsibilidade e conversão. Não vaidade digital.
+    - generic [ref=e231]:
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - text: "06"
+          - generic [ref=e234]: / 08
+        - generic [ref=e236]: OBJEÇÕES
+        - generic [ref=e238]: Antes de confiar
+      - heading "Antes de contratar, todo escritório precisa confiar em três coisas." [level=2] [ref=e239]
+      - generic [ref=e240]:
+        - article [ref=e241]:
+          - generic [ref=e242]:
+            - generic [ref=e243]: C.
+            - paragraph [ref=e244]: “Já tentei marketing antes e não funcionou.”
+          - generic [ref=e245]:
+            - generic [ref=e246]: VM.
+            - paragraph [ref=e247]: Faz sentido. Em muitos casos, o problema não era falta de ação. Era falta de diagnóstico. Quando ninguém sabe por que algo falhou, a tendência é repetir o mesmo erro com outro fornecedor.
+        - article [ref=e248]:
+          - generic [ref=e249]:
+            - generic [ref=e250]: C.
+            - paragraph [ref=e251]: “Não sei se isso funciona para o meu nicho jurídico.”
+          - generic [ref=e252]:
+            - generic [ref=e253]: VM.
+            - paragraph [ref=e254]: Não existe estratégia jurídica de copiar e colar. A jornada de compra muda conforme a área, o ticket, a urgência e o tipo de cliente que o escritório quer atrair.
+        - article [ref=e255]:
+          - generic [ref=e256]:
+            - generic [ref=e257]: C.
+            - paragraph [ref=e258]: “Não quero automação que pareça robô para os meus clientes.”
+          - generic [ref=e259]:
+            - generic [ref=e260]: VM.
+            - paragraph [ref=e261]: A tecnologia precisa proteger a experiência, não empobrecer a relação. O objetivo é responder melhor, qualificar melhor e organizar melhor o atendimento.
+      - complementary [ref=e262]:
+        - img [ref=e264]
+        - heading "Espaço reservado para depoimentos validados" [level=3] [ref=e265]
+        - paragraph [ref=e266]: Cases reais e feedbacks de clientes entram aqui apenas quando houver lastro confirmado. Sem inflar números.
+    - generic [ref=e268]:
+      - generic [ref=e269]:
+        - generic [ref=e270]:
+          - text: "07"
+          - generic [ref=e271]: / 08
+        - generic [ref=e273]: FAQ
+        - generic [ref=e275]: Perguntas frequentes
+      - generic [ref=e276]:
+        - heading "Perguntas frequentes" [level=2] [ref=e278]
+        - generic [ref=e279]:
+          - group [ref=e280]:
+            - generic "Vocês trabalham com qualquer área do Direito?" [ref=e281] [cursor=pointer]:
+              - generic [ref=e282]:
+                - heading "Vocês trabalham com qualquer área do Direito?" [level=3] [ref=e283]
+                - generic [ref=e284]: ...
+              - img [ref=e286]
+          - group [ref=e287]:
+            - generic "O que acontece no diagnóstico?" [ref=e288] [cursor=pointer]:
+              - generic [ref=e289]:
+                - heading "O que acontece no diagnóstico?" [level=3] [ref=e290]
+                - generic [ref=e291]: ...
+              - img [ref=e293]
+          - group [ref=e294]:
+            - generic "Isso substitui o marketing que já fazemos?" [ref=e295] [cursor=pointer]:
+              - generic [ref=e296]:
+                - heading "Isso substitui o marketing que já fazemos?" [level=3] [ref=e297]
+                - generic [ref=e298]: ...
+              - img [ref=e300]
+          - group [ref=e301]:
+            - generic "Em quanto tempo começa a dar resultado?" [ref=e302] [cursor=pointer]:
+              - generic [ref=e303]:
+                - heading "Em quanto tempo começa a dar resultado?" [level=3] [ref=e304]
+                - generic [ref=e305]: ...
+              - img [ref=e307]
+          - group [ref=e308]:
+            - generic "Quem acompanha o projeto?" [ref=e309] [cursor=pointer]:
+              - generic [ref=e310]:
+                - heading "Quem acompanha o projeto?" [level=3] [ref=e311]
+                - generic [ref=e312]: ...
+              - img [ref=e314]
+    - generic [ref=e316]:
+      - generic [ref=e317]:
+        - generic [ref=e318]:
+          - text: "08"
+          - generic [ref=e319]: / 08
+        - generic [ref=e321]: Próximo passo
+        - generic [ref=e323]: Diagnóstico antes da estratégia
+      - generic [ref=e324]:
+        - generic [ref=e325]:
+          - heading "O próximo passo não é aumentar o ruído. É diagnosticar o gargalo certo." [level=2] [ref=e326]
+          - paragraph [ref=e327]: Se hoje você sente que a receita depende demais de indicação, que o atendimento perde lead, ou que o comercial ainda funciona mais no improviso do que no método, vale começar pelo diagnóstico.
+        - generic [ref=e328]:
+          - link "Agendar diagnóstico" [ref=e329] [cursor=pointer]:
+            - /url: https://wa.me/5511912112227?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e....
+            - generic [ref=e330]:
+              - text: Agendar diagnóstico
+              - img [ref=e331]
+          - link "Falar com a equipe" [ref=e333] [cursor=pointer]:
+            - /url: https://wa.me/5511912112227?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e....
+            - generic [ref=e334]: Falar com a equipe
+      - paragraph [ref=e335]: Conversa objetiva. Sem pacote empurrado. Sem promessa fácil.
+  - contentinfo [ref=e336]:
+    - generic [ref=e337]:
+      - generic [ref=e338]:
+        - generic [ref=e339]:
+          - link "Variant Media - inicio" [ref=e340] [cursor=pointer]:
+            - /url: /
+            - img "Variant Media" [ref=e341]
+          - paragraph [ref=e342]: Assessoria de performance juridica. Diagnostico, metodo e tecnologia aplicada a conversao.
+        - generic [ref=e343]:
+          - paragraph [ref=e344]: Especializada em escritorios de advocacia.
+          - paragraph [ref=e345]: Oferta, demanda e conversao com criterio operacional.
+      - generic [ref=e346]:
+        - generic [ref=e347]: © 2026 Variant Media
+        - generic [ref=e348]: Performance juridica com diagnostico
+  - button "Open Next.js Dev Tools" [ref=e354] [cursor=pointer]:
+    - img [ref=e355]

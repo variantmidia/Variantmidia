@@ -66,6 +66,7 @@ export function Credibility() {
                   title={card.title}
                   body={card.body}
                   Icon={icons[index]}
+                  showConnector={index < credibility.cards.length - 1}
                 />
               </div>
             ))}

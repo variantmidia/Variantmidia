@@ -27,7 +27,7 @@ export function FinalCTA() {
 
           <div className="flex flex-col items-start gap-3 sm:flex-row lg:flex-col lg:items-stretch">
             <Link className="inline-flex" href={finalCTA.cta.primary.href}>
-              <Button size="lg" variant="cyan" withArrow>
+              <Button size="lg" variant="cyan" withArrow className="vm-cta-breathe">
                 {finalCTA.cta.primary.label}
               </Button>
             </Link>

@@ -8,12 +8,28 @@ import { Section } from "@/components/landing/Section";
 import { SectionRule } from "@/components/landing/SectionRule";
 import { content } from "@/lib/content";
 import { useScrollProgress } from "@/lib/hooks/useScrollProgress";
+import {
+  BriefcaseBusiness,
+  Gauge,
+  Handshake,
+  ScanSearch,
+  ShieldCheck,
+  Waypoints
+} from "lucide-react";
 
 export function Differentials() {
   const { differentials } = content;
   const { ref, progress } = useScrollProgress<HTMLDivElement>();
 
   const sides = ["left", "right", "left", "right", "left", "right"] as const;
+  const icons = [
+    ShieldCheck,
+    ScanSearch,
+    Waypoints,
+    Handshake,
+    Gauge,
+    BriefcaseBusiness
+  ] as const;
 
   return (
     <Section
@@ -52,6 +68,11 @@ export function Differentials() {
               data-scroll-line
               style={{ "--scroll-progress": progress } as CSSProperties}
             />
+            <span
+              aria-hidden="true"
+              className="differentials-scroll-arrow hidden lg:block"
+              style={{ "--scroll-progress": progress } as CSSProperties}
+            />
 
             <ol className="relative z-10 grid" role="list">
               {differentials.items.map((item, index) => (
@@ -61,6 +82,7 @@ export function Differentials() {
                   title={item.title}
                   body={item.body}
                   side={sides[index]}
+                  Icon={icons[index]}
                 />
               ))}
             </ol>

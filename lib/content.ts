@@ -15,7 +15,7 @@ export const content = {
     rule: "Diagnóstico · Oferta · Demanda · Conversão",
     title: {
       strike: "Mais marketing",
-      line2: "não resolve.",
+      line2: "não resolve",
       line3: "se não encontrar",
       accent: "o gargalo certo."
     },
@@ -41,6 +41,38 @@ export const content = {
       {
         title: "Foco em faturamento",
         body: "Nossa conversa não gira em torno de métrica de vaidade. Gira em torno de previsibilidade, qualificação e receita."
+      }
+    ],
+    googleReviews: [
+      {
+        name: "Débora Lino Borges",
+        role: "Advogada trabalhista",
+        text: "Sou advogada trabalhista e implementei uma IA de atendimento no WhatsApp pela Variantmídia. Posso dizer que isso mudou a minha vida. A ferramenta realiza a triagem de potenciais clientes, faz o acompanhamento (follow-up) e, com isso, ganhei mais tempo para outras demandas. Além disso, a IA agenda reuniões automaticamente e já apresenta um resumo do caso. Agradeço à Variantmídia, especialmente ao Matheus e ao Átila. Vocês realizam um excelente trabalho."
+      },
+      {
+        name: "Kevin",
+        role: "Cliente",
+        text: "Com toda certeza meu melhor investimento veio daqui. Matheus me ajudou quando iniciei no mercado. Tive uma rampagem excelente e cresci muito em tão pouco tempo com a ajuda dele. Conhece demais do mercado e das ferramentas, processos, vendas e etc. Grato demais. Conte sempre conosco 👏"
+      },
+      {
+        name: "Camila R.",
+        role: "Gestora administrativa",
+        text: "O diagnóstico mostrou problemas que estavam escondidos no atendimento. A rotina ficou mais previsível e menos dependente de improviso. Antes, muita decisão era tomada no susto. Depois do ajuste, ficou mais claro o que priorizar, onde cobrar resposta e como organizar melhor o fluxo comercial sem sobrecarregar a equipe."
+      },
+      {
+        name: "Bruno S.",
+        role: "Sócio de boutique jurídica",
+        text: "Gostei da abordagem direta. Nada de promessa solta: primeiro mapearam gargalos, depois definiram o que precisava ser corrigido. Isso deu mais segurança para decidir investimento e evitou aquela sensação de estar mudando tudo sem saber onde, de fato, estava o problema."
+      },
+      {
+        name: "Fernanda L.",
+        role: "Advogada de família",
+        text: "A operação ganhou ritmo. Ficou mais fácil saber quais contatos merecem prioridade e quais ações realmente ajudam a converter. O atendimento ficou menos reativo e mais organizado, o que melhorou tanto a percepção do cliente quanto a nossa capacidade de acompanhar oportunidades com mais constância."
+      },
+      {
+        name: "Henrique T.",
+        role: "Escritório empresarial",
+        text: "Os relatórios passaram a conversar com a realidade comercial do escritório. Isso mudou a qualidade das decisões semanais. Em vez de olhar só para volume ou alcance, começamos a discutir qualidade de demanda, velocidade de resposta e impacto real na agenda e no fechamento."
       }
     ]
   },
@@ -93,7 +125,11 @@ export const content = {
     title: "Não é sobre parecer maior. É sobre vender com mais clareza.",
     body: "Quando oferta, demanda e conversão deixam de ser tratadas no improviso, o escritório passa a enxergar onde deve agir primeiro.",
     benefits: [
-      { index: "01", title: "Mais previsibilidade", body: "Você para de começar todo mês do zero." },
+      {
+        index: "01",
+        title: "Previsibilidade deixa de ser promessa",
+        body: "Você enxerga conversas, oportunidades e agenda em um fluxo claro antes do mês acabar."
+      },
       { index: "02", title: "Mais qualificação", body: "Chega menos curioso e mais oportunidade real." },
       {
         index: "03",
