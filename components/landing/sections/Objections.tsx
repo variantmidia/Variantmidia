@@ -18,7 +18,7 @@ export function Objections() {
   return (
     <Section padding="tight" className="overflow-x-hidden border-y border-vm-line">
       <Container>
-        <SectionRule index="06" total="08" label="OBJEÇÕES" caption="Antes de confiar" />
+        <SectionRule index="06" total="08" label="" caption="Antes de confiar" />
 
         <h2 className="vm-h2 mt-4 max-w-[28ch]">
           {titleBefore}
@@ -119,11 +119,7 @@ function ObjectionCard({
         </span>
       ) : null}
 
-      <span className="relative z-[1] font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-vm-cyan-deep">
-        Objeção
-      </span>
-
-      <p className="relative z-[1] mt-4 font-serif text-[clamp(15px,1.4vw,19px)] font-light italic leading-[1.4] text-vm-ink">
+      <p className="relative z-[1] font-serif text-[clamp(15px,1.4vw,19px)] font-light italic leading-[1.4] text-vm-ink">
         &ldquo;{objection}&rdquo;
       </p>
 
