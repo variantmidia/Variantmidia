@@ -20,6 +20,10 @@ export function Objections() {
       <Container>
         <SectionRule index="06" total="08" label="" caption="Antes de confiar" />
 
+        <p className="font-mono text-[10.5px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-vm-cyan-deep">
+          Dúvidas comuns
+        </p>
+
         <h2 className="vm-h2 mt-4 max-w-[28ch]">
           {titleBefore}
           <span className="font-serif font-normal italic">três coisas</span>
@@ -119,7 +123,11 @@ function ObjectionCard({
         </span>
       ) : null}
 
-      <p className="relative z-[1] font-serif text-[clamp(15px,1.4vw,19px)] font-light italic leading-[1.4] text-vm-ink">
+      <span className="relative z-[1] font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-vm-cyan-deep">
+        Dúvidas comuns
+      </span>
+
+      <p className="relative z-[1] mt-4 font-serif text-[clamp(15px,1.4vw,19px)] font-light italic leading-[1.4] text-vm-ink">
         &ldquo;{objection}&rdquo;
       </p>
 
