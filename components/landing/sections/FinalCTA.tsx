@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AtSign } from "lucide-react";
 
 import { Button } from "@/components/landing/Button";
 import { Container } from "@/components/landing/Container";
@@ -36,6 +37,20 @@ export function FinalCTA() {
                 {finalCTA.cta.secondary.label}
               </Button>
             </Link>
+            <p className="mt-2 inline-flex items-center gap-2 text-[13.5px] leading-[1.5] text-vm-muted lg:mt-1">
+              <AtSign className="size-4 shrink-0 text-vm-cyan-deep" strokeWidth={1.9} />
+              <span>
+                Siga-nos no Instagram:{" "}
+              <Link
+                href="https://instagram.com/variantmidia"
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-vm-cyan-deep transition-colors duration-200 ease-vm-out hover:text-vm-cyan"
+              >
+                @variantmidia
+              </Link>
+              </span>
+            </p>
           </div>
         </div>
 
