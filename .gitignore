@@ -31,3 +31,6 @@ Thumbs.db
 .turbo/
 .vercel/
 coverage/
+
+# Claude Code config
+.claude/
