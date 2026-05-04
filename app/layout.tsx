@@ -25,14 +25,14 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Variant Media | Assessoria de performance jurídica",
+  title: "Variantmidia | Assessoria de performance jurídica",
   description:
-    "A Variant Media ajuda escritórios de advocacia a diagnosticar gargalos de oferta, demanda e conversão para atrair, qualificar e converter melhores oportunidades.",
+    "A Variantmidia ajuda escritórios de advocacia a diagnosticar gargalos de oferta, demanda e conversão para atrair, qualificar e converter melhores oportunidades.",
   openGraph: {
-    title: "Variant Media | Assessoria de performance jurídica",
+    title: "Variantmidia | Assessoria de performance jurídica",
     description:
       "Diagnóstico de gargalos de oferta, demanda e conversão para escritórios de advocacia.",
-    siteName: "Variant Media",
+    siteName: "Variantmidia",
     locale: "pt_BR",
     type: "website"
   }

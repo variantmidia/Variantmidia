@@ -6,10 +6,10 @@ export function Footer() {
       <div className="mx-auto w-full max-w-[1240px] px-5 py-16 sm:px-6 lg:px-8 xl:px-12">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr] md:items-start">
           <div>
-            <Link href="/" aria-label="Variant Media - início" className="mb-4 inline-flex">
+            <Link href="/" aria-label="Variantmidia - início" className="mb-4 inline-flex">
               <img
                 src="/logos/horizontal-dark.svg"
-                alt="Variant Media"
+                alt="Variantmidia"
                 width="1899"
                 height="336"
                 className="h-8 w-auto max-w-[190px]"

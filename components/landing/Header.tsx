@@ -48,11 +48,11 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-[68px] w-full max-w-[min(100%,1680px)] items-center justify-between gap-5 px-5 sm:px-6 lg:px-8 xl:px-10">
-        <Link href="/" aria-label="Variant Media - início" className="flex min-w-0 items-center">
+        <Link href="/" aria-label="Variantmidia - início" className="flex min-w-0 items-center">
           {onDarkSection ? (
             <img
               src="/logos/horizontal-dark.svg"
-              alt="Variant Media"
+              alt="Variantmidia"
               width="1899"
               height="336"
               className="h-8 w-auto max-w-[168px] sm:max-w-[190px]"
@@ -60,7 +60,7 @@ export function Header() {
           ) : (
             <img
               src="/logos/horizontal-light.svg"
-              alt="Variant Media"
+              alt="Variantmidia"
               width="1899"
               height="336"
               className="h-8 w-auto max-w-[168px] sm:max-w-[190px]"

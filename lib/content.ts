@@ -19,7 +19,7 @@ export const content = {
       line3: "se não encontrar",
       accent: "o gargalo certo."
     },
-    sub: "A Variant Media identifica onde seu escritório está perdendo receita — na oferta, demanda ou conversão — e estrutura um processo claro para transformar oportunidades em contratos.",
+    sub: "A Variantmidia identifica onde seu escritório está perdendo receita — na oferta, demanda ou conversão — e estrutura um processo claro para transformar oportunidades em contratos.",
     cta: {
       primary: { label: "Agendar diagnóstico", href: whatsappHref },
       secondary: { label: "Ver operação", href: "#operacao" }
