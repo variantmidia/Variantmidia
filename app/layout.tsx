@@ -25,11 +25,11 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Variantmidia | Assessoria de performance jurídica",
+  title: "Variantmidia | Gestor de jornada de compra",
   description:
     "A Variantmidia ajuda escritórios de advocacia a diagnosticar gargalos de oferta, demanda e conversão para atrair, qualificar e converter melhores oportunidades.",
   openGraph: {
-    title: "Variantmidia | Assessoria de performance jurídica",
+    title: "Variantmidia | Gestor de jornada de compra",
     description:
       "Diagnóstico de gargalos de oferta, demanda e conversão para escritórios de advocacia.",
     siteName: "Variantmidia",
