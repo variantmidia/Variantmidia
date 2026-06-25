@@ -8,36 +8,36 @@ const diagnosis = [
     label: "01",
     title: "Falta de leitura do funil",
     body:
-      "Hoje o escritorio ainda nao enxerga com clareza de onde o contato veio, quantos leads sao realmente qualificados e quantos viram cliente."
+      "Hoje o escritório ainda não enxerga com clareza de onde o contato veio, quantos leads são realmente qualificados e quantos viram cliente."
   },
   {
     label: "02",
     title: "Atendimento e triagem manuais",
     body:
-      "Parte da perda acontece entre o primeiro contato e a reuniao: demora de resposta, curiosos demais, pouco criterio de qualificacao e follow-up irregular."
+      "Parte da perda acontece entre o primeiro contato e a reunião: demora de resposta, curiosos demais, pouco critério de qualificação e follow-up irregular."
   },
   {
     label: "03",
-    title: "Crescimento sem processo previsivel",
+    title: "Crescimento sem processo previsível",
     body:
-      "O nome do escritorio ajuda, mas ainda falta um modelo operacional que transforme demanda em agenda e agenda em contrato com mais consistencia."
+      "O nome do escritório ajuda, mas ainda falta um modelo operacional que transforme demanda em agenda e agenda em contrato com mais consistência."
   }
 ] as const;
 
 const deliverables = [
-  "Diagnostico inicial da operacao comercial e de captacao.",
-  "Definicao da tese principal de aquisicao para o escritorio, priorizando canais com maior intencao de compra.",
-  "Estruturacao do funil de acompanhamento: lead, qualificado, reuniao, proposta e fechamento.",
-  "Implantacao ou ajuste de CRM para leitura real do que entra, do que trava e do que fecha.",
-  "Camada de atendimento e pre-triagem com IA no WhatsApp quando fizer sentido para o volume e a rotina do escritorio.",
-  "Ritual de acompanhamento e relatorio para que a decisao nao fique no escuro nem dependa de promessa de fornecedor."
+  "Diagnóstico inicial da operação comercial e de captação.",
+  "Definição da tese principal de aquisição para o escritório, priorizando canais com maior intenção de compra.",
+  "Estruturação do funil de acompanhamento: lead, qualificado, reunião, proposta e fechamento.",
+  "Implantação ou ajuste de CRM para leitura real do que entra, do que trava e do que fecha.",
+  "Camada de atendimento e pré-triagem com IA no WhatsApp quando fizer sentido para o volume e a rotina do escritório.",
+  "Ritual de acompanhamento e relatório para que a decisão não fique no escuro nem dependa de promessa de fornecedor."
 ] as const;
 
 const responsibilities = [
-  "Definir um responsavel interno para centralizar retorno, aprovacoes e prioridades.",
-  "Compartilhar feedback sobre lead qualificado, reunioes realizadas e contratos fechados.",
-  "Reservar janela minima para materiais, gravacoes ou ajustes de atendimento quando o plano exigir.",
-  "Alinhar rapidamente pontos operacionais que travem a execucao, para que o projeto nao repita o erro da agencia anterior."
+  "Definir um responsável interno para centralizar retorno, aprovações e prioridades.",
+  "Compartilhar feedback sobre lead qualificado, reuniões realizadas e contratos fechados.",
+  "Reservar janela mínima para materiais, gravações ou ajustes de atendimento quando o plano exigir.",
+  "Alinhar rapidamente pontos operacionais que travem a execução, para que o projeto não repita o erro da agência anterior."
 ] as const;
 
 const roadmap = [
@@ -45,23 +45,23 @@ const roadmap = [
     phase: "Fase 1",
     title: "Clareza e estrutura",
     body:
-      "Mapeamento do funil atual, definicao de criterio de lead qualificado, desenho operacional e prioridades de curto prazo."
+      "Mapeamento do funil atual, definição de critério de lead qualificado, desenho operacional e prioridades de curto prazo."
   },
   {
     phase: "Fase 2",
-    title: "Ativacao e leitura",
+    title: "Ativação e leitura",
     body:
-      "Entrada do canal principal, rotina de acompanhamento, criterio de resposta e organizacao do que precisa ser medido toda semana."
+      "Entrada do canal principal, rotina de acompanhamento, critério de resposta e organização do que precisa ser medido toda semana."
   },
   {
     phase: "Fase 3",
-    title: "Conversao e velocidade",
+    title: "Conversão e velocidade",
     body:
-      "Ajustes de atendimento, triagem, follow-up e operacao comercial para aumentar a taxa de reuniao e de contrato."
+      "Ajustes de atendimento, triagem, follow-up e operação comercial para aumentar a taxa de reunião e de contrato."
   },
   {
     phase: "Fase 4",
-    title: "Escala com criterio",
+    title: "Escala com critério",
     body:
       "Expandir o que provar resultado, sem abrir novos vazamentos nem inflar investimento antes da hora."
   }
@@ -69,49 +69,49 @@ const roadmap = [
 
 const references = [
   {
-    title: "Dra. Debora Borges",
+    title: "Dra. Débora Borges",
     kind: "Prova social validada",
     href: "",
     body:
-      '"Sou advogada trabalhista e implementei uma IA de atendimento no WhatsApp pela Variantmidia... a ferramenta realiza triagem, follow-up, agenda reunioes automaticamente e me devolveu tempo para outras demandas."',
+      '"Sou advogada trabalhista e implementei uma IA de atendimento no WhatsApp pela Variantmidia... a ferramenta realiza triagem, follow-up, agenda reuniões automaticamente e me devolveu tempo para outras demandas."',
     note: "Case de atendimento, triagem e agendamento via WhatsApp."
   },
   {
-    title: "Wagner Valadao Advocacia",
-    kind: "Referencia de execucao",
+    title: "Wagner Valadão Advocacia",
+    kind: "Referência de execução",
     href: "https://advogadowagnervaladao.com.br/",
     body:
-      "Site trabalhista e previdenciario com prova social, CTA direto para WhatsApp, areas de atuacao claras e estrutura pensada para conversao.",
-    note: "Referencia publica de posicionamento e captacao."
+      "Site trabalhista e previdenciário com prova social, CTA direto para WhatsApp, áreas de atuação claras e estrutura pensada para conversão.",
+    note: "Referência pública de posicionamento e captação."
   },
   {
     title: "Gioia & Associados",
-    kind: "Referencia de autoridade",
+    kind: "Referência de autoridade",
     href: "https://www.gioiaeassociados.com.br/",
     body:
-      "Presenca institucional mais robusta, com areas de atuacao, equipe, historia, depoimentos e argumentacao de confianca bem organizada.",
-    note: "Referencia publica de credibilidade e estrutura."
+      "Presença institucional mais robusta, com áreas de atuação, equipe, história, depoimentos e argumentação de confiança bem organizada.",
+    note: "Referência pública de credibilidade e estrutura."
   },
   {
     title: "Leandro Azevedo Advogado",
-    kind: "Referencia de urgencia e WhatsApp",
+    kind: "Referência de urgência e WhatsApp",
     href: "https://leandroazevedoadvogado.com/",
     body:
-      "Landing orientada a resposta rapida, CTA forte para WhatsApp e uso de reviews como gatilho de confianca antes do contato.",
-    note: "Referencia publica de conversao e urgencia."
+      "Landing orientada a resposta rápida, CTA forte para WhatsApp e uso de reviews como gatilho de confiança antes do contato.",
+    note: "Referência pública de conversão e urgência."
   }
 ] as const;
 
 const investment = [
-  { label: "Mensalidade de operacao", value: "R$ 3.000 / mes" },
-  { label: "Verba recomendada de midia", value: "R$ 1.200 a R$ 1.500 / mes" },
-  { label: "Investimento inicial estimado", value: "R$ 4.200 a R$ 4.500 / mes" }
+  { label: "Mensalidade de operação", value: "R$ 3.000 / mês" },
+  { label: "Verba recomendada de mídia", value: "R$ 1.200 a R$ 1.500 / mês" },
+  { label: "Investimento inicial estimado", value: "R$ 4.200 a R$ 4.500 / mês" }
 ] as const;
 
 export const metadata: Metadata = {
   title: "Proposta | Saraiva & Amaral Sociedade de Advogados",
   description:
-    "Proposta executiva da Variantmidia para Saraiva & Amaral Sociedade de Advogados, baseada na reuniao de 25/06/2026."
+    "Proposta executiva da Variantmidia para Saraiva & Amaral Sociedade de Advogados, baseada na reunião de 25/06/2026."
 };
 
 function SectionRule({
@@ -150,7 +150,7 @@ export default function SaraivaAmaralProposalPage() {
       <main className="min-h-screen bg-vm-bg text-vm-graphite">
         <div className="sticky top-0 z-[60] border-b border-vm-line-cool/80 bg-vm-bg-alt/88 backdrop-blur-2xl">
           <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between gap-5 px-5 py-4 sm:px-6 lg:px-8 xl:px-12">
-            <Link href="/" aria-label="Variantmidia - inicio" className="inline-flex items-center">
+            <Link href="/" aria-label="Variantmidia - início" className="inline-flex items-center">
               <img
                 src="/logos/horizontal-light.svg"
                 alt="Variantmidia"
@@ -165,7 +165,7 @@ export default function SaraivaAmaralProposalPage() {
                 Proposta executiva
               </span>
               <span className="rounded-pill bg-vm-cyan/12 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em] text-vm-cyan-deep">
-                Retorno combinado ate 29/06
+                Retorno combinado até 29/06
               </span>
             </div>
           </div>
@@ -179,22 +179,22 @@ export default function SaraivaAmaralProposalPage() {
                   Saraiva & Amaral Sociedade de Advogados
                 </span>
                 <span className="rounded-pill bg-vm-cyan/12 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em] text-vm-cyan-deep">
-                  Reuniao-base: 25/06/2026
+                  Reunião-base: 25/06/2026
                 </span>
               </div>
 
-              <p className="vm-eyebrow">Descricao comercial com escopo, responsabilidade e investimento</p>
+              <p className="vm-eyebrow">Descrição comercial com escopo, responsabilidade e investimento</p>
               <h1 className="vm-display mt-6 max-w-[10ch]">
-                O problema nao e captar mais.
+                O problema não é captar mais.
                 <br />
                 <em className="font-serif font-light italic text-vm-cyan-deep">
-                  E converter com mais criterio.
+                  É converter com mais critério.
                 </em>
               </h1>
               <p className="vm-lead mt-8 max-w-[62ch] text-vm-muted">
-                Esta proposta foi montada com base no que voces pediram na reuniao: um material claro, escrito,
-                que mostre exatamente o que entra, o que o escritorio precisa sustentar do lado de dentro e
-                como o investimento se divide entre operacao e midia.
+                Esta proposta foi montada com base no que vocês pediram na reunião: um material claro, escrito,
+                que mostre exatamente o que entra, o que o escritório precisa sustentar do lado de dentro e
+                como o investimento se divide entre operação e mídia.
               </p>
             </div>
 
@@ -205,7 +205,7 @@ export default function SaraivaAmaralProposalPage() {
                     Documento VM-SARAIVA-0625
                   </div>
                   <p className="mt-2 text-[14px] leading-[1.55] text-vm-muted">
-                    Preparado por Matheus, com base no diagnostico e na conversa de decisao.
+                    Preparado por Matheus, com base no diagnóstico e na conversa de decisão.
                   </p>
                 </div>
                 <div className="h-12 w-12 rounded-full bg-vm-cyan/14 shadow-[inset_0_0_0_1px_rgba(22,212,232,.22)]" />
@@ -214,21 +214,21 @@ export default function SaraivaAmaralProposalPage() {
               <div className="mt-6 space-y-4">
                 <div className="rounded-[16px] border border-vm-line bg-vm-bg-alt/85 p-4">
                   <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-vm-muted-2">
-                    O que ficou claro na reuniao
+                    O que ficou claro na reunião
                   </div>
                   <p className="mt-3 text-[14px] leading-[1.6] text-vm-muted">
-                    A entrega fez sentido. O bloqueio nao foi falta de valor percebido; foi necessidade de
-                    clareza operacional, alinhamento interno e leitura do impacto total entre servico e midia.
+                    A entrega fez sentido. O bloqueio não foi falta de valor percebido; foi necessidade de
+                    clareza operacional, alinhamento interno e leitura do impacto total entre serviço e mídia.
                   </p>
                 </div>
 
                 <div className="rounded-[16px] border border-vm-line bg-vm-panel p-5 text-vm-panel-text shadow-vm-shadow-cyan">
                   <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-vm-cyan">
-                    Recomendacao central
+                    Recomendação central
                   </div>
                   <p className="mt-3 text-[15px] leading-[1.65] text-vm-panel-muted">
-                    Estruturar um sistema que junte captacao, leitura de funil, triagem e acompanhamento,
-                    para o escritorio parar de depender de tentativa e erro e passar a decidir com criterio.
+                    Estruturar um sistema que junte captação, leitura de funil, triagem e acompanhamento,
+                    para o escritório parar de depender de tentativa e erro e passar a decidir com critério.
                   </p>
                 </div>
               </div>
@@ -240,8 +240,8 @@ export default function SaraivaAmaralProposalPage() {
           <SectionRule
             index="01"
             label="Leitura do caso"
-            title="O que entendemos do momento atual do escritorio."
-            body="Voces ja tem reputacao, experiencia e uma base real de atendimento. O que falta hoje nao e nome de mercado. E previsibilidade para transformar demanda em contrato com mais metodo."
+            title="O que entendemos do momento atual do escritório."
+            body="Vocês já têm reputação, experiência e uma base real de atendimento. O que falta hoje não é nome de mercado. É previsibilidade para transformar demanda em contrato com mais método."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -263,7 +263,7 @@ export default function SaraivaAmaralProposalPage() {
             index="02"
             label="Escopo recomendado"
             title="O que entra no trabalho da Variantmidia."
-            body="A proposta nao e vender campanha isolada. E estruturar um motor de aquisicao e conversao que faca sentido para o tipo de escritorio, para a rotina de voces e para a meta de crescimento."
+            body="A proposta não é vender campanha isolada. É estruturar um motor de aquisição e conversão que faça sentido para o tipo de escritório, para a rotina de vocês e para a meta de crescimento."
           />
 
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.58fr)_minmax(0,0.42fr)]">
@@ -288,14 +288,14 @@ export default function SaraivaAmaralProposalPage() {
 
             <div className="rounded-[22px] border border-white/10 bg-vm-panel p-6 text-vm-panel-text shadow-vm lg:p-7">
               <div className="mb-5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-vm-cyan">
-                Observacao importante
+                Observação importante
               </div>
               <h3 className="vm-h3 max-w-[18ch] text-white">
-                Se o orcamento pesar, o desenho pode ser faseado sem matar a tese principal.
+                Se o orçamento pesar, o desenho pode ser faseado sem matar a tese principal.
               </h3>
               <p className="mt-4 text-[15px] leading-[1.68] text-vm-panel-muted">
-                Isso significa comecar pelo que trava mais hoje e evoluir para uma operacao mais completa
-                conforme o escritorio ganhar clareza, ritmo e retorno. O objetivo nao e inflar escopo. E
+                Isso significa começar pelo que trava mais hoje e evoluir para uma operação mais completa
+                conforme o escritório ganhar clareza, ritmo e retorno. O objetivo não é inflar escopo. É
                 corrigir o gargalo certo primeiro.
               </p>
               <div className="mt-6 grid gap-3">
@@ -314,9 +314,9 @@ export default function SaraivaAmaralProposalPage() {
 
           <SectionRule
             index="03"
-            label="Contrapartida do escritorio"
-            title="O que precisa acontecer do lado de voces para a execucao funcionar."
-            body="Esse foi um dos pontos mais importantes da reuniao. O projeto precisa ter espaco operacional interno para nao repetir a frustracao com fornecedor anterior."
+            label="Contrapartida do escritório"
+            title="O que precisa acontecer do lado de vocês para a execução funcionar."
+            body="Esse foi um dos pontos mais importantes da reunião. O projeto precisa ter espaço operacional interno para não repetir a frustração com fornecedor anterior."
           />
 
           <div className="grid gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)]">
@@ -325,8 +325,8 @@ export default function SaraivaAmaralProposalPage() {
                 Em linguagem direta
               </div>
               <p className="mt-3 text-[15px] leading-[1.68] text-vm-muted">
-                O projeto melhora muito quando o escritorio consegue devolver feedback, aprovar ajustes
-                com agilidade e manter um dono interno para as prioridades. Sem isso, a execucao perde
+                O projeto melhora muito quando o escritório consegue devolver feedback, aprovar ajustes
+                com agilidade e manter um dono interno para as prioridades. Sem isso, a execução perde
                 ritmo e volta a depender de improviso.
               </p>
             </div>
@@ -350,9 +350,9 @@ export default function SaraivaAmaralProposalPage() {
 
           <SectionRule
             index="04"
-            label="Referencias"
-            title="Provas e casos para reduzir risco antes da decisao."
-            body="Como combinado, este bloco serve para voces enxergarem tanto prova social real quanto referencias publicas de execucao e posicionamento."
+            label="Referências"
+            title="Provas e casos para reduzir risco antes da decisão."
+            body="Como combinado, este bloco serve para vocês enxergarem tanto prova social real quanto referências públicas de execução e posicionamento."
           />
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -392,7 +392,7 @@ export default function SaraivaAmaralProposalPage() {
                         : "border border-vm-line-cool bg-vm-bg-alt text-vm-ink hover:border-vm-ink/15 hover:bg-white"
                     }`}
                   >
-                    Abrir referencia
+                    Abrir referência
                   </a>
                 ) : null}
               </article>
@@ -403,7 +403,7 @@ export default function SaraivaAmaralProposalPage() {
             index="05"
             label="Investimento"
             title="Como o investimento se divide."
-            body="Aqui esta a estrutura financeira alinhada com o que foi apresentado na reuniao: servico separado de midia, para que a decisao fique clara e comparavel internamente."
+            body="Aqui está a estrutura financeira alinhada com o que foi apresentado na reunião: serviço separado de mídia, para que a decisão fique clara e comparável internamente."
           />
 
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.56fr)_minmax(0,0.44fr)]">
@@ -431,9 +431,9 @@ export default function SaraivaAmaralProposalPage() {
 
               <div className="mt-6 rounded-[18px] border border-vm-cyan/20 bg-vm-cyan/10 p-4">
                 <p className="text-[14px] leading-[1.62] text-vm-graphite">
-                  <strong>Importante:</strong> a verba de midia e investida diretamente nas plataformas. Se alguma
-                  ferramenta ou integracao adicional for realmente necessaria para o desenho final, isso e alinhado
-                  antes da ativacao.
+                  <strong>Importante:</strong> a verba de mídia é investida diretamente nas plataformas. Se alguma
+                  ferramenta ou integração adicional for realmente necessária para o desenho final, isso é alinhado
+                  antes da ativação.
                 </p>
               </div>
             </div>
@@ -443,20 +443,20 @@ export default function SaraivaAmaralProposalPage() {
                 Leitura comercial
               </div>
               <h3 className="vm-h3 mt-4 max-w-[15ch] text-white">
-                O preco nao foi o unico tema da reuniao.
+                O preço não foi o único tema da reunião.
               </h3>
               <p className="mt-4 text-[15px] leading-[1.68] text-vm-panel-muted">
-                O escritorio tambem pediu clareza sobre escopo, carga operacional e o que precisara sustentar do
-                lado de dentro. Por isso esta pagina existe: para transformar percepcao em leitura concreta antes
-                da decisao.
+                O escritório também pediu clareza sobre escopo, carga operacional e o que precisará sustentar do
+                lado de dentro. Por isso esta página existe: para transformar percepção em leitura concreta antes
+                da decisão.
               </p>
 
               <div className="mt-6 rounded-[18px] border border-vm-panel-line bg-white/[0.03] p-4">
                 <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-vm-cyan">
-                  Proximo passo combinado
+                  Próximo passo combinado
                 </div>
                 <p className="mt-3 text-[15px] leading-[1.65] text-vm-panel-muted">
-                  Revisao interna, retorno de <strong className="text-white">sim ou nao ate 29/06/2026</strong> e,
+                  Revisão interna, retorno de <strong className="text-white">sim ou não até 29/06/2026</strong> e,
                   se o bloqueio restante for apenas faixa de investimento, alinhamento de viabilidade ou faseamento.
                 </p>
               </div>
@@ -470,13 +470,13 @@ export default function SaraivaAmaralProposalPage() {
                   Fechamento
                 </div>
                 <h2 className="mt-3 text-[clamp(34px,5.6vw,64px)] font-semibold leading-[1.02] tracking-[-0.04em] text-vm-ink">
-                  Se fizer sentido para voces, o proximo passo nao e mais uma reuniao longa.
+                  Se fizer sentido para vocês, o próximo passo não é mais uma reunião longa.
                   <br />
-                  <span className="text-vm-cyan-deep">E uma decisao clara.</span>
+                  <span className="text-vm-cyan-deep">É uma decisão clara.</span>
                 </h2>
                 <p className="mt-5 max-w-[62ch] text-[16px] leading-[1.7] text-vm-muted">
-                  Esta proposta ja responde o que foi pedido: o que esta incluso, o que depende do escritorio,
-                  quais referencias sustentam a confianca e como o investimento se separa entre operacao e midia.
+                  Esta proposta já responde o que foi pedido: o que está incluso, o que depende do escritório,
+                  quais referências sustentam a confiança e como o investimento se separa entre operação e mídia.
                 </p>
               </div>
 
