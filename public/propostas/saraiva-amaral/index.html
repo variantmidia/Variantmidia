@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Proposta | Saraiva & Amaral Sociedade de Advogados</title>
+    <meta
+      name="description"
+      content="Proposta executiva da Variantmidia para Saraiva & Amaral Sociedade de Advogados."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --vm-bg: #f2f4f1;
+        --vm-bg-alt: #f7fafa;
+        --vm-surface: #ffffff;
+        --vm-line: #e2e2d6;
+        --vm-line-cool: #e6eef2;
+        --vm-ink: #1a1a1a;
+        --vm-graphite: #2b2b2b;
+        --vm-muted: #5a5a52;
+        --vm-muted-2: #6a6a60;
+        --vm-cyan: #16d4e8;
+        --vm-cyan-deep: #0fb8cc;
+        --vm-panel: #0e1620;
+        --vm-panel-text: #d5dee6;
+        --vm-panel-muted: rgba(213, 222, 230, 0.78);
+        --vm-panel-line: rgba(255, 255, 255, 0.08);
+        --shadow-sm: 0 10px 30px -20px rgba(16, 24, 32, 0.2);
+        --shadow-lg: 0 28px 60px -40px rgba(11, 24, 38, 0.3);
+        --radius: 22px;
+        --radius-sm: 16px;
+        --radius-pill: 999px;
+        --container: 1240px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(22, 212, 232, 0.12), transparent 24%),
+          linear-gradient(180deg, #f7fbfb 0%, var(--vm-bg) 34%, #eef2ef 100%);
+        color: var(--vm-graphite);
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .shell {
+        width: min(100%, var(--container));
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(18px);
+        background: rgba(247, 250, 250, 0.88);
+        border-bottom: 1px solid var(--vm-line-cool);
+      }
+
+      .topbar__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 78px;
+      }
+
+      .badge-row,
+      .hero__badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: var(--radius-pill);
+        padding: 10px 14px;
+        border: 1px solid var(--vm-line-cool);
+        background: rgba(255, 255, 255, 0.85);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--vm-muted-2);
+      }
+
+      .badge--cyan {
+        border-color: rgba(22, 212, 232, 0.12);
+        background: rgba(22, 212, 232, 0.12);
+        color: var(--vm-cyan-deep);
+      }
+
+      .hero {
+        padding: 64px 0 42px;
+      }
+
+      .hero__grid {
+        display: grid;
+        gap: 28px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 24px 0 0;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--vm-muted-2);
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--vm-cyan);
+        box-shadow: 0 0 0 4px rgba(22, 212, 232, 0.14);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .hero h1 {
+        margin-top: 20px;
+        max-width: 11ch;
+        color: var(--vm-ink);
+        font-size: clamp(42px, 7vw, 86px);
+        line-height: 0.94;
+        letter-spacing: -0.05em;
+      }
+
+      .hero h1 em {
+        display: inline-block;
+        color: var(--vm-cyan-deep);
+        font-family: Georgia, "Times New Roman", serif;
+        font-style: italic;
+        font-weight: 400;
+      }
+
+      .hero__lead {
+        margin-top: 26px;
+        max-width: 63ch;
+        color: var(--vm-muted);
+        font-size: clamp(17px, 1.4vw, 20px);
+        line-height: 1.62;
+      }
+
+      .hero__grid--split {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .card,
+      .panel {
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .card {
+        border: 1px solid var(--vm-line);
+        background: rgba(255, 255, 255, 0.88);
+      }
+
+      .panel {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--vm-panel);
+        color: var(--vm-panel-text);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .panel p {
+        color: var(--vm-panel-muted);
+      }
+
+      .section {
+        padding: 28px 0;
+      }
+
+      .section__rule {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--vm-muted-2);
+      }
+
+      .section__rule::after {
+        content: "";
+        height: 1px;
+        flex: 1;
+        background: var(--vm-ink);
+      }
+
+      .section__head {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+
+      .section__head h2 {
+        max-width: 18ch;
+        color: var(--vm-ink);
+        font-size: clamp(30px, 4.4vw, 48px);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+
+      .section__head p {
+        max-width: 60ch;
+        color: var(--vm-muted);
+        font-size: 17px;
+        line-height: 1.65;
+      }
+
+      .grid-3,
+      .grid-2 {
+        display: grid;
+        gap: 16px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .index {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        border-radius: var(--radius-pill);
+        background: rgba(22, 212, 232, 0.12);
+        padding: 8px 12px;
+        color: var(--vm-cyan-deep);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .item h3 {
+        margin-top: 18px;
+        color: var(--vm-ink);
+        font-size: 22px;
+        line-height: 1.14;
+        letter-spacing: -0.03em;
+      }
+
+      .item p,
+      .list li {
+        margin-top: 12px;
+        color: var(--vm-muted);
+        font-size: 15px;
+        line-height: 1.68;
+      }
+
+      .list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 14px;
+      }
+
+      .list li {
+        margin: 0;
+        padding-top: 14px;
+        border-top: 1px solid var(--vm-line-cool);
+      }
+
+      .list li:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+
+      .list strong {
+        display: block;
+        color: var(--vm-ink);
+        margin-bottom: 5px;
+      }
+
+      .roadmap {
+        display: grid;
+        gap: 12px;
+      }
+
+      .roadmap article {
+        border: 1px solid var(--vm-panel-line);
+        border-radius: var(--radius-sm);
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .roadmap span,
+      .mini-label {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .roadmap span,
+      .panel .mini-label {
+        color: var(--vm-cyan);
+      }
+
+      .mini-label {
+        color: var(--vm-muted-2);
+      }
+
+      .roadmap h3 {
+        margin-top: 10px;
+        color: #fff;
+        font-size: 18px;
+      }
+
+      .roadmap p {
+        margin-top: 8px;
+      }
+
+      .reference--featured {
+        background: var(--vm-panel);
+        color: var(--vm-panel-text);
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .reference--featured h3 {
+        color: #fff;
+      }
+
+      .reference--featured .item p,
+      .reference--featured p {
+        color: var(--vm-panel-muted);
+      }
+
+      .reference__link,
+      .cta,
+      .cta--ghost {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-pill);
+        padding: 13px 18px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      }
+
+      .reference__link:hover,
+      .cta:hover,
+      .cta--ghost:hover {
+        transform: translateY(-1px);
+      }
+
+      .reference__link {
+        margin-top: 18px;
+        border: 1px solid var(--vm-line-cool);
+        background: var(--vm-bg-alt);
+        color: var(--vm-ink);
+      }
+
+      .reference--featured .reference__link {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+      }
+
+      .price-row {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 18px 0;
+        border-top: 1px solid var(--vm-line-cool);
+      }
+
+      .price-row:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+
+      .price-row strong {
+        color: var(--vm-ink);
+        font-size: clamp(24px, 3vw, 34px);
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .note {
+        margin-top: 22px;
+        border-radius: var(--radius-sm);
+        padding: 18px;
+        background: rgba(22, 212, 232, 0.1);
+        border: 1px solid rgba(22, 212, 232, 0.18);
+        color: var(--vm-graphite);
+        font-size: 14px;
+        line-height: 1.62;
+      }
+
+      .footer-cta {
+        margin: 26px 0 72px;
+        padding: 28px;
+        border: 1px solid var(--vm-line-cool);
+        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 250, 0.92));
+        box-shadow: var(--shadow-sm);
+      }
+
+      .footer-cta h2 {
+        max-width: 14ch;
+        color: var(--vm-ink);
+        font-size: clamp(34px, 5vw, 62px);
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+      }
+
+      .footer-cta h2 span {
+        color: var(--vm-cyan-deep);
+      }
+
+      .footer-cta p {
+        margin-top: 18px;
+        max-width: 60ch;
+        color: var(--vm-muted);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .footer-cta__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .cta {
+        background: var(--vm-ink);
+        color: #fff;
+        box-shadow: 0 12px 28px -12px rgba(16, 24, 32, 0.45);
+      }
+
+      .cta--ghost {
+        border: 1px solid var(--vm-line-cool);
+        background: #fff;
+        color: var(--vm-ink);
+      }
+
+      @media (min-width: 860px) {
+        .hero__grid--split,
+        .grid-2 {
+          grid-template-columns: minmax(0, 0.6fr) minmax(320px, 0.4fr);
+        }
+
+        .grid-3 {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .footer-cta {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 280px;
+          align-items: end;
+          gap: 28px;
+        }
+
+        .footer-cta__actions {
+          margin-top: 0;
+        }
+      }
+
+      @media (max-width: 719px) {
+        .badge-row {
+          display: none;
+        }
+
+        .topbar__inner {
+          min-height: 70px;
+        }
+
+        .hero {
+          padding-top: 42px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell topbar__inner">
+        <a href="https://variantmidia.com.br/" aria-label="Variantmidia">
+          <img src="/logos/horizontal-light.svg" alt="Variantmidia" style="height: 32px; width: auto;" />
+        </a>
+        <div class="badge-row">
+          <span class="badge">Proposta executiva</span>
+          <span class="badge badge--cyan">Retorno combinado ate 29/06</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="hero">
+        <div class="hero__grid hero__grid--split">
+          <div>
+            <div class="hero__badges">
+              <span class="badge">Saraiva &amp; Amaral Sociedade de Advogados</span>
+              <span class="badge badge--cyan">Reuniao-base: 25/06/2026</span>
+            </div>
+            <p class="eyebrow">Descricao comercial com escopo, responsabilidade e investimento</p>
+            <h1>
+              O problema nao e captar mais.
+              <br />
+              <em>E converter com mais criterio.</em>
+            </h1>
+            <p class="hero__lead">
+              Esta proposta foi montada com base no que voces pediram na reuniao: um material claro, escrito,
+              que mostre exatamente o que entra, o que o escritorio precisa sustentar do lado de dentro e
+              como o investimento se divide entre operacao e midia.
+            </p>
+          </div>
+
+          <aside class="stack">
+            <section class="card">
+              <p class="mini-label">Documento VM-SARAIVA-0625</p>
+              <p style="margin-top: 12px; font-size: 14px; line-height: 1.6; color: var(--vm-muted);">
+                Preparado por Matheus, com base no diagnostico e na conversa de decisao.
+              </p>
+            </section>
+            <section class="card">
+              <p class="mini-label">O que ficou claro na reuniao</p>
+              <p style="margin-top: 12px; font-size: 15px; line-height: 1.68; color: var(--vm-muted);">
+                A entrega fez sentido. O bloqueio nao foi falta de valor percebido; foi necessidade de
+                clareza operacional, alinhamento interno e leitura do impacto total entre servico e midia.
+              </p>
+            </section>
+            <section class="panel">
+              <p class="mini-label">Recomendacao central</p>
+              <p style="margin-top: 12px; font-size: 15px; line-height: 1.68;">
+                Estruturar um sistema que junte captacao, leitura de funil, triagem e acompanhamento,
+                para o escritorio parar de depender de tentativa e erro e passar a decidir com criterio.
+              </p>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__rule">01 Leitura do caso</div>
+        <div class="section__head">
+          <h2>O que entendemos do momento atual do escritorio.</h2>
+          <p>
+            Voces ja tem reputacao, experiencia e uma base real de atendimento. O que falta hoje nao e nome
+            de mercado. E previsibilidade para transformar demanda em contrato com mais metodo.
+          </p>
+        </div>
+        <div class="grid-3">
+          <article class="card item">
+            <span class="index">01</span>
+            <h3>Falta de leitura do funil</h3>
+            <p>
+              Hoje o escritorio ainda nao enxerga com clareza de onde o contato veio, quantos leads sao
+              realmente qualificados e quantos viram cliente.
+            </p>
+          </article>
+          <article class="card item">
+            <span class="index">02</span>
+            <h3>Atendimento e triagem manuais</h3>
+            <p>
+              Parte da perda acontece entre o primeiro contato e a reuniao: demora de resposta, curiosos
+              demais, pouco criterio de qualificacao e follow-up irregular.
+            </p>
+          </article>
+          <article class="card item">
+            <span class="index">03</span>
+            <h3>Crescimento sem processo previsivel</h3>
+            <p>
+              O nome do escritorio ajuda, mas ainda falta um modelo operacional que transforme demanda em
+              agenda e agenda em contrato com mais consistencia.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__rule">02 Escopo recomendado</div>
+        <div class="section__head">
+          <h2>O que entra no trabalho da Variantmidia.</h2>
+          <p>
+            A proposta nao e vender campanha isolada. E estruturar um motor de aquisicao e conversao que faca
+            sentido para o tipo de escritorio, para a rotina de voces e para a meta de crescimento.
+          </p>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <ul class="list">
+              <li><strong>Diagnostico inicial da operacao comercial e de captacao.</strong> Leitura do funil atual e dos gargalos reais.</li>
+              <li><strong>Definicao da tese principal de aquisicao.</strong> Priorizacao de canais com maior intencao de compra.</li>
+              <li><strong>Estruturacao do funil de acompanhamento.</strong> Lead, qualificado, reuniao, proposta e fechamento.</li>
+              <li><strong>Implantacao ou ajuste de CRM.</strong> Leitura real do que entra, do que trava e do que fecha.</li>
+              <li><strong>Camada de atendimento e pre-triagem com IA.</strong> Especialmente no WhatsApp, quando fizer sentido.</li>
+              <li><strong>Ritual de acompanhamento e relatorio.</strong> Para a decisao nao ficar no escuro nem depender de promessa.</li>
+            </ul>
+          </article>
+          <aside class="panel">
+            <p class="mini-label">Observacao importante</p>
+            <h3 style="margin-top: 12px; color: #fff; font-size: 28px; line-height: 1.1; letter-spacing: -0.03em;">
+              Se o orcamento pesar, o desenho pode ser faseado sem matar a tese principal.
+            </h3>
+            <p style="margin-top: 14px; font-size: 15px; line-height: 1.68;">
+              Isso significa comecar pelo que trava mais hoje e evoluir para uma operacao mais completa
+              conforme o escritorio ganhar clareza, ritmo e retorno.
+            </p>
+            <div class="roadmap" style="margin-top: 18px;">
+              <article>
+                <span>Fase 1</span>
+                <h3>Clareza e estrutura</h3>
+                <p>Mapeamento do funil atual, definicao de criterio de lead qualificado e prioridades de curto prazo.</p>
+              </article>
+              <article>
+                <span>Fase 2</span>
+                <h3>Ativacao e leitura</h3>
+                <p>Entrada do canal principal, rotina de acompanhamento e organizacao do que precisa ser medido.</p>
+              </article>
+              <article>
+                <span>Fase 3</span>
+                <h3>Conversao e velocidade</h3>
+                <p>Ajustes de atendimento, triagem, follow-up e operacao comercial para subir taxa de reuniao e contrato.</p>
+              </article>
+              <article>
+                <span>Fase 4</span>
+                <h3>Escala com criterio</h3>
+                <p>Expandir o que provar resultado, sem abrir novos vazamentos nem inflar investimento antes da hora.</p>
+              </article>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__rule">03 Contrapartida do escritorio</div>
+        <div class="section__head">
+          <h2>O que precisa acontecer do lado de voces para a execucao funcionar.</h2>
+          <p>
+            Esse foi um dos pontos mais importantes da reuniao. O projeto precisa ter espaco operacional
+            interno para nao repetir a frustracao com fornecedor anterior.
+          </p>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <p class="mini-label">Em linguagem direta</p>
+            <p style="margin-top: 12px; font-size: 15px; line-height: 1.68; color: var(--vm-muted);">
+              O projeto melhora muito quando o escritorio consegue devolver feedback, aprovar ajustes com
+              agilidade e manter um dono interno para as prioridades.
+            </p>
+          </article>
+          <article class="card">
+            <ul class="list">
+              <li><strong>Definir um responsavel interno.</strong> Centralizar retorno, aprovacoes e prioridades.</li>
+              <li><strong>Compartilhar feedback comercial.</strong> Lead qualificado, reunioes realizadas e contratos fechados.</li>
+              <li><strong>Reservar janela minima operacional.</strong> Materiais, gravacoes e ajustes de atendimento quando o plano exigir.</li>
+              <li><strong>Alinhar rapidamente travas operacionais.</strong> Para a execucao nao voltar a depender de improviso.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__rule">04 Referencias</div>
+        <div class="section__head">
+          <h2>Provas e casos para reduzir risco antes da decisao.</h2>
+          <p>
+            Como combinado, este bloco serve para voces enxergarem tanto prova social real quanto referencias
+            publicas de execucao e posicionamento.
+          </p>
+        </div>
+        <div class="grid-2">
+          <article class="panel reference--featured item">
+            <p class="mini-label">Prova social validada</p>
+            <h3>Dra. Debora Borges</h3>
+            <p>
+              "Sou advogada trabalhista e implementei uma IA de atendimento no WhatsApp pela Variantmidia...
+              a ferramenta realiza triagem, follow-up, agenda reunioes automaticamente e me devolveu tempo
+              para outras demandas."
+            </p>
+            <p style="margin-top: 12px; font-size: 13px;">Case de atendimento, triagem e agendamento via WhatsApp.</p>
+          </article>
+          <article class="card item">
+            <p class="mini-label">Referencia de execucao</p>
+            <h3>Wagner Valadao Advocacia</h3>
+            <p>Site trabalhista e previdenciario com prova social, CTA direto para WhatsApp e estrutura pensada para conversao.</p>
+            <a class="reference__link" href="https://advogadowagnervaladao.com.br/" target="_blank" rel="noreferrer">Abrir referencia</a>
+          </article>
+          <article class="card item">
+            <p class="mini-label">Referencia de autoridade</p>
+            <h3>Gioia &amp; Associados</h3>
+            <p>Presenca institucional mais robusta, com areas de atuacao, equipe, historia e argumentacao de confianca.</p>
+            <a class="reference__link" href="https://www.gioiaeassociados.com.br/" target="_blank" rel="noreferrer">Abrir referencia</a>
+          </article>
+          <article class="card item">
+            <p class="mini-label">Referencia de urgencia e WhatsApp</p>
+            <h3>Leandro Azevedo Advogado</h3>
+            <p>Landing orientada a resposta rapida, CTA forte para WhatsApp e uso de reviews como gatilho de confianca.</p>
+            <a class="reference__link" href="https://leandroazevedoadvogado.com/" target="_blank" rel="noreferrer">Abrir referencia</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__rule">05 Investimento</div>
+        <div class="section__head">
+          <h2>Como o investimento se divide.</h2>
+          <p>
+            Aqui esta a estrutura financeira alinhada com o que foi apresentado na reuniao: servico separado
+            de midia, para que a decisao fique clara e comparavel internamente.
+          </p>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <div class="price-row">
+              <div>
+                <p class="mini-label">01</p>
+                <p style="margin-top: 8px; color: var(--vm-muted); font-size: 15px;">Mensalidade de operacao</p>
+              </div>
+              <strong>R$ 3.000 / mes</strong>
+            </div>
+            <div class="price-row">
+              <div>
+                <p class="mini-label">02</p>
+                <p style="margin-top: 8px; color: var(--vm-muted); font-size: 15px;">Verba recomendada de midia</p>
+              </div>
+              <strong>R$ 1.200 a R$ 1.500 / mes</strong>
+            </div>
+            <div class="price-row">
+              <div>
+                <p class="mini-label">03</p>
+                <p style="margin-top: 8px; color: var(--vm-muted); font-size: 15px;">Investimento inicial estimado</p>
+              </div>
+              <strong>R$ 4.200 a R$ 4.500 / mes</strong>
+            </div>
+            <div class="note">
+              <strong>Importante:</strong> a verba de midia e investida diretamente nas plataformas. Se alguma
+              ferramenta ou integracao adicional for realmente necessaria para o desenho final, isso e
+              alinhado antes da ativacao.
+            </div>
+          </article>
+          <aside class="panel">
+            <p class="mini-label">Leitura comercial</p>
+            <h3 style="margin-top: 12px; color: #fff; font-size: 30px; line-height: 1.08; letter-spacing: -0.03em;">
+              O preco nao foi o unico tema da reuniao.
+            </h3>
+            <p style="margin-top: 14px; font-size: 15px; line-height: 1.68;">
+              O escritorio tambem pediu clareza sobre escopo, carga operacional e o que precisara sustentar
+              do lado de dentro. Por isso esta pagina existe: para transformar percepcao em leitura concreta
+              antes da decisao.
+            </p>
+            <div style="margin-top: 20px; border: 1px solid var(--vm-panel-line); border-radius: var(--radius-sm); padding: 18px; background: rgba(255,255,255,0.03);">
+              <p class="mini-label">Proximo passo combinado</p>
+              <p style="margin-top: 12px; font-size: 15px; line-height: 1.68;">
+                Revisao interna, retorno de <strong style="color: #fff;">sim ou nao ate 29/06/2026</strong> e,
+                se o bloqueio restante for apenas faixa de investimento, alinhamento de viabilidade ou faseamento.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="footer-cta">
+        <div>
+          <p class="mini-label">Fechamento</p>
+          <h2>
+            Se fizer sentido para voces, o proximo passo nao e mais uma reuniao longa.
+            <br />
+            <span>E uma decisao clara.</span>
+          </h2>
+          <p>
+            Esta proposta ja responde o que foi pedido: o que esta incluso, o que depende do escritorio,
+            quais referencias sustentam a confianca e como o investimento se separa entre operacao e midia.
+          </p>
+        </div>
+        <div class="footer-cta__actions">
+          <a
+            class="cta"
+            href="https://wa.me/5511912112227?text=Matheus%2C%20analisamos%20a%20proposta%20da%20Saraiva%20%26%20Amaral%20e%20queremos%20avancar."
+            target="_blank"
+            rel="noreferrer"
+          >
+            Confirmar interesse
+          </a>
+          <a
+            class="cta--ghost"
+            href="https://wa.me/5511912112227?text=Matheus%2C%20analisamos%20a%20proposta%20da%20Saraiva%20%26%20Amaral%20e%20queremos%20ajustar%20a%20viabilidade."
+            target="_blank"
+            rel="noreferrer"
+          >
+            Ajustar viabilidade
+          </a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
