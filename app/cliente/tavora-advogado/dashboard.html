@@ -35,11 +35,41 @@
     flex-wrap: wrap; gap: 14px;
   }
   .vm-brand { display: flex; align-items: center; gap: 12px; }
+  .vm-brand-logos {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
   .vm-logo-mark {
     width: 38px; height: 38px;
     background: var(--vm-ciano); color: var(--vm-ink);
     font-weight: 900; display: flex; align-items: center; justify-content: center;
     border-radius: 9px; font-size: 19px;
+  }
+  .vm-brand-logo {
+    display: block;
+    object-fit: contain;
+    background: rgba(255,255,255,.98);
+    border: 1px solid rgba(255,255,255,.12);
+  }
+  .vm-brand-logo.client {
+    width: 58px;
+    height: 58px;
+    padding: 5px;
+    border-radius: 8px;
+  }
+  .vm-brand-logo.agency {
+    width: 54px;
+    height: 58px;
+    padding: 6px;
+    border-radius: 8px;
+    background: #111820;
+  }
+  .vm-brand-link {
+    width: 1px;
+    height: 38px;
+    background: rgba(255,255,255,.14);
   }
   .vm-brand-text h1 { font-size: 18px; color: var(--vm-text); font-weight: 700; }
   .vm-brand-text span {
@@ -208,29 +238,14 @@
   .vm-side-logo {
     width: 52px;
     height: 52px;
-    display: grid;
-    place-items: center;
+    display: block;
     margin: 0 auto 28px;
-    background: #fff;
-    border-radius: 2px;
-    color: var(--vm-ink);
-    font-size: 9px;
-    font-weight: 800;
-    line-height: 1.1;
-    text-align: center;
-    position: relative;
+    object-fit: contain;
+    background: #111820;
+    border-radius: 7px;
+    padding: 6px;
+    border: 1px solid rgba(255,255,255,.12);
   }
-  .vm-side-logo::before,
-  .vm-side-logo::after {
-    content: "";
-    position: absolute;
-    top: 13px;
-    width: 16px;
-    height: 22px;
-    border-top: 5px solid var(--vm-ciano);
-  }
-  .vm-side-logo::before { left: 12px; transform: rotate(45deg); }
-  .vm-side-logo::after { right: 12px; transform: rotate(-45deg); }
   .vm-side-nav {
     display: grid;
     gap: 10px;
@@ -261,17 +276,6 @@
     background: linear-gradient(180deg, #20252E 0%, #171D26 100%);
     box-shadow: 0 16px 50px rgba(0,0,0,.18);
   }
-  .vm-logo-mark {
-    background: transparent;
-    color: #1688ff;
-    width: auto;
-    min-width: 58px;
-    font-size: 34px;
-    border-radius: 0;
-  }
-  .vm-logo-mark::before { content: "∞"; }
-  .vm-logo-mark { font-size: 0; }
-  .vm-logo-mark::before { font-size: 35px; line-height: 1; }
   .vm-brand-text h1 { font-size: 22px; letter-spacing: 0; }
   .vm-brand-text span { display: block; margin-top: 10px; color: #d8e0e8; text-transform: none; font-size: 12px; }
   .vm-toolbar {
@@ -380,7 +384,7 @@
 
 <div class="vm-dash">
   <aside class="vm-side" aria-label="Navegação do relatório">
-    <div class="vm-side-logo">variant<br>midia</div>
+    <img class="vm-side-logo" src="/brand/variantmidia-vertical-dark.png" alt="Variantmidia">
     <div class="vm-side-nav">
       <div class="vm-side-link active">Geral</div>
       <div class="vm-side-link">Ads</div>
@@ -391,7 +395,11 @@
   <main class="vm-main">
   <div class="vm-header">
     <div class="vm-brand">
-      <div class="vm-logo-mark" aria-hidden="true">Meta</div>
+      <div class="vm-brand-logos" aria-label="Távora Advogado e Variantmidia">
+        <img class="vm-brand-logo client" src="/clientes/tavora-advogado/logo-tavora.png" alt="Távora Advogado">
+        <span class="vm-brand-link" aria-hidden="true"></span>
+        <img class="vm-brand-logo agency" src="/brand/variantmidia-vertical-dark.png" alt="Variantmidia">
+      </div>
       <div class="vm-brand-text">
         <h1>Távora Advogado</h1>
         <span>Relatório Meta Ads | Leads · Variantmidia</span>
@@ -430,12 +438,12 @@
       <div class="vm-card-sub">Verba de mídia</div>
     </div>
     <div class="vm-card vm-kpi-card">
-      <div class="vm-card-title">📨 Leads (CRM)</div>
+      <div class="vm-card-title">📨 Leads (Meta)</div>
       <div class="vm-card-value" id="kpi-leads">7</div>
       <div class="vm-card-sub" id="kpi-leads-sub">Meta marcou: 7</div>
     </div>
     <div class="vm-card vm-kpi-card">
-      <div class="vm-card-title">⭐ Qualificados</div>
+      <div class="vm-card-title">⭐ Qualificados (CRM)</div>
       <div class="vm-card-value" id="kpi-qualif" style="color:var(--vm-ciano)">4</div>
       <div class="vm-card-sub" id="kpi-qualif-sub">57% dos leads</div>
     </div>
@@ -509,7 +517,7 @@
         <div class="vm-card-title">Custo por Lead Qualificado</div>
         <div class="vm-card-value" id="cost-cplq" style="color:var(--vm-warning);font-size:22px">R$ 46,99</div>
         <div class="vm-cost-bar"><div class="vm-cost-fill" id="cost-cplq-bar" style="background:var(--vm-warning);width:55%"></div></div>
-        <div class="vm-card-sub" style="margin-top:6px">Saudável para advocacia trabalhista</div>
+        <div class="vm-card-sub" id="cost-cplq-sub" style="margin-top:6px">Saudável para advocacia trabalhista</div>
       </div>
       <div class="vm-cost-block">
         <div class="vm-card-title">Custo por Reunião</div>
@@ -654,6 +662,17 @@
     }
   };
 
+  // Recorte CRM/Sheets conhecido neste relatório. Meta Ads entra ao vivo pela API;
+  // qualificados, reuniões e vendas precisam respeitar a data do CRM.
+  const crmDaily = [
+    { date: '2026-05-20', qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-06-10', qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-06-20', qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-06-21', qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-06-24', qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-06-25', qualif: 1, reun: 0, vendas: 0 }
+  ];
+
   const fmt = (n) => 'R$ ' + n.toFixed(2).replace('.', ',');
   const num = (n) => n.toLocaleString('pt-BR');
   const pad = (n) => String(n).padStart(2, '0');
@@ -695,6 +714,16 @@
     return { ...data.todo, label, note: '· fallback estático até a Meta responder' };
   }
 
+  function crmMetricsForRange(since, until) {
+    return crmDaily
+      .filter((row) => row.date >= since && row.date <= until)
+      .reduce((total, row) => ({
+        qualif: total.qualif + (row.qualif || 0),
+        reun: total.reun + (row.reun || 0),
+        vendas: total.vendas + (row.vendas || 0)
+      }), { qualif: 0, reun: 0, vendas: 0 });
+  }
+
   function setLiveStatus(kind, text) {
     const dot = document.getElementById('vm-live-dot');
     const label = document.getElementById('vm-live-status');
@@ -717,13 +746,16 @@
 
   function mergeLiveData(period, live) {
     const base = data[period] || dataForRange(startInput.value, endInput.value);
+    const crm = crmMetricsForRange(live.since || startInput.value, live.until || endInput.value);
 
     return {
       ...base,
       ...live,
-      qualif: live.qualif ?? base.qualif,
-      reun: live.reun ?? base.reun,
-      vendas: live.vendas ?? base.vendas
+      qualif: crm.qualif,
+      reun: crm.reun,
+      vendas: crm.vendas,
+      note: live.note ? live.note + ' + CRM por data' : '· Meta Ads ao vivo + CRM por data',
+      crmSource: 'crm_by_date'
     };
   }
 
@@ -783,7 +815,9 @@
     document.getElementById('kpi-leads-sub').textContent = 'Meta marcou: ' + d.metaLeads;
     document.getElementById('kpi-qualif').textContent = d.qualif;
     const qpct = d.leads ? Math.round(d.qualif / d.leads * 100) : 0;
-    document.getElementById('kpi-qualif-sub').textContent = qpct + '% dos leads';
+    document.getElementById('kpi-qualif-sub').textContent = d.qualif
+      ? qpct + '% dos leads · CRM'
+      : (d.crmSource ? 'Sem qualificados no CRM no período' : '0% dos leads');
     document.getElementById('kpi-reun').textContent = d.reun;
     document.getElementById('kpi-vendas').textContent = d.vendas;
     const cpl = typeof d.cpl === 'number' ? d.cpl : (d.leads ? d.spend / d.leads : 0);
@@ -798,8 +832,8 @@
     const stages = [
       { name: 'Impressões', val: num(d.imp), meta: '<strong>100%</strong>', w: W.imp, empty: false },
       { name: 'Cliques', val: num(d.clicks), meta: 'CTR <strong>' + d.ctr + '</strong>', w: W.clicks, empty: false },
-      { name: 'Leads (CRM)', val: d.leads, meta: 'Conv. <strong>' + convLead.toFixed(1).replace('.', ',') + '%</strong>', w: W.leads, empty: false },
-      { name: 'Qualificados', val: d.qualif, meta: 'Qualif. <strong>' + qpct + '%</strong>', w: W.qualif, empty: d.qualif === 0 },
+      { name: 'Leads (Meta)', val: d.leads, meta: 'Conv. <strong>' + convLead.toFixed(1).replace('.', ',') + '%</strong>', w: W.leads, empty: false },
+      { name: 'Qualificados', val: d.qualif, meta: d.qualif ? 'CRM <strong>' + qpct + '%</strong>' : 'CRM <strong>0</strong>', w: W.qualif, empty: d.qualif === 0 },
       { name: 'Reuniões', val: d.reun, meta: d.reun ? '<strong>' + d.reun + '</strong>' : '—', w: 16, empty: d.reun === 0 },
       { name: 'Vendas', val: d.vendas, meta: d.vendas ? '<strong>' + d.vendas + '</strong>' : '—', w: 10, empty: d.vendas === 0 }
     ];
@@ -822,6 +856,9 @@
     const cplq = d.qualif ? d.spend / d.qualif : 0;
     document.getElementById('cost-cplq').textContent = d.qualif ? fmt(cplq) : '—';
     document.getElementById('cost-cplq-bar').style.width = d.qualif ? Math.min(cplq / 100 * 100, 100) + '%' : '0%';
+    document.getElementById('cost-cplq-sub').textContent = d.qualif
+      ? 'Calculado com qualificados do CRM'
+      : 'Aguardando registro qualificado no CRM';
     if (d.topAds) renderTopCreatives(d.topAds);
   }
 
