@@ -1,8 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { createHmac } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
 const REALM = "Relatorios Variantmidia";
+const COOKIE_NAME = "tavora_report_session";
+
+function signSession(password: string) {
+  return createHmac("sha256", password).update("tavora-report").digest("base64url");
+}
 
 function unauthorized() {
   return new NextResponse("Autenticacao necessaria.", {
@@ -50,10 +56,20 @@ export async function GET(request: NextRequest) {
 
   const html = await readFile(join(process.cwd(), "app", "cliente", "tavora-advogado", "dashboard.html"), "utf8");
 
-  return new NextResponse(html, {
+  const response = new NextResponse(html, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "private, no-store",
     },
   });
+
+  response.cookies.set(COOKIE_NAME, signSession(process.env.CLIENTE_RELATORIO_PASSWORD || ""), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: request.nextUrl.protocol === "https:",
+    path: "/",
+    maxAge: 60 * 60 * 12,
+  });
+
+  return response;
 }

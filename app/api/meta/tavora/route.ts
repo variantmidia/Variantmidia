@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createHmac, timingSafeEqual } from "node:crypto";
 
 type InsightAction = {
   action_type?: string;
@@ -28,6 +29,7 @@ const DEFAULT_LEAD_ACTION_TYPES = [
   "onsite_conversion.messaging_conversation_started_7d",
   "onsite_conversion.messaging_first_reply",
 ];
+const COOKIE_NAME = "tavora_report_session";
 
 function unauthorized() {
   return NextResponse.json({ error: "Autenticacao necessaria." }, { status: 401 });
@@ -38,6 +40,14 @@ function isAuthorized(request: NextRequest) {
   const expectedPassword = process.env.CLIENTE_RELATORIO_PASSWORD;
 
   if (!expectedUser || !expectedPassword) return false;
+
+  const expectedSession = createHmac("sha256", expectedPassword).update("tavora-report").digest("base64url");
+  const session = request.cookies.get(COOKIE_NAME)?.value;
+  if (session) {
+    const left = Buffer.from(session);
+    const right = Buffer.from(expectedSession);
+    if (left.length === right.length && timingSafeEqual(left, right)) return true;
+  }
 
   const header = request.headers.get("authorization");
   if (!header?.startsWith("Basic ")) return false;
