@@ -100,7 +100,7 @@ function getRange(request: NextRequest) {
   const until = params.get("date") || currentBrazilDate();
 
   if (params.get("since") && params.get("until")) {
-    return { period: "custom", since: params.get("since")!, until: params.get("until")! };
+    return { period, since: params.get("since")!, until: params.get("until")! };
   }
 
   if (period === "7d") return { period, since: addDays(until, -6), until };
