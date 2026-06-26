@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variant Mídia — Dashboard Operacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+:root {
+  --cyan: #16D4E8;
+  --cyan-deep: #0FB8CC;
+  --cyan-dim: rgba(22,212,232,.12);
+  --graphite: #2B2B2B;
+  --ink: #1A1A1A;
+  --ink2: #101820;
+  --muted: #5A5A52;
+  --muted2: #6A6A60;
+  --muted3: #9A9A90;
+  --bg: #FFFFFF;
+  --bg-alt: #F7FAFA;
+  --surface: #FFFFFF;
+  --line: #E2E2D6;
+  --line-cool: #E6EEF2;
+  --line-soft: #EFF4F6;
+  --panel: #0E1620;
+  --panel2: #131C27;
+  --panel-text: #D5DEE6;
+  --ok: #1F9D6F;
+  --warn: #C97A1B;
+  --crit: #C03B3B;
+  --f-display: 'Syne', sans-serif;
+  --f-body: 'DM Sans', sans-serif;
+  --f-mono: 'JetBrains Mono', monospace;
+  --r-sm: 8px;
+  --r: 12px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+}
+*,*::before,*::after { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family: var(--f-body);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.shell { max-width: 1480px; margin: 0 auto; padding: 32px clamp(20px,4vw,56px) 80px; }
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { overflow-x: hidden; }
+.quick-nav {
+  position: sticky; top: 0; z-index: 20; display: flex; align-items: center;
+  gap: 6px; margin: -8px 0 24px; padding: 10px 12px; overflow-x: auto;
+  background: rgba(255,255,255,.92); border: 1px solid var(--line-cool);
+  border-radius: 10px; backdrop-filter: blur(14px); box-shadow: 0 8px 30px rgba(16,24,32,.06);
+}
+.quick-nav a {
+  flex: 0 0 auto; padding: 7px 12px; border-radius: var(--r-pill); color: var(--muted);
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600; letter-spacing: .08em;
+  text-decoration: none; text-transform: uppercase; transition: 160ms ease;
+}
+.quick-nav a:hover, .quick-nav a:focus-visible { background: var(--ink2); color: white; outline: none; }
+.quick-nav .nav-primary { background: var(--cyan-dim); color: var(--cyan-deep); }
+.privacy-note { margin-left: auto; color: var(--ok); white-space: nowrap; font: 600 10px var(--f-mono); letter-spacing: .08em; }
+.section-rule { scroll-margin-top: 76px; }
+.config { position: relative; }
+.config::before { content: 'FONTE DE DADOS'; font: 600 9px var(--f-mono); letter-spacing: .13em; color: var(--muted3); }
+.data-quality {
+  display: flex; gap: 8px; align-items: center; margin: -12px 0 28px; color: var(--muted2);
+  font: 500 11px var(--f-mono);
+}
+.data-quality::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+@media (max-width: 760px) {
+  .shell { padding: 18px 14px 56px; }
+  .quick-nav { margin-left: -4px; margin-right: -4px; }
+  .privacy-note { display: none; }
+  .config input { min-width: 100%; }
+  .header-meta { width: 100%; justify-content: space-between; gap: 10px; }
+  .health-grid, .chart-grid, .compare-grid, .weekly-grid, .jornada-hero { grid-template-columns: 1fr !important; }
+  .clients-card, .table-card { overflow-x: auto; }
+  table { min-width: 720px; }
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding-bottom: 24px; border-bottom: 1px solid var(--ink);
+  margin-bottom: 32px; gap: 24px; flex-wrap: wrap;
+}
+.brand-mark { display: flex; align-items: center; gap: 14px; }
+.brand-dot {
+  width: 14px; height: 14px; background: var(--cyan);
+  box-shadow: 0 0 0 4px var(--cyan-dim);
+}
+.brand-name {
+  font-family: var(--f-display); font-size: 24px; font-weight: 800;
+  letter-spacing: -.02em;
+}
+.brand-name em {
+  font-family: Georgia, serif; font-style: italic; font-weight: 400;
+  color: var(--cyan-deep);
+}
+.brand-tag {
+  margin-top: 4px;
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted2);
+}
+.header-meta { display: flex; gap: 28px; align-items: center; }
+.meta-item {
+  font-family: var(--f-mono); font-size: 11px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--muted2);
+}
+.meta-item strong { display: block; font-size: 13px; color: var(--ink); font-weight: 600; margin-top: 2px; }
+.live-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: var(--r-pill);
+  background: var(--cyan-dim); color: var(--cyan-deep);
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--cyan-deep);
+  animation: pulse 1.6s infinite;
+}
+@keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.3 } }
+
+/* ── CONFIG BAR ── */
+.config {
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  padding: 12px 18px; margin-bottom: 28px;
+  background: var(--bg-alt); border: 1px solid var(--line-cool);
+  border-radius: var(--r-sm);
+}
+.config label {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--muted2);
+}
+.config input {
+  flex: 1; min-width: 280px;
+  padding: 7px 11px; border: 1px solid var(--line-cool);
+  border-radius: 6px; font-family: var(--f-mono); font-size: 12px;
+  background: white;
+}
+.config button {
+  padding: 7px 16px; border-radius: var(--r-pill);
+  background: var(--ink); color: white; border: 0;
+  font-family: var(--f-body); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: transform 140ms ease;
+}
+.config button:hover { transform: translateY(-1px); }
+.config-hint {
+  font-size: 11px; color: var(--muted2); width: 100%; margin-top: 2px;
+}
+
+/* ── INSIGHT BANNER ── */
+.insight {
+  margin: 0 0 28px; padding: 22px 28px;
+  background: var(--ink2); color: var(--panel-text);
+  border-radius: var(--r-sm); position: relative; overflow: hidden;
+}
+.insight::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--cyan);
+}
+.insight-grid {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: center;
+}
+.insight-label {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--cyan);
+  margin-bottom: 6px;
+}
+.insight-text { font-size: 15px; line-height: 1.55; max-width: 70ch; }
+.insight-text strong { color: white; font-weight: 600; }
+.insight-action {
+  font-family: var(--f-mono); font-size: 11px; color: var(--cyan);
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 8px 16px; border: 1px solid rgba(22,212,232,.4); border-radius: var(--r-pill);
+}
+
+/* ── SECTION TITLE ── */
+.section-rule {
+  display: flex; align-items: baseline; gap: 16px;
+  margin: 56px 0 22px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.section-num {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--cyan-deep);
+}
+.section-title {
+  font-family: var(--f-display); font-size: 24px; font-weight: 700;
+  letter-spacing: -.02em;
+}
+.section-tag {
+  margin-left: auto; font-family: var(--f-mono); font-size: 10px;
+  color: var(--muted3); letter-spacing: .12em; text-transform: uppercase;
+}
+
+/* ── KPI CARDS ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.kpi {
+  padding: 22px; border: 1px solid var(--line);
+  border-radius: var(--r-sm); background: white;
+  position: relative; overflow: hidden;
+}
+.kpi::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--cyan);
+}
+.kpi.ok::before { background: var(--ok); }
+.kpi.warn::before { background: var(--warn); }
+.kpi.crit::before { background: var(--crit); }
+.kpi-label {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted2);
+  margin-bottom: 12px;
+}
+.kpi-value {
+  font-family: var(--f-display); font-size: 38px; font-weight: 800;
+  letter-spacing: -.03em; line-height: 1; color: var(--ink);
+}
+.kpi-value .unit { font-size: 16px; font-weight: 500; color: var(--muted2); margin-left: 4px; }
+.kpi-meta {
+  margin-top: 10px; display: flex; justify-content: space-between; align-items: center;
+}
+.kpi-target {
+  font-family: var(--f-mono); font-size: 11px; color: var(--muted2);
+}
+.kpi-delta {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 4px;
+}
+.kpi-delta.ok   { background: rgba(31,157,111,.12); color: var(--ok); }
+.kpi-delta.warn { background: rgba(201,122,27,.12); color: var(--warn); }
+.kpi-delta.crit { background: rgba(192,59,59,.12); color: var(--crit); }
+.kpi-bar {
+  margin-top: 14px; height: 6px; border-radius: 3px; background: var(--line-soft);
+  overflow: hidden;
+}
+.kpi-bar-fill { height: 100%; background: var(--cyan); border-radius: 3px; transition: width .6s ease; }
+.kpi.ok .kpi-bar-fill { background: var(--ok); }
+.kpi.warn .kpi-bar-fill { background: var(--warn); }
+.kpi.crit .kpi-bar-fill { background: var(--crit); }
+
+/* ── FUNIL ── */
+.funnel { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.funnel-step {
+  padding: 20px 18px; background: white; border: 1px solid var(--line);
+  border-radius: var(--r-sm); position: relative;
+}
+.funnel-step.ok   { border-top: 3px solid var(--ok); }
+.funnel-step.warn { border-top: 3px solid var(--warn); }
+.funnel-step.crit { border-top: 3px solid var(--crit); }
+.funnel-step::after {
+  content: '→'; position: absolute; right: -14px; top: 28px;
+  font-size: 16px; color: var(--muted3); z-index: 1; font-weight: 700;
+}
+.funnel-step:last-child::after { display: none; }
+.funnel-step-code {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  color: var(--cyan-deep); letter-spacing: .14em; text-transform: uppercase;
+}
+.funnel-step-label {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--muted2);
+  margin-bottom: 10px;
+}
+.funnel-step-value {
+  font-family: var(--f-display); font-size: 32px; font-weight: 800;
+  letter-spacing: -.03em; line-height: 1; color: var(--ink);
+}
+.funnel-step-target {
+  font-family: var(--f-mono); font-size: 11px; color: var(--muted); margin-top: 6px;
+}
+.funnel-step-bar {
+  margin-top: 10px; height: 4px; border-radius: 2px; background: var(--line-soft); overflow: hidden;
+}
+.funnel-step-bar-fill { height: 100%; background: var(--cyan); border-radius: 2px; }
+.funnel-step.ok .funnel-step-bar-fill { background: var(--ok); }
+.funnel-step.warn .funnel-step-bar-fill { background: var(--warn); }
+.funnel-step.crit .funnel-step-bar-fill { background: var(--crit); }
+.funnel-step-money {
+  margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.funnel-step-money small {
+  font-family: var(--f-mono); font-size: 10px; color: var(--muted3);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+.funnel-step-money strong {
+  font-family: var(--f-mono); font-size: 13px; color: var(--ink); font-weight: 600;
+}
+
+/* ── CONVERSION CARDS ── */
+.conv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.conv-card {
+  padding: 22px; background: white; border: 1px solid var(--line);
+  border-radius: var(--r-sm); position: relative; overflow: hidden;
+}
+.conv-card.ok   { border-left: 4px solid var(--ok); }
+.conv-card.warn { border-left: 4px solid var(--warn); }
+.conv-card.crit { border-left: 4px solid var(--crit); }
+.conv-flow {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--cyan-deep);
+  margin-bottom: 4px;
+}
+.conv-diag {
+  font-family: var(--f-mono); font-size: 10px; color: var(--muted2);
+  letter-spacing: .04em; text-transform: uppercase;
+  margin-bottom: 16px; line-height: 1.4;
+}
+.conv-numbers {
+  display: flex; align-items: baseline; gap: 12px;
+}
+.conv-actual {
+  font-family: var(--f-display); font-size: 32px; font-weight: 800;
+  letter-spacing: -.03em; line-height: 1;
+}
+.conv-card.ok .conv-actual   { color: var(--ok); }
+.conv-card.warn .conv-actual { color: var(--warn); }
+.conv-card.crit .conv-actual { color: var(--crit); }
+.conv-target {
+  font-family: var(--f-mono); font-size: 12px; color: var(--muted2);
+}
+.conv-gauge {
+  margin-top: 16px; height: 5px; background: var(--line-soft); border-radius: 2px;
+  position: relative; overflow: visible;
+}
+.conv-gauge-fill { height: 100%; border-radius: 2px; background: currentColor; }
+.conv-card.ok .conv-gauge-fill   { background: var(--ok); }
+.conv-card.warn .conv-gauge-fill { background: var(--warn); }
+.conv-card.crit .conv-gauge-fill { background: var(--crit); }
+.conv-gauge-marker {
+  position: absolute; top: -3px; width: 2px; height: 11px;
+  background: var(--ink); border-radius: 1px;
+}
+
+/* ── CHART CARDS ── */
+.chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+
+/* ── COMPARAÇÃO COM MELHOR MÊS ── */
+.compare-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  margin-bottom: 20px;
+}
+.compare-card {
+  padding: 20px 22px; background: white; border: 1px solid var(--line);
+  border-radius: var(--r-sm); border-left: 3px solid var(--cyan);
+}
+.compare-card.medal-gold   { border-left-color: #C5A300; }
+.compare-card.medal-silver { border-left-color: #8E8E8E; }
+.compare-card.medal-bronze { border-left-color: #B0691F; }
+.compare-card .compare-cat {
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted2); margin-bottom: 8px;
+}
+.compare-card .compare-month {
+  font-family: var(--f-display); font-size: 34px; font-weight: 800;
+  letter-spacing: -.02em; line-height: 1; color: var(--ink);
+}
+.compare-card .compare-metric {
+  margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.5;
+}
+.compare-card .compare-metric strong {
+  color: var(--ink); font-weight: 600;
+}
+.compare-detail {
+  padding: 22px 24px; background: var(--bg-alt); border: 1px solid var(--line-cool);
+  border-radius: var(--r-sm); margin-bottom: 32px;
+}
+.compare-detail h3 {
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted2); margin-bottom: 12px;
+}
+.compare-table { border-collapse: collapse; width: 100%; }
+.compare-table th, .compare-table td {
+  text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line-soft);
+  font-size: 13.5px;
+}
+.compare-table th {
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted2); border-bottom: 1px solid var(--line);
+}
+.compare-table td.num, .compare-table th.num {
+  text-align: right; font-family: var(--f-mono); font-feature-settings: "tnum";
+}
+.compare-table td.label { font-weight: 500; }
+.compare-table td.delta { font-weight: 700; font-family: var(--f-mono); }
+.compare-table td.delta.up   { color: var(--ok); }
+.compare-table td.delta.down { color: var(--crit); }
+.compare-table td.delta.neutral { color: var(--muted2); }
+
+
+.chart-card {
+  padding: 24px; background: white; border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.chart-card h3 {
+  font-family: var(--f-display); font-size: 17px; font-weight: 700;
+  margin-bottom: 4px; letter-spacing: -.01em;
+}
+.chart-card .sub {
+  font-size: 12px; color: var(--muted); margin-bottom: 18px;
+}
+.chart-wrap { position: relative; height: 280px; }
+.chart-wrap.tall { height: 320px; }
+
+/* ── TABLE ── */
+.table-card { padding: 0; background: white; border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; }
+.table-head {
+  padding: 18px 22px; border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.table-head h3 {
+  font-family: var(--f-display); font-size: 17px; font-weight: 700; letter-spacing: -.01em;
+}
+.table-head .count {
+  font-family: var(--f-mono); font-size: 11px; color: var(--muted2);
+  padding: 4px 10px; background: var(--bg-alt); border-radius: var(--r-pill);
+}
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 12px 22px; text-align: left;
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--muted2);
+  background: var(--bg-alt); border-bottom: 1px solid var(--line);
+}
+td {
+  padding: 13px 22px; border-bottom: 1px solid var(--line-soft);
+  font-size: 14px;
+}
+td.num { font-family: var(--f-mono); font-weight: 600; text-align: right; }
+tr:last-child td { border-bottom: 0; }
+tr:hover td { background: var(--bg-alt); }
+.stage-pill {
+  display: inline-block; padding: 3px 10px; border-radius: var(--r-pill);
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.stage-pill.cold     { background: rgba(154,154,144,.15); color: var(--muted2); }
+.stage-pill.contact  { background: rgba(22,212,232,.15); color: var(--cyan-deep); }
+.stage-pill.meeting  { background: rgba(15,184,204,.18); color: var(--cyan-deep); }
+.stage-pill.proposal { background: rgba(31,157,111,.15); color: var(--ok); }
+.stage-pill.won      { background: var(--ok); color: white; }
+.stage-pill.lost     { background: rgba(192,59,59,.15); color: var(--crit); }
+.stage-pill.followup { background: rgba(201,122,27,.15); color: var(--warn); }
+.icp-fire { font-size: 12px; letter-spacing: -2px; }
+
+/* ── SAÚDE FINANCEIRA ── */
+.health-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.health-card {
+  padding: 22px; border: 1px solid var(--line);
+  border-radius: var(--r-sm); background: white;
+  position: relative; overflow: hidden;
+}
+.health-card.accent {
+  background: var(--ink2); color: var(--panel-text);
+  border-color: transparent;
+}
+.health-card.accent::before {
+  content: ''; position: absolute; top:0; left:0; right:0; height: 3px;
+  background: var(--cyan);
+}
+.health-label {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted2); margin-bottom: 12px;
+}
+.health-card.accent .health-label { color: var(--cyan); }
+.health-value {
+  font-family: var(--f-display); font-size: 36px; font-weight: 800;
+  letter-spacing: -.03em; line-height: 1; color: var(--ink);
+}
+.health-card.accent .health-value { color: white; }
+.health-value .small { font-size: 16px; font-weight: 500; color: var(--muted2); margin-left: 6px; }
+.health-card.accent .health-value .small { color: rgba(213,222,230,.6); }
+.health-sub {
+  margin-top: 10px; font-family: var(--f-mono); font-size: 11px;
+  color: var(--muted2); letter-spacing: .04em;
+}
+.health-card.accent .health-sub { color: rgba(213,222,230,.6); }
+.health-trend {
+  margin-top: 12px; display: flex; gap: 6px; align-items: center;
+  font-family: var(--f-mono); font-size: 11px;
+}
+.health-trend.up   { color: var(--ok); }
+.health-trend.down { color: var(--crit); }
+
+.clients-card {
+  background: white; border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden;
+}
+.clients-card .table-head { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.clients-card h3 { font-family: var(--f-display); font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+.mrr-pill {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  padding: 4px 12px; border-radius: var(--r-pill);
+  background: var(--cyan-dim); color: var(--cyan-deep);
+}
+.client-status {
+  display: inline-block; padding: 3px 10px; border-radius: var(--r-pill);
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.client-status.ativo   { background: rgba(31,157,111,.15); color: var(--ok); }
+.client-status.upgrade { background: rgba(22,212,232,.18); color: var(--cyan-deep); }
+.client-status.pausa   { background: rgba(154,154,144,.15); color: var(--muted2); }
+
+.runway-card {
+  padding: 24px; background: white; border: 1px solid var(--line);
+  border-radius: var(--r-sm); margin-top: 16px;
+}
+.runway-bar-wrap {
+  position: relative; margin-top: 18px; height: 38px;
+  background: var(--line-soft); border-radius: var(--r-sm); overflow: hidden;
+}
+.runway-bar-mrr {
+  position: absolute; left:0; top:0; bottom:0;
+  background: linear-gradient(90deg, var(--ok), #16D4E8);
+}
+.runway-bar-pipeline {
+  position: absolute; top:0; bottom:0;
+  background: rgba(22,212,232,.35);
+}
+.runway-marker {
+  position: absolute; top: -6px; bottom: -6px; width: 2px;
+  background: var(--ink);
+}
+.runway-marker-label {
+  position: absolute; top: -22px; transform: translateX(-50%);
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .08em; color: var(--ink); white-space: nowrap;
+}
+.runway-legend {
+  margin-top: 16px; display: flex; gap: 24px; flex-wrap: wrap;
+  font-family: var(--f-mono); font-size: 11px; color: var(--muted);
+}
+.runway-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.runway-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* ── JORNADA DE COMPRA ── */
+.jornada-hero {
+  display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;
+}
+.jornada-card {
+  padding: 22px; background: white; border: 1px solid var(--line);
+  border-radius: var(--r-sm); position: relative;
+}
+.jornada-card.featured {
+  background: linear-gradient(135deg, var(--ink2) 0%, var(--panel) 100%);
+  color: var(--panel-text); border-color: transparent;
+}
+.jornada-label {
+  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted2);
+  margin-bottom: 12px;
+}
+.jornada-card.featured .jornada-label { color: var(--cyan); }
+.jornada-big {
+  font-family: var(--f-display); font-size: 56px; font-weight: 800;
+  letter-spacing: -.04em; line-height: 1; color: var(--ink);
+}
+.jornada-big .unit { font-size: 18px; font-weight: 500; color: var(--muted2); margin-left: 4px; }
+.jornada-card.featured .jornada-big { color: white; }
+.jornada-card.featured .jornada-big .unit { color: rgba(213,222,230,.6); }
+.jornada-mini {
+  font-family: var(--f-display); font-size: 28px; font-weight: 700;
+  letter-spacing: -.02em; line-height: 1; color: var(--ink);
+}
+.jornada-mini .unit { font-size: 13px; font-weight: 500; color: var(--muted2); margin-left: 4px; }
+.jornada-sub {
+  margin-top: 8px; font-family: var(--f-mono); font-size: 11px;
+  color: var(--muted2); letter-spacing: .04em;
+}
+.jornada-card.featured .jornada-sub { color: rgba(213,222,230,.6); }
+.jornada-empty {
+  padding: 32px; text-align: center; background: var(--bg-alt);
+  border: 1px dashed var(--line-cool); border-radius: var(--r-sm);
+  color: var(--muted); font-size: 13px;
+}
+.jornada-empty strong {
+  display: block; color: var(--ink); font-family: var(--f-display);
+  font-size: 16px; margin-bottom: 6px;
+}
+
+/* ── RELATÓRIO SEMANAL · 3 CANAIS ── */
+.weekly-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.weekly-channel {
+  padding: 22px; background: white; border: 1px solid var(--line);
+  border-radius: var(--r-sm); position: relative;
+}
+.weekly-channel::before {
+  content: ''; position: absolute; top:0; left:0; right:0; height: 3px;
+}
+.weekly-channel.ligacao::before { background: var(--cyan); }
+.weekly-channel.disparo::before { background: var(--ink); }
+.weekly-channel.follow::before  { background: var(--warn); }
+.weekly-icon {
+  font-size: 22px; margin-bottom: 8px;
+}
+.weekly-title {
+  font-family: var(--f-display); font-size: 18px; font-weight: 700;
+  letter-spacing: -.01em; margin-bottom: 4px;
+}
+.weekly-sub {
+  font-family: var(--f-mono); font-size: 10px; color: var(--muted2);
+  letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px;
+}
+.weekly-rows {
+  display: grid; gap: 8px;
+}
+.weekly-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 8px 0; border-bottom: 1px solid var(--line-soft);
+}
+.weekly-row:last-child { border-bottom: 0; }
+.weekly-row-label {
+  font-family: var(--f-mono); font-size: 11px; color: var(--muted);
+  letter-spacing: .04em;
+}
+.weekly-row-value {
+  font-family: var(--f-display); font-size: 18px; font-weight: 700;
+  color: var(--ink);
+}
+.weekly-row-value.placeholder { color: var(--muted3); font-weight: 400; }
+.weekly-placeholder {
+  padding: 32px; text-align: center;
+  background: var(--bg-alt); border: 1px dashed var(--line-cool);
+  border-radius: var(--r-sm); color: var(--muted);
+  font-size: 13px;
+}
+.weekly-placeholder strong { display: block; color: var(--ink); font-family: var(--f-display); font-size: 16px; margin-bottom: 6px; }
+
+/* ── FOOTER ── */
+.footer {
+  margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--f-mono); font-size: 11px; color: var(--muted3);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1180px) {
+  .kpi-grid, .conv-grid { grid-template-columns: repeat(2, 1fr); }
+  .funnel { grid-template-columns: 1fr; }
+  .funnel-step::after { display: none; }
+  .chart-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .kpi-grid, .conv-grid { grid-template-columns: 1fr; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand-mark">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-name">Variant<em>mídia</em></div>
+        <div class="brand-tag">Dashboard Operacional · Comunidade Escolhidos</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-item">Mês corrente<strong id="meta-month">—</strong></div>
+      <div class="meta-item">Atualizado<strong id="meta-updated">—</strong></div>
+      <div class="live-pill"><span class="live-dot"></span> <span id="live-status">Carregando</span></div>
+    </div>
+  </div>
+
+  <nav class="quick-nav" aria-label="Navegação do dashboard">
+    <a class="nav-primary" href="#saude">Visão executiva</a>
+    <a href="#funil">Comercial</a>
+    <a href="#historico">Histórico</a>
+    <a href="#crm">Pipeline</a>
+    <a href="#semanal">Canais</a>
+    <span class="privacy-note">● somente neste computador</span>
+  </nav>
+
+  <!-- CONFIG -->
+  <div class="config">
+    <label>Sheet ID</label>
+    <input id="sheet-id" type="text" value="1HUzi9pPREWx9bp1iOidEp-NoP_UPTBRaJi1sIV-2rYI">
+    <button onclick="loadAll()">Recarregar</button>
+    <div class="config-hint">
+      Dashboard puxa <strong>8 abas</strong>: 6 meses do Diário de Bordo (Jan→Jun) · Prospecções e Follow-up · Clientes Ativos. A planilha precisa estar com <em>"Qualquer pessoa com o link"</em> em modo leitor.
+    </div>
+  </div>
+  <div class="data-quality" id="data-quality">Fonte conectada ao Google Sheets · atualização manual ou ao abrir</div>
+
+  <!-- DIAGNÓSTICO -->
+  <div class="insight">
+    <div class="insight-grid">
+      <div style="font-family:var(--f-display); font-size:48px; font-weight:800; color:var(--cyan); line-height:1">⚡</div>
+      <div>
+        <div class="insight-label">Diagnóstico Escolhidos · Maior gargalo</div>
+        <div class="insight-text" id="insight-text">Carregando análise...</div>
+      </div>
+      <div class="insight-action" id="insight-action">—</div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 00 — SAÚDE FINANCEIRA -->
+  <div class="section-rule" id="saude">
+    <span class="section-num">00</span>
+    <h2 class="section-title">Saúde Financeira</h2>
+    <span class="section-tag">MRR · ARR · Gap pra meta · Runway de pipeline</span>
+  </div>
+  <div class="health-grid">
+    <div class="health-card accent">
+      <div class="health-label">MRR atual</div>
+      <div class="health-value">R$ <span id="v-mrr">0</span></div>
+      <div class="health-sub" id="s-mrr">— clientes ativos</div>
+    </div>
+    <div class="health-card">
+      <div class="health-label">ARR projetado</div>
+      <div class="health-value">R$ <span id="v-arr">0</span></div>
+      <div class="health-sub">MRR × 12 (sem variável)</div>
+    </div>
+    <div class="health-card">
+      <div class="health-label">Gap pra meta mensal</div>
+      <div class="health-value">R$ <span id="v-gap">0</span></div>
+      <div class="health-sub" id="s-gap">— fechamentos faltam</div>
+    </div>
+    <div class="health-card">
+      <div class="health-label">Pipeline em aberto</div>
+      <div class="health-value">R$ <span id="v-pipe">0</span></div>
+      <div class="health-sub" id="s-pipe">— propostas ativas</div>
+    </div>
+  </div>
+
+  <div class="runway-card">
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px">
+      <h3 style="font-family:var(--f-display); font-size:16px; font-weight:700">Cobertura da meta de R$ 15.000</h3>
+      <span style="font-family:var(--f-mono); font-size:11px; color:var(--muted2)" id="runway-summary">—</span>
+    </div>
+    <div class="runway-bar-wrap">
+      <div class="runway-bar-mrr" id="runway-mrr"></div>
+      <div class="runway-bar-pipeline" id="runway-pipeline"></div>
+      <div class="runway-marker" id="runway-marker" style="left:100%">
+        <div class="runway-marker-label">META 15K</div>
+      </div>
+    </div>
+    <div class="runway-legend">
+      <span><span class="runway-dot" style="background:#1F9D6F"></span> MRR recorrente</span>
+      <span><span class="runway-dot" style="background:rgba(22,212,232,.55)"></span> Pipeline em aberto</span>
+      <span><span class="runway-dot" style="background:#1A1A1A"></span> Meta mensal</span>
+    </div>
+  </div>
+
+  <div class="clients-card" style="margin-top:16px">
+    <div class="table-head">
+      <h3>Clientes Ativos</h3>
+      <span class="mrr-pill" id="mrr-pill">MRR R$ 0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Status</th>
+          <th>Notas</th>
+          <th style="text-align:right">Variável</th>
+          <th style="text-align:right">Recorrente</th>
+        </tr>
+      </thead>
+      <tbody id="clients-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="clients-card" style="margin-top:16px">
+    <div class="table-head">
+      <h3>Propostas em Aberto</h3>
+      <span class="mrr-pill" id="propostas-pill">0 propostas</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Canal</th>
+          <th>Status</th>
+          <th>Próxima ação</th>
+          <th style="text-align:right">Aberta em</th>
+          <th style="text-align:right">Valor</th>
+        </tr>
+      </thead>
+      <tbody id="propostas-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 1 — KPIs DE FATURAMENTO -->
+  <div class="section-rule" id="faturamento">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Faturamento &amp; Produção</h2>
+    <span class="section-tag">Meta R$ 15.000 · 10 fechamentos · Ticket R$ 1.500</span>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi" id="kpi-faturamento">
+      <div class="kpi-label">Faturamento do mês</div>
+      <div class="kpi-value">R$ <span id="v-faturamento">0</span></div>
+      <div class="kpi-meta">
+        <span class="kpi-target">Meta: R$ 15.000</span>
+        <span class="kpi-delta" id="d-faturamento">0%</span>
+      </div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="b-faturamento" style="width:0"></div></div>
+    </div>
+    <div class="kpi" id="kpi-producao">
+      <div class="kpi-label">Valor produzido</div>
+      <div class="kpi-value">R$ <span id="v-producao">0</span></div>
+      <div class="kpi-meta">
+        <span class="kpi-target">Soma das etapas × valor</span>
+        <span class="kpi-delta" id="d-producao">0</span>
+      </div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="b-producao" style="width:0"></div></div>
+    </div>
+    <div class="kpi" id="kpi-fechados">
+      <div class="kpi-label">Fechamentos do mês</div>
+      <div class="kpi-value"><span id="v-fechados">0</span><span class="unit">/ 10</span></div>
+      <div class="kpi-meta">
+        <span class="kpi-target">Ticket médio: R$ 1.500</span>
+        <span class="kpi-delta" id="d-fechados">0%</span>
+      </div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="b-fechados" style="width:0"></div></div>
+    </div>
+    <div class="kpi" id="kpi-hora">
+      <div class="kpi-label">Custo do tempo investido</div>
+      <div class="kpi-value">R$ <span id="v-hora">0</span></div>
+      <div class="kpi-meta">
+        <span class="kpi-target">R$ 375/h prospecção</span>
+        <span class="kpi-delta" id="d-hora">—</span>
+      </div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="b-hora" style="width:0"></div></div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 2 — FUNIL 5 ETAPAS -->
+  <div class="section-rule" id="funil">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Funil Outbound · 5 etapas</h2>
+    <span class="section-tag">LD → DC → R1 Marc. → R2 Real. → FR · vs Meta Mensal</span>
+  </div>
+  <div class="funnel" id="funnel"></div>
+
+  <!-- SEÇÃO 3 — TAXAS DE CONVERSÃO -->
+  <div class="section-rule" id="conversoes">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Taxas de Conversão</h2>
+    <span class="section-tag">Atual (ano) vs Números de Ouro</span>
+  </div>
+  <div class="conv-grid" id="conv-grid"></div>
+
+  <!-- SEÇÃO 4 — HISTÓRICO ANUAL -->
+  <div class="section-rule" id="historico">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Histórico Anual</h2>
+    <span class="section-tag">12 meses · Volume por etapa</span>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Evolução mensal</h3>
+      <div class="sub">LD / DC / R1 Marc. / R2 Real. — escala log pra comparar volume com proporção</div>
+      <div class="chart-wrap tall"><canvas id="chart-historico"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Fechamentos no ano</h3>
+      <div class="sub">Cada barra é 1 fechamento real</div>
+      <div class="chart-wrap tall"><canvas id="chart-fechamentos"></canvas></div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 05 — COMPARAÇÃO COM MELHOR MÊS -->
+  <div class="section-rule" id="comparacao">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Comparação com Melhor Mês</h2>
+    <span class="section-tag">Mês corrente vs. seu pico histórico · Receita · Volume · Conversão</span>
+  </div>
+  <div id="best-month-grid" class="compare-grid"></div>
+  <div id="compare-detail" class="compare-detail"></div>
+
+  <!-- SEÇÃO 06 — RITMO DIÁRIO -->
+  <div class="section-rule" id="ritmo">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Ritmo Diário</h2>
+    <span class="section-tag">Junho 2026 · Meta 17 LD/dia</span>
+  </div>
+  <div class="chart-card">
+    <h3>Ligações Discadas por dia</h3>
+    <div class="sub">Linha tracejada = meta diária (17 LD). Vermelho = abaixo de 50% da meta · Amarelo = 50-95% · Cyan = na meta</div>
+    <div class="chart-wrap tall"><canvas id="chart-daily"></canvas></div>
+  </div>
+
+  <!-- SEÇÃO 07 — CRM RECENTE -->
+  <div class="section-rule" id="crm">
+    <span class="section-num">07</span>
+    <h2 class="section-title">CRM · Pipeline Ativo</h2>
+    <span class="section-tag">Reuniões agendadas, follow-ups e oportunidades quentes</span>
+  </div>
+  <div class="table-card">
+    <div class="table-head">
+      <h3>Próximas ações</h3>
+      <span class="count"><span id="crm-count">0</span> registros</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Empresa</th>
+          <th>Decisor</th>
+          <th>Resultado</th>
+          <th>ICP</th>
+          <th>Bairro</th>
+          <th style="text-align:right">Retorno</th>
+          <th style="text-align:right">Tentativas</th>
+        </tr>
+      </thead>
+      <tbody id="crm-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 08 — JORNADA DE COMPRA -->
+  <div class="section-rule" id="jornada">
+    <span class="section-num">08</span>
+    <h2 class="section-title">Jornada de Compra</h2>
+    <span class="section-tag">Dias entre 1º contato e pagamento · base: clientes fechados</span>
+  </div>
+  <div id="jornada-content"></div>
+
+  <!-- SEÇÃO 09 — RELATÓRIO SEMANAL 3 CANAIS -->
+  <div class="section-rule" id="semanal">
+    <span class="section-num">09</span>
+    <h2 class="section-title">Relatório Semanal · 3 Canais</h2>
+    <span class="section-tag" id="weekly-period">Ligações · Disparos · Follow-up</span>
+  </div>
+  <div class="weekly-grid">
+    <div class="weekly-channel ligacao">
+      <div class="weekly-icon">📞</div>
+      <div class="weekly-title">Ligações</div>
+      <div class="weekly-sub">Cold call · canal primário</div>
+      <div class="weekly-rows">
+        <div class="weekly-row"><span class="weekly-row-label">Ligações</span><span class="weekly-row-value placeholder" id="w-lig-ligacoes">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">Conexões</span><span class="weekly-row-value placeholder" id="w-lig-conexoes">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">Decisores</span><span class="weekly-row-value placeholder" id="w-lig-decisores">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">R1 marcadas</span><span class="weekly-row-value placeholder" id="w-lig-reunioes">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">R2 realizadas</span><span class="weekly-row-value placeholder" id="w-lig-rr">—</span></div>
+      </div>
+    </div>
+    <div class="weekly-channel disparo">
+      <div class="weekly-icon">🚀</div>
+      <div class="weekly-title">Disparos</div>
+      <div class="weekly-sub">Mensagens em escala</div>
+      <div class="weekly-rows">
+        <div class="weekly-row"><span class="weekly-row-label">Qtd Disparos</span><span class="weekly-row-value placeholder" id="w-dis-qtd">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">Decisores gerados</span><span class="weekly-row-value placeholder" id="w-dis-decisores">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">R1 marcadas</span><span class="weekly-row-value placeholder" id="w-dis-reunioes">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">R2 realizadas</span><span class="weekly-row-value placeholder" id="w-dis-rr">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">Taxa Disparo→Reunião</span><span class="weekly-row-value placeholder" id="w-dis-taxa">—</span></div>
+      </div>
+    </div>
+    <div class="weekly-channel follow">
+      <div class="weekly-icon">🔁</div>
+      <div class="weekly-title">Follows</div>
+      <div class="weekly-sub">Retorno em conversas abertas</div>
+      <div class="weekly-rows">
+        <div class="weekly-row"><span class="weekly-row-label">Qtd Follows</span><span class="weekly-row-value placeholder" id="w-fol-qtd">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">Decisores gerados</span><span class="weekly-row-value placeholder" id="w-fol-decisores">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">R1 marcadas</span><span class="weekly-row-value placeholder" id="w-fol-reunioes">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">R2 realizadas</span><span class="weekly-row-value placeholder" id="w-fol-rr">—</span></div>
+        <div class="weekly-row"><span class="weekly-row-label">Taxa Follow→Reunião</span><span class="weekly-row-value placeholder" id="w-fol-taxa">—</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="weekly-placeholder" id="weekly-placeholder" style="margin-top:16px">
+    <strong>Aba "Semanais 2026" ainda não criada na planilha</strong>
+    Crie a aba com as colunas <em>Data · Canal · Ligações · Conexões · Decisores · Reuniões · Horas · Melhor Horário · Dificuldade</em> e preencha após cada dia/semana. O dashboard vai consolidar automaticamente assim que ela existir.
+  </div>
+
+  <div class="footer">
+    <span>Variantmidia · Métrica viva · pt-BR</span>
+    <span id="footer-ts">—</span>
+  </div>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   CONFIG — extraído da aba "Números de Ouro"
+═══════════════════════════════════════════════════════ */
+const CONFIG = {
+  metaFaturamento: 15000,
+  ticketMedio: 1500,
+  metasMensais: { LD: 347, DC: 104, RM: 42, RR: 25, FR: 10 },
+  metasDiarias: { LD: 17, DC: 5, RM: 2, RR: 1, FR: 1 },
+  valorEtapa:   { LD: 43, DC: 144, RM: 360, RR: 600, FR: 1500 },
+  numerosOuro:  { "LD>DC": 0.30, "DC>RM": 0.40, "RM>RR": 0.60, "RR>FR": 0.40 },
+  diagnostico:  {
+    "LD>DC": "Qualidade da lista de prospecção",
+    "DC>RM": "Execução do script de agendamento (DC→R1)",
+    "RM>RR": "Follow-up pós-marcação / no-show (R1→R2)",
+    "RR>FR": "Habilidade de negociação e fechamento (R2→FR)"
+  },
+  horaProspeccao: 375,
+  horasMes: 40,
+  meses: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+
+  /* ─── GIDs reais da planilha CRM + CLAUDE ─── */
+  GIDS: {
+    prospeccoes:    0,
+    clientesAtivos: 223637761,
+    semanais:       1021780426,
+    meses: {
+      Jan: 1911990810,
+      Fev: 1309725648,
+      Mar: 1243909087,
+      Abr: 1589537166,
+      Mai: 1596124703,
+      Jun: 225642064
+    }
+  },
+
+  /* ─── Fallback (usado só se Clientes Ativos vier vazio) ─── */
+  propostasAbertas: [
+    { cliente: "Advocacia (3 sócios)", valor: 2700, dataAbertura: "30/05/2026", status: "Em negociação", canal: "Outbound", proximaAcao: "Tentar marcar 2ª reunião c/ 3 sócios" }
+  ]
+};
+
+const DASH_STATE = {
+  sheetId: null,
+  numerosOuro: null,      // agregado de todos os meses (compat com render existente)
+  diarioBordo: null,      // dias do mês corrente (Jun)
+  todosMeses: null,       // { Jan: [...], Fev: [...], ... } pra histórico
+  crm: null,              // Prospecções e Follow-up
+  clientesAtivos: null,   // aba Clientes Ativos (substitui hardcoded)
+  semanais: null,         // métricas por canal da aba Semanais 2026
+  monthIdx: new Date().getMonth()
+};
+
+/* ═══════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════ */
+const fmtBRL = n => "R$ " + Math.round(n).toLocaleString("pt-BR");
+const fmtNum = n => Math.round(n).toLocaleString("pt-BR");
+const fmtPct = n => (n*100).toFixed(1).replace(".",",") + "%";
+
+const normalizeKey = value => String(value || "")
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .trim()
+  .toLowerCase()
+  .replace(/\s+/g, " ");
+
+function parsePct(s) {
+  if (!s) return 0;
+  const m = String(s).replace(/\./g,"").replace(",",".").match(/[\d.]+/);
+  return m ? parseFloat(m[0])/100 : 0;
+}
+function parseNum(s) {
+  if (s==null || s==="") return 0;
+  const v = String(s).replace(/[R$.\s]/g,"").replace(",",".").match(/-?[\d.]+/);
+  return v ? parseFloat(v[0]) : 0;
+}
+function classify(actual, target) {
+  if (!target) return "warn";
+  const p = actual / target;
+  if (p >= 0.95) return "ok";
+  if (p >= 0.50) return "warn";
+  return "crit";
+}
+
+/* ═══════════════════════════════════════════════════════
+   SHEET LOADER — JSONP (contorna CORS em file://)
+═══════════════════════════════════════════════════════ */
+function fetchSheet(sheetId, gid) {
+  return new Promise((resolve, reject) => {
+    const cbName = `__vmsheet_${Date.now()}_${Math.floor(Math.random()*1e6)}`;
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error(`Sheet ${gid}: timeout (10s)`));
+    }, 10000);
+    function cleanup() {
+      clearTimeout(timeout);
+      try { delete window[cbName]; } catch(e) {}
+      if (script && script.parentNode) script.parentNode.removeChild(script);
+    }
+    window[cbName] = (data) => {
+      cleanup();
+      try {
+        if (!data || !data.table) { reject(new Error(`Sheet ${gid}: resposta inválida`)); return; }
+        const cols = data.table.cols || [];
+        const rawRows = data.table.rows || [];
+        const ncols = cols.length;
+        // headers=0 → todas as linhas da planilha vêm em rawRows (linha 1 incluída)
+        const rows = rawRows.map(r => {
+          const arr = new Array(ncols).fill("");
+          if (r && r.c) {
+            for (let i = 0; i < ncols; i++) {
+              const cell = r.c[i];
+              if (cell) {
+                arr[i] = (cell.f != null && cell.f !== "") ? cell.f
+                       : (cell.v != null) ? cell.v : "";
+              }
+            }
+          }
+          return arr.map(v => v == null ? "" : String(v));
+        });
+        resolve(rows);
+      } catch (e) { reject(e); }
+    };
+    const script = document.createElement("script");
+    script.onerror = () => { cleanup(); reject(new Error(`Sheet ${gid}: erro ao carregar (verifique permissão "Qualquer pessoa com o link · Leitor")`)); };
+    script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?gid=${gid}&headers=0&tqx=responseHandler:${cbName}`;
+    document.head.appendChild(script);
+  });
+}
+const fetchCSV = fetchSheet; // alias retrocompat
+
+/* parse "Números de Ouro" — extrai histórico mensal e taxas */
+function parseNumerosOuro(rows) {
+  // Procura a linha que começa com "Meta de Ligações Discadas" no relatório (col G)
+  // Formato: ["Meta...", 347, "", "Meta...", 17, "", "Ligações Discadas", m1, m2, ..., m12, total, ...]
+  const result = {
+    historico: { LD: [], DC: [], RM: [], RR: [], FR: [] },
+    taxas: { "LD>DC": [], "DC>RM": [], "RM>RR": [], "RR>FR": [] },
+    taxasTotal: { "LD>DC": 0, "DC>RM": 0, "RM>RR": 0, "RR>FR": 0 },
+    totaisAno: { LD: 0, DC: 0, RM: 0, RR: 0, FR: 0 }
+  };
+  const stageKey = {
+    "Ligações Discadas":"LD",
+    "Decisores Contatados":"DC",
+    "R1 Marcadas":"RM",
+    "Reuniões Marcadas":"RM",
+    "R2 Realizadas":"RR",
+    "Reuniões Realizadas":"RR",
+    "Fechamentos Realizados":"FR"
+  };
+  const taxaKey = ["LD>DC","DC>RM","RM>RR","RR>FR"];
+  for (const row of rows) {
+    if (!row) continue;
+    const label = (row[6]||"").trim();
+    if (stageKey[label]) {
+      const k = stageKey[label];
+      const monthly = [];
+      for (let i=7; i<=18; i++) monthly.push(parseNum(row[i]||"0"));
+      result.historico[k] = monthly;
+      result.totaisAno[k] = parseNum(row[19]||"0") || monthly.reduce((a,b)=>a+b,0);
+    }
+    if (taxaKey.includes(label)) {
+      const monthly = [];
+      for (let i=7; i<=18; i++) monthly.push(parsePct(row[i]||"0"));
+      result.taxas[label] = monthly;
+      result.taxasTotal[label] = parsePct(row[19]||"0");
+    }
+  }
+  return result;
+}
+
+/* parse aba mensal (Jan, Fev, ..., Dez)
+   Estrutura REAL (confirmada pelos prints):
+     A = Data
+     B = LABELS (CONVERSÃO/LD>DC/META) — NÃO contém dados diários
+     C = Ligações Discadas        (LD)
+     D = Decisores Contatados      (DC)
+     E = Reuniões Marcadas         (RM = R1 marcada)
+     F = Reuniões Realizadas       (RR = R2 realizada)
+     G = Fechamentos Realizados    (FR)
+   Ignora linhas de cabeçalho, META, CONVERSÃO — só pega linhas com data válida em A.
+*/
+function parseMesDiario(rows, monthLabel) {
+  const days = [];
+  for (const row of rows) {
+    if (!row || !row[0]) continue;
+    const dateStr = String(row[0]).trim();
+    const m = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!m) continue;
+    const [_, dd, mm, yyyy] = m;
+    days.push({
+      mes:  monthLabel,
+      date: `${dd.padStart(2,"0")}/${mm.padStart(2,"0")}`,
+      dataFull: `${dd.padStart(2,"0")}/${mm.padStart(2,"0")}/${yyyy}`,
+      dd:   parseInt(dd,10),
+      mm:   parseInt(mm,10),
+      yyyy: parseInt(yyyy,10),
+      LD:   parseNum(row[2]||"0"),  // col C — Ligações Discadas
+      DC:   parseNum(row[3]||"0"),  // col D — Decisores Contatados
+      RM:   parseNum(row[4]||"0"),  // col E — R1 Marcadas
+      RR:   parseNum(row[5]||"0"),  // col F — R2 Realizadas
+      FR:   parseNum(row[6]||"0")   // col G — Fechamentos
+    });
+  }
+  return days;
+}
+/* Alias retrocompat — usado pelo renderDaily atual */
+const parseDiarioBordo = (rows) => parseMesDiario(rows, CONFIG.meses[new Date().getMonth()]);
+
+/* Agrega todos os meses em estrutura compatível com parseNumerosOuro
+   (mantém render existente intacto) */
+function buildNumerosOuroFromMonths(mesesData) {
+  const result = {
+    historico: { LD: new Array(12).fill(0), DC: new Array(12).fill(0),
+                 RM: new Array(12).fill(0), RR: new Array(12).fill(0),
+                 FR: new Array(12).fill(0) },
+    taxas: { "LD>DC": new Array(12).fill(0), "DC>RM": new Array(12).fill(0),
+             "RM>RR": new Array(12).fill(0), "RR>FR": new Array(12).fill(0) },
+    taxasTotal: { "LD>DC": 0, "DC>RM": 0, "RM>RR": 0, "RR>FR": 0 },
+    totaisAno:  { LD: 0, DC: 0, RM: 0, RR: 0, FR: 0 }
+  };
+  const monthByIdx = {};
+  Object.entries(mesesData).forEach(([nome, days]) => {
+    if (!days || !days.length) return;
+    const mmIdx = days[0].mm - 1;
+    if (!monthByIdx[mmIdx]) monthByIdx[mmIdx] = { LD:0, DC:0, RM:0, RR:0, FR:0 };
+    for (const d of days) {
+      monthByIdx[mmIdx].LD += d.LD;
+      monthByIdx[mmIdx].DC += d.DC;
+      monthByIdx[mmIdx].RM += d.RM;
+      monthByIdx[mmIdx].RR += d.RR;
+      monthByIdx[mmIdx].FR += d.FR;
+    }
+  });
+  for (let i = 0; i < 12; i++) {
+    const m = monthByIdx[i];
+    if (!m) continue;
+    result.historico.LD[i] = m.LD;
+    result.historico.DC[i] = m.DC;
+    result.historico.RM[i] = m.RM;
+    result.historico.RR[i] = m.RR;
+    result.historico.FR[i] = m.FR;
+    result.totaisAno.LD += m.LD;
+    result.totaisAno.DC += m.DC;
+    result.totaisAno.RM += m.RM;
+    result.totaisAno.RR += m.RR;
+    result.totaisAno.FR += m.FR;
+    result.taxas["LD>DC"][i] = m.LD ? m.DC/m.LD : 0;
+    result.taxas["DC>RM"][i] = m.DC ? m.RM/m.DC : 0;
+    result.taxas["RM>RR"][i] = m.RM ? m.RR/m.RM : 0;
+    result.taxas["RR>FR"][i] = m.RR ? m.FR/m.RR : 0;
+  }
+  const t = result.totaisAno;
+  result.taxasTotal["LD>DC"] = t.LD ? t.DC/t.LD : 0;
+  result.taxasTotal["DC>RM"] = t.DC ? t.RM/t.DC : 0;
+  result.taxasTotal["RM>RR"] = t.RM ? t.RR/t.RM : 0;
+  result.taxasTotal["RR>FR"] = t.RR ? t.FR/t.RR : 0;
+  return result;
+}
+
+/* parse aba "Clientes Ativos" — usa indice fixo (A=Cliente, B=Recorrente, C=Variavel %, D=Variavel Base, E=Inicio, F=Status, G=Notas)
+   Headers B e C ficaram vazios na criacao da aba, entao nao da pra buscar por nome.
+*/
+function parseClientesAtivos(rows) {
+  if (!rows || rows.length < 2) return [];
+  const byClient = new Map();
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r || !r[0] || !String(r[0]).trim()) continue;
+    const variavelRaw = String(r[2] || "0").trim();
+    let variavel = parseNum(variavelRaw.replace("%",""));
+    if (variavel > 1) variavel = variavel / 100;
+    if (!Number.isFinite(variavel) || variavel < 0 || variavel > 1) variavel = 0;
+    const item = {
+      cliente:      String(r[0]).trim(),
+      recorrente:   parseNum(r[1] || "0"),
+      variavel,
+      variavelBase: r[3] || "",
+      inicio:       r[4] || "",
+      status:       String(r[5] || "ativo").trim().toLowerCase(),
+      notas:        r[6] || ""
+    };
+    const key = normalizeKey(item.cliente);
+    const previous = byClient.get(key);
+    if (!previous || item.recorrente > previous.recorrente || item.status === "ativo") {
+      byClient.set(key, item);
+    }
+  }
+  return [...byClient.values()];
+}
+
+/* parse aba CRM */
+function parseCRM(rows) {
+  if (!rows || rows.length < 2) return [];
+  const headers = rows[0].map(h => String(h||"").trim());
+  const idx = name => headers.indexOf(name);
+  const out = [];
+  for (let i=1; i<rows.length; i++) {
+    const r = rows[i];
+    if (!r || !r[idx("Nome da empresa")]) continue;
+    out.push({
+      entrada:    r[idx("Entrada") >= 0 ? idx("Entrada") : idx("Data")] || "",
+      empresa:    r[idx("Nome da empresa")] || "",
+      decisor:    r[idx("Nome do Decisor")] || "",
+      resultado:  (r[idx("Resultado da Call")]||"").trim(),
+      icp:        r[idx("ICP")] || "",
+      bairro:     r[idx("Bairro")] || "",
+      retorno:    r[idx("Retorno/Reunião")] || "",
+      tentativas: parseInt(r[idx("Tentativas")]||"0",10),
+      // ─── Colunas novas (existem só se você criar) ───
+      canal:           r[idx("Canal Origem")] || "",
+      dataPagamento:   r[idx("Data Pagamento")] || "",
+      valorContratado: parseNum(r[idx("Valor Contratado")] || "0")
+    });
+  }
+  return out;
+}
+
+function parseSemanais(rows) {
+  if (!rows || rows.length < 2) return [];
+  const headers = rows[0].map(h => normalizeKey(h));
+  const find = (...names) => names.map(normalizeKey).map(n => headers.indexOf(n)).find(i => i >= 0) ?? -1;
+  const cols = {
+    data: find("Data"), canal: find("Canal"), ligacoes: find("Ligações", "Ligacoes"),
+    conexoes: find("Conexões", "Conexoes"), decisores: find("Decisores"),
+    reunioes: find("Reuniões", "Reunioes", "RM"), rr: find("RR", "R2 Realizadas"),
+    vendas: find("Vendas", "FR"), horas: find("Horas")
+  };
+  // A aba legada usa cabeçalhos mesclados/vazios. Nela, a ordem estável é
+  // Data, Canal, Volume, Conexões, Decisores, R1, R2, Vendas, Horas.
+  const at = (r, named, fallback) => r[named >= 0 ? named : fallback];
+  const byDayChannel = new Map();
+  rows.slice(1).filter(r => r && at(r, cols.canal, 1)).forEach(r => {
+    const item = {
+      data: at(r, cols.data, 0) || "",
+      canal: normalizeKey(at(r, cols.canal, 1)),
+      ligacoes: parseNum(at(r, cols.ligacoes, 2)), conexoes: parseNum(at(r, cols.conexoes, 3)),
+      decisores: parseNum(at(r, cols.decisores, 4)), reunioes: parseNum(at(r, cols.reunioes, 5)),
+      rr: parseNum(at(r, cols.rr, 6)), vendas: parseNum(at(r, cols.vendas, 7)), horas: parseNum(at(r, cols.horas, 8))
+    };
+    byDayChannel.set(`${item.data}|${item.canal}`, item); // atualização do dia substitui duplicata
+  });
+  return [...byDayChannel.values()];
+}
+
+function renderWeekly() {
+  const rows = DASH_STATE.semanais || [];
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setHours(0,0,0,0);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  let dated = rows.filter(r => {
+    const d = parseDataBR(r.data);
+    return d && d >= monday && d <= now;
+  });
+  let periodStart = monday;
+  if (!dated.length && rows.length) {
+    const latest = rows.map(r => parseDataBR(r.data)).filter(Boolean).sort((a,b) => b-a)[0];
+    periodStart = new Date(latest); periodStart.setHours(0,0,0,0);
+    periodStart.setDate(latest.getDate() - ((latest.getDay() + 6) % 7));
+    const periodEnd = new Date(periodStart); periodEnd.setDate(periodStart.getDate() + 6); periodEnd.setHours(23,59,59,999);
+    dated = rows.filter(r => { const d = parseDataBR(r.data); return d && d >= periodStart && d <= periodEnd; });
+  }
+  const source = dated;
+  const sumFor = aliases => source.filter(r => aliases.includes(r.canal)).reduce((a, r) => ({
+    ligacoes: a.ligacoes + r.ligacoes, conexoes: a.conexoes + r.conexoes,
+    decisores: a.decisores + r.decisores, reunioes: a.reunioes + r.reunioes,
+    rr: a.rr + r.rr, vendas: a.vendas + r.vendas
+  }), { ligacoes:0, conexoes:0, decisores:0, reunioes:0, rr:0, vendas:0 });
+  const lig = sumFor(["ligacao", "ligacoes", "cold call"]);
+  const dis = sumFor(["disparo", "disparos", "whatsapp"]);
+  const fol = sumFor(["follow", "follows", "follow-up", "follow up"]);
+  const set = (id, value, format = fmtNum) => {
+    const el = document.getElementById(id); if (!el) return;
+    el.textContent = format(value); el.classList.remove("placeholder");
+  };
+  set("w-lig-ligacoes", lig.ligacoes); set("w-lig-conexoes", lig.conexoes);
+  set("w-lig-decisores", lig.decisores); set("w-lig-reunioes", lig.reunioes); set("w-lig-rr", lig.rr);
+  set("w-dis-qtd", dis.ligacoes); set("w-dis-decisores", dis.decisores); set("w-dis-reunioes", dis.reunioes);
+  set("w-dis-rr", dis.rr); set("w-dis-taxa", dis.ligacoes ? dis.reunioes / dis.ligacoes : 0, fmtPct);
+  set("w-fol-qtd", fol.ligacoes); set("w-fol-decisores", fol.decisores); set("w-fol-reunioes", fol.reunioes);
+  set("w-fol-rr", fol.rr); set("w-fol-taxa", fol.ligacoes ? fol.reunioes / fol.ligacoes : 0, fmtPct);
+  const period = document.getElementById("weekly-period");
+  if (period && source.length) {
+    const end = new Date(periodStart); end.setDate(periodStart.getDate() + 6);
+    const short = d => d.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit"});
+    period.textContent = `Semana de ${short(periodStart)} a ${short(end)} · ${source.length} registros`;
+  }
+  const placeholder = document.getElementById("weekly-placeholder");
+  if (placeholder) {
+    placeholder.style.display = rows.length ? "none" : "block";
+    if (!rows.length) placeholder.querySelector("strong").textContent = 'Sem registros válidos na aba "Semanais 2026"';
+  }
+}
+
+/* calcula Jornada de Compra (dias entre Entrada e Data Pagamento) */
+function parseDataBR(s) {
+  if (!s) return null;
+  const str = String(s).trim();
+  // tenta dd/mm/yyyy
+  let m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+  // tenta yyyy-mm-dd
+  m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+  return null;
+}
+function computeJornadaCompra(crm) {
+  const fechados = crm.filter(c => c.dataPagamento && c.entrada);
+  const jornadas = fechados.map(c => {
+    const d1 = parseDataBR(c.entrada);
+    const d2 = parseDataBR(c.dataPagamento);
+    if (!d1 || !d2) return null;
+    return {
+      empresa: c.empresa,
+      canal: c.canal || "—",
+      valor: c.valorContratado || 0,
+      dias: Math.round((d2 - d1) / 86400000),
+      entrada: c.entrada,
+      pagamento: c.dataPagamento
+    };
+  }).filter(Boolean);
+  const media = jornadas.length ? Math.round(jornadas.reduce((s,j)=>s+j.dias, 0) / jornadas.length) : 0;
+  const mediana = (() => {
+    if (!jornadas.length) return 0;
+    const sorted = [...jornadas].sort((a,b)=>a.dias-b.dias);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[mid].dias : Math.round((sorted[mid-1].dias + sorted[mid].dias) / 2);
+  })();
+  const minDias = jornadas.length ? Math.min(...jornadas.map(j=>j.dias)) : 0;
+  const maxDias = jornadas.length ? Math.max(...jornadas.map(j=>j.dias)) : 0;
+  return { jornadas, media, mediana, minDias, maxDias, count: jornadas.length };
+}
+
+function computeEsforcoComercial(crm) {
+  const reuniaoStages = new Set(["reuniao agendada", "enviar proposta", "proposta enviada/apresentada", "cliente", "desqualificado reuniao"]);
+  const valid = crm.filter(c => Number.isFinite(c.tentativas) && c.tentativas > 0);
+  const summarize = list => {
+    if (!list.length) return { media:null, mediana:null, min:null, max:null, count:0 };
+    const values = list.map(c => c.tentativas).sort((a,b) => a-b);
+    const mid = Math.floor(values.length / 2);
+    return {
+      media: values.reduce((a,b) => a+b, 0) / values.length,
+      mediana: values.length % 2 ? values[mid] : (values[mid-1] + values[mid]) / 2,
+      min: values[0], max: values[values.length - 1], count: values.length
+    };
+  };
+  return {
+    reunioes: summarize(valid.filter(c => reuniaoStages.has(normalizeKey(c.resultado)))),
+    vendas: summarize(valid.filter(c => normalizeKey(c.resultado) === "cliente" || c.dataPagamento)),
+    base: valid.length
+  };
+}
+
+/* ═══════════════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════════════ */
+function renderHeader() {
+  const now = new Date();
+  document.getElementById("meta-month").textContent = CONFIG.meses[now.getMonth()] + " " + now.getFullYear();
+  document.getElementById("meta-updated").textContent = now.toLocaleString("pt-BR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+  document.getElementById("footer-ts").textContent = "v2.0 · render " + now.toLocaleTimeString("pt-BR");
+}
+
+function setKPI(id, value, target, formatter = fmtNum, suffix = "") {
+  const card = document.getElementById("kpi-" + id);
+  const cls = classify(value, target);
+  card.classList.remove("ok","warn","crit");
+  card.classList.add(cls);
+  document.getElementById("v-" + id).textContent = formatter(value);
+  const pct = target ? Math.min(100, Math.round((value/target)*100)) : 0;
+  document.getElementById("b-" + id).style.width = pct + "%";
+  const deltaEl = document.getElementById("d-" + id);
+  deltaEl.textContent = pct + "% da meta";
+  deltaEl.className = "kpi-delta " + cls;
+}
+
+function renderSaudeFinanceira() {
+  // Prefere dados da aba "Clientes Ativos"; fallback pra propostas hardcoded
+  const clientes = (DASH_STATE.clientesAtivos && DASH_STATE.clientesAtivos.length)
+    ? DASH_STATE.clientesAtivos
+    : [];
+  const propostas = CONFIG.propostasAbertas;
+  const ativosFilter = c => ["ativo", "upgrade", "em upgrade"].includes(normalizeKey(c.status));
+  const mrr = clientes.filter(ativosFilter).reduce((s,c) => s + c.recorrente, 0);
+  const arr = mrr * 12;
+  const pipelineTotal = propostas.reduce((s,p) => s + p.valor, 0);
+  const ativos = clientes.filter(ativosFilter).length;
+
+  // Gap pra meta: meta - MRR atual (assume MRR conta como base mensal)
+  const gap = Math.max(0, CONFIG.metaFaturamento - mrr);
+  const fechamentosFaltam = Math.ceil(gap / CONFIG.ticketMedio);
+
+  // KPIs cards
+  document.getElementById("v-mrr").textContent = fmtNum(mrr);
+  document.getElementById("s-mrr").textContent = `${ativos} clientes ativos · +variável Victor (20%)`;
+  document.getElementById("v-arr").textContent = fmtNum(arr);
+  document.getElementById("v-gap").textContent = fmtNum(gap);
+  document.getElementById("s-gap").textContent = `${fechamentosFaltam} fechamentos no ticket de R$ 1.500`;
+  document.getElementById("v-pipe").textContent = fmtNum(pipelineTotal);
+  document.getElementById("s-pipe").textContent = `${propostas.length} proposta(s) ativa(s)`;
+
+  // Runway bar — escala 0 a meta+30%
+  const scaleMax = CONFIG.metaFaturamento * 1.2;
+  const mrrPct = Math.min(100, (mrr / scaleMax) * 100);
+  const pipelineWidth = Math.min(100 - mrrPct, (pipelineTotal / scaleMax) * 100);
+  const metaPct = (CONFIG.metaFaturamento / scaleMax) * 100;
+  document.getElementById("runway-mrr").style.width = mrrPct + "%";
+  document.getElementById("runway-pipeline").style.left = mrrPct + "%";
+  document.getElementById("runway-pipeline").style.width = pipelineWidth + "%";
+  document.getElementById("runway-marker").style.left = metaPct + "%";
+  const cobertura = ((mrr + pipelineTotal) / CONFIG.metaFaturamento * 100).toFixed(0);
+  document.getElementById("runway-summary").textContent = `MRR + Pipeline cobre ${cobertura}% da meta`;
+
+  // Tabela clientes
+  const tbody = document.getElementById("clients-tbody");
+  tbody.innerHTML = clientes.map(c => {
+    const varTxt = c.variavel ? `${Math.round(c.variavel*100)}% s/ vendas` : "—";
+    return `<tr>
+      <td><strong>${c.cliente}</strong></td>
+      <td><span class="client-status ${c.status}">${c.status}</span></td>
+      <td style="color:var(--muted); font-size:13px">${c.notas || ""}</td>
+      <td class="num" style="color:var(--muted)">${varTxt}</td>
+      <td class="num">${fmtBRL(c.recorrente)}/mês</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("mrr-pill").textContent = "MRR " + fmtBRL(mrr);
+
+  // Tabela propostas
+  const ptbody = document.getElementById("propostas-tbody");
+  ptbody.innerHTML = propostas.map(p => `<tr>
+    <td><strong>${p.cliente}</strong></td>
+    <td style="color:var(--muted)">${p.canal}</td>
+    <td><span class="stage-pill proposal">${p.status}</span></td>
+    <td style="color:var(--muted); font-size:13px">${p.proximaAcao}</td>
+    <td class="num" style="color:var(--muted)">${p.dataAbertura}</td>
+    <td class="num">${fmtBRL(p.valor)}</td>
+  </tr>`).join("") || `<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px">Sem propostas abertas</td></tr>`;
+  document.getElementById("propostas-pill").textContent = `${propostas.length} propostas · ${fmtBRL(pipelineTotal)}`;
+}
+
+function renderKPIs() {
+  const D = DASH_STATE.numerosOuro;
+  const dias = DASH_STATE.diarioBordo || [];
+  const mi = DASH_STATE.monthIdx;
+  // Mês corrente — usa Diário de Bordo se tiver dados, senão tenta histórico
+  const monthData = dias.length
+    ? dias.reduce((a,d) => ({LD:a.LD+d.LD, DC:a.DC+d.DC, RM:a.RM+d.RM, RR:a.RR+d.RR, FR:a.FR+d.FR}), {LD:0,DC:0,RM:0,RR:0,FR:0})
+    : { LD: D.historico.LD[mi]||0, DC: D.historico.DC[mi]||0, RM: D.historico.RM[mi]||0, RR: D.historico.RR[mi]||0, FR: D.historico.FR[mi]||0 };
+
+  DASH_STATE.monthData = monthData;
+
+  const faturamento = monthData.FR * CONFIG.ticketMedio;
+  const producao =
+    monthData.LD * CONFIG.valorEtapa.LD +
+    monthData.DC * CONFIG.valorEtapa.DC +
+    monthData.RM * CONFIG.valorEtapa.RM +
+    monthData.RR * CONFIG.valorEtapa.RR +
+    monthData.FR * CONFIG.valorEtapa.FR;
+
+  setKPI("faturamento", faturamento, CONFIG.metaFaturamento, n => fmtNum(n));
+  setKPI("producao", producao, CONFIG.metaFaturamento, n => fmtNum(n));
+  setKPI("fechados", monthData.FR, CONFIG.metasMensais.FR);
+  // Custo do tempo: assume 2h/dia × dias do mês corrente
+  const today = new Date();
+  const diasUteis = Math.min(today.getDate(), 22);
+  const custoTempo = diasUteis * 2 * CONFIG.horaProspeccao;
+  setKPI("hora", custoTempo, CONFIG.metaFaturamento, n => fmtNum(n));
+  document.getElementById("d-hora").textContent = diasUteis + " dias × 2h";
+}
+
+function renderFunnel() {
+  const D = DASH_STATE.monthData || {LD:0,DC:0,RM:0,RR:0,FR:0};
+  const stages = [
+    {code:"LD", label:"Ligações Discadas",     value:D.LD, meta:CONFIG.metasMensais.LD, valor:CONFIG.valorEtapa.LD},
+    {code:"DC", label:"Decisores Contatados",  value:D.DC, meta:CONFIG.metasMensais.DC, valor:CONFIG.valorEtapa.DC},
+    {code:"RM", label:"R1 Marcadas",             value:D.RM, meta:CONFIG.metasMensais.RM, valor:CONFIG.valorEtapa.RM},
+    {code:"RR", label:"R2 Realizadas",           value:D.RR, meta:CONFIG.metasMensais.RR, valor:CONFIG.valorEtapa.RR},
+    {code:"FR", label:"Fechamentos",           value:D.FR, meta:CONFIG.metasMensais.FR, valor:CONFIG.valorEtapa.FR}
+  ];
+  const wrap = document.getElementById("funnel");
+  wrap.innerHTML = stages.map(s => {
+    const cls = classify(s.value, s.meta);
+    const pct = Math.min(100, Math.round((s.value/s.meta)*100));
+    return `<div class="funnel-step ${cls}">
+      <div class="funnel-step-code">${s.code}</div>
+      <div class="funnel-step-label">${s.label}</div>
+      <div class="funnel-step-value">${fmtNum(s.value)}</div>
+      <div class="funnel-step-target">de ${s.meta} · ${pct}%</div>
+      <div class="funnel-step-bar"><div class="funnel-step-bar-fill" style="width:${pct}%"></div></div>
+      <div class="funnel-step-money">
+        <small>Valor unit.</small>
+        <strong>${fmtBRL(s.valor)}</strong>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderConversions() {
+  const T = DASH_STATE.numerosOuro.taxasTotal;
+  const cards = [
+    {flow:"LD → DC", key:"LD>DC", diag:CONFIG.diagnostico["LD>DC"]},
+    {flow:"DC → R1", key:"DC>RM", diag:CONFIG.diagnostico["DC>RM"]},
+    {flow:"R1 → R2", key:"RM>RR", diag:CONFIG.diagnostico["RM>RR"]},
+    {flow:"R2 → FR", key:"RR>FR", diag:CONFIG.diagnostico["RR>FR"]}
+  ];
+  const wrap = document.getElementById("conv-grid");
+  wrap.innerHTML = cards.map(c => {
+    const actual = T[c.key];
+    const target = CONFIG.numerosOuro[c.key];
+    const cls = classify(actual, target);
+    const widthActual = Math.min(100, (actual/Math.max(target,0.01))*100);
+    const markerPos = 100; // marker no target
+    return `<div class="conv-card ${cls}">
+      <div class="conv-flow">${c.flow}</div>
+      <div class="conv-diag">${c.diag}</div>
+      <div class="conv-numbers">
+        <span class="conv-actual">${fmtPct(actual)}</span>
+        <span class="conv-target">meta ${fmtPct(target)}</span>
+      </div>
+      <div class="conv-gauge">
+        <div class="conv-gauge-fill" style="width:${widthActual}%"></div>
+        <div class="conv-gauge-marker" style="left:calc(${markerPos}% - 1px)"></div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderInsight() {
+  const T = DASH_STATE.numerosOuro.taxasTotal;
+  const gaps = Object.keys(T).map(k => ({
+    key: k,
+    gap: CONFIG.numerosOuro[k] - T[k],
+    pct: T[k] / CONFIG.numerosOuro[k]
+  })).sort((a,b) => a.pct - b.pct);
+  const worst = gaps[0];
+  const diag = CONFIG.diagnostico[worst.key];
+  const acoes = {
+    "LD>DC": "Refinar ICP e lista",
+    "DC>RM": "Treinar script",
+    "RM>RR": "Reforçar follow-up",
+    "RR>FR": "Revisar negociação"
+  };
+  const keyLabel = {"LD>DC":"LD→DC", "DC>RM":"DC→R1", "RM>RR":"R1→R2", "RR>FR":"R2→FR"};
+  const text = `Maior gargalo do ano: <strong>${keyLabel[worst.key]||worst.key}</strong> em <strong>${fmtPct(T[worst.key])}</strong> (meta ${fmtPct(CONFIG.numerosOuro[worst.key])}) — <strong>${diag}</strong>. Outras conversões: LD→DC ${fmtPct(T["LD>DC"])} · DC→R1 ${fmtPct(T["DC>RM"])} · R1→R2 ${fmtPct(T["RM>RR"])} · R2→FR ${fmtPct(T["RR>FR"])}.`;
+  document.getElementById("insight-text").innerHTML = text;
+  document.getElementById("insight-action").textContent = acoes[worst.key];
+}
+
+let chartHist, chartFech, chartDaily;
+function renderHistorico() {
+  const D = DASH_STATE.numerosOuro.historico;
+  const ctx = document.getElementById("chart-historico").getContext("2d");
+  if (chartHist) chartHist.destroy();
+  const mkLine = (label, data, color, dash=false) => ({
+    label, data,
+    borderColor: color,
+    backgroundColor: color + "20",
+    borderWidth: 2,
+    borderDash: dash ? [4,4] : [],
+    tension: .3, pointRadius: 3, pointHoverRadius: 5
+  });
+  chartHist = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: CONFIG.meses,
+      datasets: [
+        mkLine("LD", D.LD, "#16D4E8"),
+        mkLine("DC", D.DC, "#0FB8CC"),
+        mkLine("R1 Marc.", D.RM, "#2B2B2B"),
+        mkLine("R2 Real.", D.RR, "#1F9D6F"),
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position:"bottom", labels:{font:{family:"'JetBrains Mono'", size:11}, padding:14, boxWidth:14, boxHeight:8} },
+        tooltip: { backgroundColor:"#101820", padding:10, titleFont:{family:"'JetBrains Mono'"} }
+      },
+      scales: {
+        y: { type:"logarithmic", grid:{color:"#EFF4F6"}, ticks:{font:{family:"'JetBrains Mono'", size:10}, color:"#6A6A60"} },
+        x: { grid:{display:false}, ticks:{font:{family:"'JetBrains Mono'", size:10}, color:"#6A6A60"} }
+      }
+    }
+  });
+}
+
+function renderFechamentos() {
+  const FR = DASH_STATE.numerosOuro.historico.FR;
+  const ctx = document.getElementById("chart-fechamentos").getContext("2d");
+  if (chartFech) chartFech.destroy();
+  chartFech = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: CONFIG.meses,
+      datasets: [{
+        label: "Fechamentos",
+        data: FR,
+        backgroundColor: FR.map(v => v>0 ? "#1F9D6F" : "#EFF4F6"),
+        borderRadius: 4,
+        maxBarThickness: 26
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor:"#101820", padding:10 }
+      },
+      scales: {
+        y: { beginAtZero:true, ticks:{stepSize:1, font:{family:"'JetBrains Mono'", size:10}, color:"#6A6A60"}, grid:{color:"#EFF4F6"} },
+        x: { grid:{display:false}, ticks:{font:{family:"'JetBrains Mono'", size:10}, color:"#6A6A60"} }
+      }
+    }
+  });
+}
+
+function renderDaily() {
+  const dias = DASH_STATE.diarioBordo || [];
+  const ctx = document.getElementById("chart-daily").getContext("2d");
+  if (chartDaily) chartDaily.destroy();
+  // só os dias úteis e até hoje
+  const today = new Date();
+  const ofThisMonth = dias.filter(d => d.mm === today.getMonth()+1 && d.yyyy === today.getFullYear() && d.dd <= today.getDate());
+  const labels = ofThisMonth.map(d => d.date);
+  const vals = ofThisMonth.map(d => d.LD);
+  const meta = CONFIG.metasDiarias.LD;
+  chartDaily = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "LD",
+        data: vals,
+        backgroundColor: vals.map(v => v >= meta ? "#16D4E8" : (v >= meta*0.5 ? "#C97A1B" : "#C03B3B")),
+        borderRadius: 4,
+        maxBarThickness: 28
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor:"#101820", padding:10 }
+      },
+      scales: {
+        y: { beginAtZero:true, grid:{color:"#EFF4F6"}, ticks:{font:{family:"'JetBrains Mono'", size:10}, color:"#6A6A60"} },
+        x: { grid:{display:false}, ticks:{font:{family:"'JetBrains Mono'", size:10}, color:"#6A6A60"} }
+      }
+    },
+    plugins: [{
+      id:"meta-line",
+      afterDraw(chart) {
+        const yScale = chart.scales.y;
+        const y = yScale.getPixelForValue(meta);
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.strokeStyle = "#1A1A1A"; ctx.setLineDash([4,4]); ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, y); ctx.lineTo(chart.chartArea.right, y);
+        ctx.stroke();
+        ctx.fillStyle = "#1A1A1A"; ctx.font="bold 10px 'JetBrains Mono'";
+        ctx.fillText("META " + meta + " LD", chart.chartArea.right - 76, y - 4);
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+function renderJornadaCompra() {
+  const crm = DASH_STATE.crm || [];
+  const j = computeJornadaCompra(crm);
+  const esforco = computeEsforcoComercial(crm);
+  const wrap = document.getElementById("jornada-content");
+  const metric = value => value == null ? "—" : value.toLocaleString("pt-BR", {maximumFractionDigits:1});
+  const esforcoHtml = `<div class="jornada-hero">
+    <div class="jornada-card featured">
+      <div class="jornada-label">Tentativas até reunião</div>
+      <div class="jornada-big">${metric(esforco.reunioes.media)}<span class="unit">contatos</span></div>
+      <div class="jornada-sub">média · base ${esforco.reunioes.count} empresa${esforco.reunioes.count === 1 ? "" : "s"}</div>
+    </div>
+    <div class="jornada-card">
+      <div class="jornada-label">Mediana até reunião</div>
+      <div class="jornada-mini">${metric(esforco.reunioes.mediana)}<span class="unit">contatos</span></div>
+      <div class="jornada-sub">faixa ${metric(esforco.reunioes.min)}–${metric(esforco.reunioes.max)}</div>
+    </div>
+    <div class="jornada-card">
+      <div class="jornada-label">Tentativas até venda</div>
+      <div class="jornada-mini">${metric(esforco.vendas.media)}<span class="unit">contatos</span></div>
+      <div class="jornada-sub">média · base ${esforco.vendas.count} cliente${esforco.vendas.count === 1 ? "" : "s"}</div>
+    </div>
+    <div class="jornada-card">
+      <div class="jornada-label">Base acompanhada</div>
+      <div class="jornada-mini">${fmtNum(esforco.base)}<span class="unit">empresas</span></div>
+      <div class="jornada-sub">registros com Tentativas preenchidas</div>
+    </div>
+  </div>`;
+  if (!j.count) {
+    wrap.innerHTML = `${esforcoHtml}<div class="jornada-empty">
+      <strong>Jornada em dias aguardando pagamentos preenchidos</strong>
+      As colunas <em>Data Pagamento</em> e <em>Valor Contratado</em> já existem no CRM. Preencha-as nas empresas com status Cliente para calcular os dias entre o primeiro contato e o pagamento.
+    </div>`;
+    return;
+  }
+  const porCanal = j.jornadas.reduce((acc, jr) => {
+    if (!acc[jr.canal]) acc[jr.canal] = { dias: [], count: 0, total: 0 };
+    acc[jr.canal].dias.push(jr.dias);
+    acc[jr.canal].count++;
+    acc[jr.canal].total += jr.valor;
+    return acc;
+  }, {});
+  const canaisHtml = Object.entries(porCanal).map(([canal, data]) => {
+    const avg = Math.round(data.dias.reduce((a,b)=>a+b,0) / data.count);
+    return `<tr>
+      <td><strong>${canal}</strong></td>
+      <td class="num">${data.count}</td>
+      <td class="num">${avg} dias</td>
+      <td class="num">${fmtBRL(data.total)}</td>
+    </tr>`;
+  }).join("");
+  const jornadasHtml = j.jornadas
+    .sort((a,b) => b.dias - a.dias)
+    .map(jr => `<tr>
+      <td><strong>${jr.empresa}</strong></td>
+      <td style="color:var(--muted)">${jr.canal}</td>
+      <td class="num" style="color:var(--muted)">${jr.entrada}</td>
+      <td class="num" style="color:var(--muted)">${jr.pagamento}</td>
+      <td class="num">${jr.dias} dias</td>
+      <td class="num">${fmtBRL(jr.valor)}</td>
+    </tr>`).join("");
+
+  wrap.innerHTML = `${esforcoHtml}
+    <div class="jornada-hero">
+      <div class="jornada-card featured">
+        <div class="jornada-label">Jornada média</div>
+        <div class="jornada-big">${j.media}<span class="unit">dias</span></div>
+        <div class="jornada-sub">do 1º contato até o pagamento · base ${j.count} cliente${j.count>1?"s":""}</div>
+      </div>
+      <div class="jornada-card">
+        <div class="jornada-label">Mediana</div>
+        <div class="jornada-mini">${j.mediana}<span class="unit">dias</span></div>
+        <div class="jornada-sub">metade fecha em até esse tempo</div>
+      </div>
+      <div class="jornada-card">
+        <div class="jornada-label">Mais rápido</div>
+        <div class="jornada-mini">${j.minDias}<span class="unit">dias</span></div>
+        <div class="jornada-sub">cliente que mais rápido pagou</div>
+      </div>
+      <div class="jornada-card">
+        <div class="jornada-label">Mais longo</div>
+        <div class="jornada-mini">${j.maxDias}<span class="unit">dias</span></div>
+        <div class="jornada-sub">cliente que mais demorou</div>
+      </div>
+    </div>
+
+    <div class="clients-card" style="margin-top:16px">
+      <div class="table-head">
+        <h3>Por canal de origem</h3>
+        <span class="mrr-pill">Jornada vs valor</span>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Canal</th>
+          <th style="text-align:right">Clientes</th>
+          <th style="text-align:right">Jornada média</th>
+          <th style="text-align:right">Valor total</th>
+        </tr></thead>
+        <tbody>${canaisHtml || `<tr><td colspan="4" style="text-align:center; color:var(--muted)">Sem dados de canal</td></tr>`}</tbody>
+      </table>
+    </div>
+
+    <div class="clients-card" style="margin-top:16px">
+      <div class="table-head">
+        <h3>Clientes fechados</h3>
+        <span class="mrr-pill">${j.count} fechamento${j.count>1?"s":""}</span>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Empresa</th>
+          <th>Canal</th>
+          <th style="text-align:right">Entrada</th>
+          <th style="text-align:right">Pagamento</th>
+          <th style="text-align:right">Jornada</th>
+          <th style="text-align:right">Valor</th>
+        </tr></thead>
+        <tbody>${jornadasHtml}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════
+   COMPARAÇÃO COM MELHOR MÊS
+═══════════════════════════════════════════════════════ */
+function renderComparison() {
+  if (!DASH_STATE.todosMeses) return;
+  const meses = DASH_STATE.todosMeses;
+
+  // Agrega cada mês
+  const summaries = {};
+  for (const [nome, days] of Object.entries(meses)) {
+    if (!days || !days.length) continue;
+    const tot = days.reduce((a,d) => ({
+      LD: a.LD + d.LD, DC: a.DC + d.DC, RM: a.RM + d.RM,
+      RR: a.RR + d.RR, FR: a.FR + d.FR
+    }), {LD:0,DC:0,RM:0,RR:0,FR:0});
+    const diasComDados = days.filter(d => d.LD || d.DC || d.RM || d.RR || d.FR).length;
+    summaries[nome] = { nome, ...tot, dias: diasComDados || 1 };
+  }
+  const arr = Object.values(summaries).filter(m => m.LD > 0 || m.DC > 0);
+  if (!arr.length) {
+    document.getElementById("best-month-grid").innerHTML = `<p style="color:var(--muted)">Sem dados mensais ainda.</p>`;
+    document.getElementById("compare-detail").innerHTML = "";
+    return;
+  }
+
+  // Categorias de "melhor"
+  const byRevenue = arr.slice().sort((a,b) => b.FR - a.FR || b.RR - a.RR)[0];
+  const byVolume  = arr.slice().sort((a,b) => b.LD - a.LD)[0];
+  const byConv    = arr.slice().filter(m => m.DC > 0)
+                       .sort((a,b) => (b.RM/b.DC) - (a.RM/a.DC))[0] || byVolume;
+
+  // Mês atual
+  const mesAtualLabel = CONFIG.meses[new Date().getMonth()];
+  const atual = summaries[mesAtualLabel];
+
+  // Cards de melhor mês
+  document.getElementById("best-month-grid").innerHTML = `
+    <div class="compare-card medal-gold">
+      <div class="compare-cat">🥇 Melhor por Receita</div>
+      <div class="compare-month">${byRevenue.nome}</div>
+      <div class="compare-metric">
+        <strong>${byRevenue.FR}</strong> fechamento(s) · <strong>${fmtBRL(byRevenue.FR * CONFIG.ticketMedio)}</strong><br>
+        ${byRevenue.LD} LD · ${byRevenue.dias} dias úteis
+      </div>
+    </div>
+    <div class="compare-card medal-silver">
+      <div class="compare-cat">🥈 Maior Volume</div>
+      <div class="compare-month">${byVolume.nome}</div>
+      <div class="compare-metric">
+        <strong>${byVolume.LD}</strong> LD em ${byVolume.dias} dias<br>
+        <strong>${(byVolume.LD/byVolume.dias).toFixed(1)}</strong> LD/dia (meta ${CONFIG.metasDiarias.LD})
+      </div>
+    </div>
+    <div class="compare-card medal-bronze">
+      <div class="compare-cat">🥉 Melhor DC&gt;RM</div>
+      <div class="compare-month">${byConv.nome}</div>
+      <div class="compare-metric">
+        <strong>${((byConv.RM/byConv.DC)*100).toFixed(1)}%</strong> de conversão<br>
+        (vs Número de Ouro ${(CONFIG.numerosOuro["DC>RM"]*100).toFixed(0)}%)
+      </div>
+    </div>
+  `;
+
+  // Tabela comparativa (atual vs melhor por receita)
+  if (!atual) {
+    document.getElementById("compare-detail").innerHTML = `
+      <h3>Mês atual sem dados ainda</h3>
+      <p style="color:var(--muted); font-size:13.5px">Manda seu primeiro relatório diário pra começar a comparação.</p>
+    `;
+    return;
+  }
+  const ref = byRevenue;
+  const fmt = (v, pct) => pct ? `${(v*100).toFixed(1)}%` : (Math.abs(v) < 0.05 ? "0" : (v % 1 === 0 ? v.toString() : v.toFixed(1)));
+  const delta = (a, b) => {
+    if (b === 0 && a === 0) return {dir: "neutral", txt: "—"};
+    if (b === 0) return {dir: "up", txt: "+∞"};
+    const d = ((a - b) / b) * 100;
+    return {
+      dir: d > 5 ? "up" : (d < -5 ? "down" : "neutral"),
+      txt: (d > 0 ? "+" : "") + d.toFixed(0) + "%"
+    };
+  };
+  const rows = [
+    {label: "LD totais",        a: atual.LD,             b: ref.LD},
+    {label: "LD por dia",       a: atual.LD/atual.dias,  b: ref.LD/ref.dias},
+    {label: "DC totais",        a: atual.DC,             b: ref.DC},
+    {label: "DC por dia",       a: atual.DC/atual.dias,  b: ref.DC/ref.dias},
+    {label: "R1 Marcadas",      a: atual.RM,             b: ref.RM},
+    {label: "R2 Realizadas",    a: atual.RR,             b: ref.RR},
+    {label: "Fechamentos",      a: atual.FR,             b: ref.FR},
+    {label: "Taxa LD>DC",       a: atual.LD ? atual.DC/atual.LD : 0, b: ref.LD ? ref.DC/ref.LD : 0, pct: true},
+    {label: "Taxa DC>RM",       a: atual.DC ? atual.RM/atual.DC : 0, b: ref.DC ? ref.RM/ref.DC : 0, pct: true},
+    {label: "Taxa RM>RR",       a: atual.RM ? atual.RR/atual.RM : 0, b: ref.RM ? ref.RR/ref.RM : 0, pct: true},
+  ];
+
+  document.getElementById("compare-detail").innerHTML = `
+    <h3>${mesAtualLabel} (${atual.dias} dias úteis) vs ${ref.nome} (${ref.dias} dias) — referência por receita</h3>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Métrica</th>
+          <th class="num">${mesAtualLabel} atual</th>
+          <th class="num">${ref.nome} (ref)</th>
+          <th class="num">Delta</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(r => {
+          const d = delta(r.a, r.b);
+          return `<tr>
+            <td class="label">${r.label}</td>
+            <td class="num">${fmt(r.a, r.pct)}</td>
+            <td class="num">${fmt(r.b, r.pct)}</td>
+            <td class="num delta ${d.dir}">${d.txt}</td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderCRM() {
+  const crm = DASH_STATE.crm || [];
+  const priority = { "Reunião Agendada":1, "Follow-up":2, "De molho":3, "Recusado":4, "sem contato":5, "": 6 };
+  const ativos = crm
+    .filter(r => priority[r.resultado] < 4)
+    .sort((a,b) => (priority[a.resultado]||9) - (priority[b.resultado]||9) || b.tentativas - a.tentativas)
+    .slice(0, 25);
+  document.getElementById("crm-count").textContent = ativos.length;
+  const stageMap = {
+    "Reunião Agendada": "meeting",
+    "Follow-up":        "followup",
+    "De molho":         "contact",
+    "Recusado":         "lost",
+    "sem contato":      "cold"
+  };
+  document.getElementById("crm-tbody").innerHTML = ativos.map(r => `
+    <tr>
+      <td><strong>${r.empresa}</strong></td>
+      <td style="color:var(--muted)">${r.decisor || "—"}</td>
+      <td><span class="stage-pill ${stageMap[r.resultado]||"cold"}">${r.resultado||"sem contato"}</span></td>
+      <td class="icp-fire">${r.icp || ""}</td>
+      <td style="color:var(--muted)">${r.bairro || "—"}</td>
+      <td class="num" style="color:var(--muted)">${r.retorno || "—"}</td>
+      <td class="num">${r.tentativas || 0}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:24px">Sem ativos no CRM</td></tr>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LOADER
+═══════════════════════════════════════════════════════ */
+async function loadAll() {
+  const sheetId = document.getElementById("sheet-id").value.trim();
+  if (!sheetId) return;
+  DASH_STATE.sheetId = sheetId;
+  localStorage.setItem("variantmidia-sheet-id", sheetId);
+  document.getElementById("live-status").textContent = "Carregando";
+  try {
+    const G = CONFIG.GIDS;
+    const mesesEntries = Object.entries(G.meses); // [["Jan", 1911...], ...]
+
+    // Busca tudo em paralelo: meses + Prospecções + Clientes Ativos + Semanal por canal
+    const promessas = [
+      ...mesesEntries.map(([_, gid]) => fetchSheet(sheetId, gid)),
+      fetchSheet(sheetId, G.prospeccoes),
+      fetchSheet(sheetId, G.clientesAtivos),
+      fetchSheet(sheetId, G.semanais)
+    ];
+    const resultados = await Promise.all(promessas);
+
+    // Separa resultados
+    const mesesRows = resultados.slice(0, mesesEntries.length);
+    const crmRows = resultados[mesesEntries.length];
+    const clientesRows = resultados[mesesEntries.length + 1];
+    const semanaisRows = resultados[mesesEntries.length + 2];
+
+    // Parse meses → objeto { Jan: [...], Fev: [...], ... }
+    const todosMeses = {};
+    mesesEntries.forEach(([nome, _], i) => {
+      todosMeses[nome] = parseMesDiario(mesesRows[i], nome);
+    });
+    DASH_STATE.todosMeses = todosMeses;
+
+    // Agrega pra estrutura compatível com renderHistorico/renderConversions
+    DASH_STATE.numerosOuro = buildNumerosOuroFromMonths(todosMeses);
+
+    // Diário de bordo = dias do mês atual (ou último com dados)
+    const mesAtualLabel = CONFIG.meses[new Date().getMonth()];
+    DASH_STATE.diarioBordo = todosMeses[mesAtualLabel] || [];
+    // fallback: se mês atual vazio, pega último mês com dados
+    if (!DASH_STATE.diarioBordo.length) {
+      const ordem = ["Jun","Mai","Abr","Mar","Fev","Jan"];
+      for (const m of ordem) {
+        if (todosMeses[m] && todosMeses[m].length) {
+          DASH_STATE.diarioBordo = todosMeses[m];
+          break;
+        }
+      }
+    }
+
+    // CRM e Clientes Ativos
+    DASH_STATE.crm = parseCRM(crmRows);
+    DASH_STATE.clientesAtivos = parseClientesAtivos(clientesRows);
+    DASH_STATE.semanais = parseSemanais(semanaisRows);
+
+    // Render
+    renderHeader();
+    renderSaudeFinanceira();
+    renderKPIs();
+    renderFunnel();
+    renderConversions();
+    renderInsight();
+    renderHistorico();
+    renderFechamentos();
+    renderComparison();
+    renderDaily();
+    renderCRM();
+    renderJornadaCompra();
+    renderWeekly();
+    document.getElementById("live-status").textContent = "Live";
+  } catch (e) {
+    document.getElementById("live-status").textContent = "Erro";
+    document.getElementById("insight-text").innerHTML = `<strong style="color:#C03B3B">Erro ao carregar:</strong> ${e.message}. Confirma que a planilha está com "Qualquer pessoa com o link · Leitor".`;
+    console.error(e);
+  }
+}
+
+/* BOOT */
+const saved = localStorage.getItem("variantmidia-sheet-id");
+if (saved) document.getElementById("sheet-id").value = saved;
+renderHeader();
+loadAll();
+</script>
+</body>
+</html>
