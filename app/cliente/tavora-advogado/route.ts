@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 
 const REALM = "Relatorios Variantmidia";
@@ -25,7 +27,7 @@ function isAuthorized(request: NextRequest) {
   }
 
   try {
-    const decoded = atob(header.slice("Basic ".length));
+    const decoded = Buffer.from(header.slice("Basic ".length), "base64").toString("utf8");
     const separatorIndex = decoded.indexOf(":");
 
     if (separatorIndex === -1) {
@@ -41,20 +43,17 @@ function isAuthorized(request: NextRequest) {
   }
 }
 
-export function proxy(request: NextRequest) {
+export async function GET(request: NextRequest) {
   if (!isAuthorized(request)) {
     return unauthorized();
   }
 
-  const url = request.nextUrl.clone();
-  if (url.pathname === "/cliente/tavora-advogado" || url.pathname === "/cliente/tavora-advogado/") {
-    url.pathname = "/cliente/tavora-advogado/index.html";
-    return NextResponse.rewrite(url);
-  }
+  const html = await readFile(join(process.cwd(), "app", "cliente", "tavora-advogado", "dashboard.html"), "utf8");
 
-  return NextResponse.next();
+  return new NextResponse(html, {
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "private, no-store",
+    },
+  });
 }
-
-export const config = {
-  matcher: ["/cliente/:path*"],
-};
