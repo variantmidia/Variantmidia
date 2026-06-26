@@ -191,32 +191,200 @@
   }
   .vm-cyano { color: var(--vm-ciano); font-weight: 700; }
   .sr-only { position: absolute; left: -10000px; }
+  .vm-dash {
+    display: grid;
+    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 18px;
+  }
+  .vm-side {
+    position: sticky;
+    top: 18px;
+    height: calc(100vh - 36px);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    background: linear-gradient(180deg, #132231 0%, #0C1823 100%);
+    padding: 14px 10px;
+  }
+  .vm-side-logo {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 28px;
+    background: #fff;
+    border-radius: 2px;
+    color: var(--vm-ink);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.1;
+    text-align: center;
+    position: relative;
+  }
+  .vm-side-logo::before,
+  .vm-side-logo::after {
+    content: "";
+    position: absolute;
+    top: 13px;
+    width: 16px;
+    height: 22px;
+    border-top: 5px solid var(--vm-ciano);
+  }
+  .vm-side-logo::before { left: 12px; transform: rotate(45deg); }
+  .vm-side-logo::after { right: 12px; transform: rotate(-45deg); }
+  .vm-side-nav {
+    display: grid;
+    gap: 10px;
+  }
+  .vm-side-link {
+    height: 54px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    color: #7f8b98;
+    border: 1px solid transparent;
+    background: rgba(255,255,255,.03);
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .vm-side-link.active {
+    color: #fff;
+    background: rgba(22,112,230,.35);
+    border-color: rgba(22,212,232,.18);
+  }
+  .vm-main { min-width: 0; }
+  .vm-header {
+    align-items: stretch;
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    background: linear-gradient(180deg, #20252E 0%, #171D26 100%);
+    box-shadow: 0 16px 50px rgba(0,0,0,.18);
+  }
+  .vm-logo-mark {
+    background: transparent;
+    color: #1688ff;
+    width: auto;
+    min-width: 58px;
+    font-size: 34px;
+    border-radius: 0;
+  }
+  .vm-logo-mark::before { content: "∞"; }
+  .vm-logo-mark { font-size: 0; }
+  .vm-logo-mark::before { font-size: 35px; line-height: 1; }
+  .vm-brand-text h1 { font-size: 22px; letter-spacing: 0; }
+  .vm-brand-text span { display: block; margin-top: 10px; color: #d8e0e8; text-transform: none; font-size: 12px; }
+  .vm-toolbar {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .vm-tool-btn,
+  .vm-date-wrap {
+    height: 36px;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 7px;
+    background: #2A303B;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .vm-tool-btn {
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .vm-tool-btn:hover,
+  .vm-tool-btn.active {
+    background: #1670E6;
+    border-color: #1670E6;
+  }
+  .vm-date-wrap {
+    min-width: 236px;
+  }
+  .vm-date-wrap input {
+    color: #fff;
+    color-scheme: dark;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    font: inherit;
+    min-width: 132px;
+  }
+  .vm-period-bar {
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding: 9px 12px;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 9px;
+    background: rgba(255,255,255,.035);
+  }
+  .vm-period-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .vm-period-right { font: 700 10px var(--f-mono, monospace); letter-spacing: .08em; text-transform: uppercase; color: var(--vm-text-3); }
+  .vm-card {
+    background: linear-gradient(180deg, #20242C 0%, #181E27 100%);
+    border-color: rgba(255,255,255,.08);
+    border-radius: 8px;
+  }
+  .vm-kpi-card::after { width: 100%; height: 2px; opacity: .85; }
+  @media (max-width: 900px) {
+    body { padding: 12px; }
+    .vm-dash { display: block; }
+    .vm-side { display: none; }
+    .vm-header { flex-direction: column; }
+    .vm-toolbar { margin-left: 0; justify-content: flex-start; }
+    .vm-date-wrap { width: 100%; }
+    .vm-date-wrap input { width: 100%; }
+    .vm-period-bar { align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
 <h2 class="sr-only">Dashboard Variantmidia para Távora Advogado com filtro de período, dados reais do CRM e plano colaborativo</h2>
 
 <div class="vm-dash">
+  <aside class="vm-side" aria-label="Navegação do relatório">
+    <div class="vm-side-logo">variant<br>midia</div>
+    <div class="vm-side-nav">
+      <div class="vm-side-link active">Geral</div>
+      <div class="vm-side-link">Ads</div>
+      <div class="vm-side-link">CRM</div>
+    </div>
+  </aside>
+
+  <main class="vm-main">
   <div class="vm-header">
     <div class="vm-brand">
-      <div class="vm-logo-mark">V</div>
+      <div class="vm-logo-mark" aria-hidden="true">Meta</div>
       <div class="vm-brand-text">
-        <h1>Távora Advogado · Performance Report</h1>
-        <span>Variantmidia · Meta Ads + CRM</span>
+        <h1>Távora Advogado</h1>
+        <span>Relatório Meta Ads | Leads · Variantmidia</span>
       </div>
     </div>
-    <div class="vm-filters" id="vm-filters">
-      <button class="vm-filter-btn" data-period="maio">Maio</button>
-      <button class="vm-filter-btn" data-period="junho">Junho</button>
-      <button class="vm-filter-btn active" data-period="7d">Últimos 7 dias</button>
-      <button class="vm-filter-btn" data-period="14d">Últimos 14 dias</button>
-      <button class="vm-filter-btn" data-period="todo">Todo período</button>
+    <div class="vm-toolbar" id="vm-filters">
+      <button class="vm-tool-btn active" data-period="hoje" type="button">Hoje</button>
+      <button class="vm-tool-btn" data-period="7d" type="button">7 dias</button>
+      <button class="vm-tool-btn" data-period="14d" type="button">14 dias</button>
+      <button class="vm-tool-btn" data-period="junho" type="button">Junho</button>
+      <label class="vm-date-wrap" for="vm-date-filter">
+        <span>Data</span>
+        <input id="vm-date-filter" type="date" value="2026-06-26">
+      </label>
     </div>
   </div>
 
   <div class="vm-period-bar">
-    Período selecionado: <span class="vm-period-pill" id="vm-period-text">19/06 a 25/06/2026</span>
-    <span id="vm-period-note" style="color:var(--vm-text-3)">· relatório enviado ao cliente</span>
+    <div class="vm-period-left">
+      Período selecionado: <span class="vm-period-pill" id="vm-period-text">01/06 a 26/06/2026</span>
+      <span id="vm-period-note" style="color:var(--vm-text-3)">· acumulado até a data de referência</span>
+    </div>
+    <div class="vm-period-right">Meta Ads + CRM</div>
   </div>
 
   <!-- KPIs -->
@@ -410,12 +578,18 @@
     <div>Gerado em <span style="color:var(--vm-text-2)">26/06/2026</span> · dados Meta Ads + CRM</div>
     <div>Produzido por <span class="vm-cyano">Variantmidia</span> · Matheus Valadão · Diretor Comercial</div>
   </div>
+  </main>
 </div>
 
 <script>
 (function() {
   // Dados reais — Meta Ads (API) + CRM (Google Sheets)
   const data = {
+    'hoje': {
+      label: '01/06 a 26/06/2026', note: '· acumulado até a data de referência',
+      spend: 386.58, imp: 30475, clicks: 288, ctr: '0,95%',
+      leads: 17, metaLeads: 13, qualif: 5, reun: 0, vendas: 0
+    },
     'maio': {
       label: '01/05 a 31/05/2026', note: '· primeiro mês de operação',
       spend: 193.25, imp: 12874, clicks: 99, ctr: '0,77%',
@@ -445,11 +619,35 @@
 
   const fmt = (n) => 'R$ ' + n.toFixed(2).replace('.', ',');
   const num = (n) => n.toLocaleString('pt-BR');
+  const pad = (n) => String(n).padStart(2, '0');
+  const isoDate = (date) => date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
+  const brDate = (iso) => {
+    const [year, month, day] = iso.split('-');
+    return day + '/' + month + '/' + year;
+  };
   // larguras visuais fixas do funil (escada), independente da escala real
   const W = { imp: 100, clicks: 70, leads: 50, qualif: 34 };
 
-  function render(period) {
-    const d = data[period];
+  function setActive(period) {
+    buttons.forEach(b => b.classList.toggle('active', b.getAttribute('data-period') === period));
+  }
+
+  function dataForDate(iso) {
+    if (iso === '2026-06-26') {
+      return { ...data.hoje, label: '01/06 a ' + brDate(iso), note: '· acumulado disponível até a data selecionada' };
+    }
+    if (iso >= '2026-06-01' && iso <= '2026-06-26') {
+      return { ...data.junho, label: '01/06 a ' + brDate(iso), note: '· acumulado disponível no arquivo estático' };
+    }
+    if (iso >= '2026-05-01' && iso <= '2026-05-31') {
+      return { ...data.maio, label: '01/05 a ' + brDate(iso), note: '· acumulado disponível no arquivo estático' };
+    }
+    return { ...data.todo, label: brDate(iso), note: '· fora do recorte diário embutido; exibindo todo período' };
+  }
+
+  function render(period, overrideData) {
+    const d = overrideData || data[period];
+    if (!d) return;
     // período
     document.getElementById('vm-period-text').textContent = d.label;
     document.getElementById('vm-period-note').textContent = d.note;
@@ -501,15 +699,32 @@
     document.getElementById('cost-cplq-bar').style.width = d.qualif ? Math.min(cplq / 100 * 100, 100) + '%' : '0%';
   }
 
-  const buttons = document.querySelectorAll('.vm-filter-btn');
+  const buttons = document.querySelectorAll('.vm-tool-btn[data-period]');
+  const dateInput = document.getElementById('vm-date-filter');
   buttons.forEach(btn => {
     btn.addEventListener('click', function() {
-      buttons.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      render(this.getAttribute('data-period'));
+      const period = this.getAttribute('data-period');
+      setActive(period);
+      if (period === 'hoje') {
+        dateInput.value = isoDate(new Date());
+      }
+      render(period);
     });
   });
-  render('7d');
+  dateInput.addEventListener('change', function() {
+    buttons.forEach(b => b.classList.remove('active'));
+    render('custom', dataForDate(this.value));
+  });
+
+  const today = isoDate(new Date());
+  dateInput.value = today;
+  if (today === '2026-06-26') {
+    setActive('hoje');
+    render('hoje');
+  } else {
+    buttons.forEach(b => b.classList.remove('active'));
+    render('custom', dataForDate(today));
+  }
 })();
 </script>
 </body>
