@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Távora Advogado · Performance Report | Variantmidia</title>
+<style>
+  :root {
+    --vm-ink: #1A1A1A;
+    --vm-grafite: #2B2B2B;
+    --vm-ciano: #16D4E8;
+    --vm-ciano-soft: #16D4E81A;
+    --vm-card: #232323;
+    --vm-card-2: #2A2A2A;
+    --vm-text: #F5F5F5;
+    --vm-text-2: #9CA3AF;
+    --vm-text-3: #6B7280;
+    --vm-border: #353535;
+    --vm-success: #10B981;
+    --vm-warning: #F59E0B;
+    --vm-purple: #A78BFA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--vm-ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .vm-dash { max-width: 1280px; margin: 0 auto; color: var(--vm-text); }
+  .vm-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 22px; padding-bottom: 18px;
+    border-bottom: 1px solid var(--vm-grafite);
+    flex-wrap: wrap; gap: 14px;
+  }
+  .vm-brand { display: flex; align-items: center; gap: 12px; }
+  .vm-logo-mark {
+    width: 38px; height: 38px;
+    background: var(--vm-ciano); color: var(--vm-ink);
+    font-weight: 900; display: flex; align-items: center; justify-content: center;
+    border-radius: 9px; font-size: 19px;
+  }
+  .vm-brand-text h1 { font-size: 18px; color: var(--vm-text); font-weight: 700; }
+  .vm-brand-text span {
+    font-size: 11px; color: var(--vm-text-2);
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .vm-filters {
+    display: flex; gap: 4px;
+    background: var(--vm-card); padding: 4px;
+    border-radius: 9px; border: 1px solid var(--vm-border);
+  }
+  .vm-filter-btn {
+    background: transparent; color: var(--vm-text-2); border: none;
+    padding: 8px 13px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    transition: all 0.15s; font-family: inherit; white-space: nowrap;
+  }
+  .vm-filter-btn:hover { color: var(--vm-text); }
+  .vm-filter-btn.active { background: var(--vm-ciano); color: var(--vm-ink); }
+
+  .vm-period-bar {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 18px; font-size: 12px; color: var(--vm-text-2);
+  }
+  .vm-period-pill {
+    background: var(--vm-ciano-soft); color: var(--vm-ciano);
+    padding: 3px 10px; border-radius: 5px; font-weight: 700;
+  }
+
+  .vm-grid { display: grid; gap: 12px; margin-bottom: 12px; }
+  .vm-row-kpi { grid-template-columns: repeat(6, 1fr); }
+  .vm-row-mid { grid-template-columns: 1.45fr 1fr 1fr; }
+  @media (max-width: 980px) {
+    .vm-row-kpi { grid-template-columns: repeat(3, 1fr); }
+    .vm-row-mid { grid-template-columns: 1fr; }
+  }
+  .vm-card {
+    background: var(--vm-card); border-radius: 11px;
+    padding: 16px; border: 1px solid var(--vm-border);
+  }
+  .vm-kpi-card { position: relative; overflow: hidden; }
+  .vm-kpi-card::after {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--vm-ciano); opacity: 0.5;
+  }
+  .vm-card-title {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--vm-text-2); margin-bottom: 8px; font-weight: 600;
+  }
+  .vm-card-value { font-size: 26px; font-weight: 800; color: var(--vm-text); line-height: 1; }
+  .vm-card-sub { font-size: 11px; color: var(--vm-text-3); margin-top: 6px; }
+  .vm-section-h {
+    font-size: 12px; color: var(--vm-text); margin: 0 0 14px 0;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .vm-section-h::before {
+    content: ''; width: 3px; height: 12px;
+    background: var(--vm-ciano); border-radius: 2px;
+  }
+  /* Funil */
+  .vm-funnel { display: flex; flex-direction: column; gap: 8px; padding: 2px 0; }
+  .vm-funnel-row { display: flex; align-items: center; gap: 10px; }
+  .vm-funnel-name { width: 130px; font-size: 12px; color: var(--vm-text); font-weight: 600; }
+  .vm-funnel-bar {
+    flex: 1; height: 34px; background: var(--vm-card-2);
+    border-radius: 4px; overflow: hidden; border: 1px solid var(--vm-border);
+  }
+  .vm-funnel-fill {
+    height: 100%; background: linear-gradient(90deg, var(--vm-ciano), #0EB4C5);
+    display: flex; align-items: center; padding-left: 12px;
+    color: var(--vm-ink); font-weight: 700; font-size: 12px;
+    transition: width 0.4s ease; min-width: 0;
+  }
+  .vm-funnel-fill.empty {
+    background: var(--vm-card-2); color: var(--vm-text-3);
+    border: 1px dashed var(--vm-border); padding-left: 10px;
+  }
+  .vm-funnel-meta { width: 110px; text-align: right; font-size: 11px; color: var(--vm-text-2); }
+  .vm-funnel-meta strong { color: var(--vm-text); font-size: 12px; }
+  .vm-attribution {
+    background: var(--vm-ciano-soft); border: 1px solid var(--vm-ciano);
+    border-radius: 8px; padding: 12px 14px; margin-top: 14px;
+    font-size: 12px; color: var(--vm-text); line-height: 1.5;
+  }
+  .vm-attribution strong { color: var(--vm-ciano); }
+  /* Top criativos */
+  .vm-tc-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 12px; background: var(--vm-card-2);
+    border-radius: 6px; border-left: 3px solid var(--vm-ciano); margin-bottom: 8px;
+  }
+  .vm-tc-name { font-size: 12px; color: var(--vm-text); font-weight: 600; }
+  .vm-tc-meta { font-size: 11px; color: var(--vm-text-2); margin-top: 2px; }
+  .vm-tc-cost { font-size: 14px; color: var(--vm-ciano); font-weight: 700; white-space: nowrap; }
+  /* Custos */
+  .vm-cost-block { margin-bottom: 14px; }
+  .vm-cost-block:last-child { margin-bottom: 0; }
+  .vm-cost-bar { background: var(--vm-card-2); height: 6px; border-radius: 3px; margin-top: 8px; }
+  .vm-cost-fill { height: 100%; border-radius: 3px; }
+  /* Implementado */
+  .vm-done-card {
+    background: linear-gradient(135deg, #10b98112 0%, #23232300 70%);
+    border: 1px solid var(--vm-success); border-radius: 11px;
+    padding: 18px; margin-bottom: 12px;
+  }
+  .vm-done-h {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--vm-success); font-size: 13px; font-weight: 700; margin-bottom: 12px;
+  }
+  .vm-done-p { font-size: 13px; color: var(--vm-text); line-height: 1.7; margin-bottom: 10px; }
+  .vm-stat-highlight {
+    display: inline-block; background: var(--vm-ciano); color: var(--vm-ink);
+    padding: 1px 8px; border-radius: 4px; font-weight: 800; font-size: 13px;
+  }
+  .vm-status-chips { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  .vm-chip {
+    background: var(--vm-card-2); border: 1px solid var(--vm-border);
+    border-radius: 7px; padding: 8px 14px; font-size: 12px; color: var(--vm-text);
+  }
+  .vm-chip strong { color: var(--vm-ciano); font-size: 15px; display: block; margin-bottom: 2px; }
+  /* Próximos */
+  .vm-next-card { background: var(--vm-card); border: 1px solid var(--vm-border); border-radius: 11px; padding: 18px; margin-bottom: 12px; }
+  .vm-next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  @media (max-width: 980px) { .vm-next-grid { grid-template-columns: 1fr; } }
+  .vm-next-item { background: var(--vm-card-2); padding: 14px; border-radius: 8px; border-left: 3px solid var(--vm-ciano); }
+  .vm-next-item.client { border-left-color: var(--vm-success); }
+  .vm-next-item.upsell { border-left-color: var(--vm-purple); }
+  .vm-next-h { font-size: 12px; font-weight: 700; color: var(--vm-text); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .vm-next-p { font-size: 11.5px; color: var(--vm-text-2); line-height: 1.6; margin: 0; }
+  .vm-next-p strong { color: var(--vm-text); }
+  .vm-next-action { margin-top: 8px; font-size: 11px; color: var(--vm-ciano); font-weight: 600; }
+  .vm-next-item.client .vm-next-action { color: var(--vm-success); }
+  .vm-next-item.upsell .vm-next-action { color: var(--vm-purple); }
+  /* Tabela */
+  .vm-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .vm-table thead th {
+    background: var(--vm-card-2); color: var(--vm-text-2);
+    padding: 10px 12px; text-align: left; font-weight: 700;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px;
+    border-bottom: 1px solid var(--vm-border);
+  }
+  .vm-table tbody td { padding: 11px 12px; border-bottom: 1px solid var(--vm-border); color: var(--vm-text); }
+  .vm-table tbody tr:last-child td { border-bottom: none; }
+  .vm-footer {
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--vm-grafite);
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--vm-text-3); letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .vm-cyano { color: var(--vm-ciano); font-weight: 700; }
+  .sr-only { position: absolute; left: -10000px; }
+</style>
+</head>
+<body>
+<h2 class="sr-only">Dashboard Variantmidia para Távora Advogado com filtro de período, dados reais do CRM e plano colaborativo</h2>
+
+<div class="vm-dash">
+  <div class="vm-header">
+    <div class="vm-brand">
+      <div class="vm-logo-mark">V</div>
+      <div class="vm-brand-text">
+        <h1>Távora Advogado · Performance Report</h1>
+        <span>Variantmidia · Meta Ads + CRM</span>
+      </div>
+    </div>
+    <div class="vm-filters" id="vm-filters">
+      <button class="vm-filter-btn" data-period="maio">Maio</button>
+      <button class="vm-filter-btn" data-period="junho">Junho</button>
+      <button class="vm-filter-btn active" data-period="7d">Últimos 7 dias</button>
+      <button class="vm-filter-btn" data-period="14d">Últimos 14 dias</button>
+      <button class="vm-filter-btn" data-period="todo">Todo período</button>
+    </div>
+  </div>
+
+  <div class="vm-period-bar">
+    Período selecionado: <span class="vm-period-pill" id="vm-period-text">19/06 a 25/06/2026</span>
+    <span id="vm-period-note" style="color:var(--vm-text-3)">· relatório enviado ao cliente</span>
+  </div>
+
+  <!-- KPIs -->
+  <div class="vm-grid vm-row-kpi">
+    <div class="vm-card vm-kpi-card">
+      <div class="vm-card-title">💰 Investimento</div>
+      <div class="vm-card-value" id="kpi-spend">R$ 187,96</div>
+      <div class="vm-card-sub">Verba de mídia</div>
+    </div>
+    <div class="vm-card vm-kpi-card">
+      <div class="vm-card-title">📨 Leads (CRM)</div>
+      <div class="vm-card-value" id="kpi-leads">7</div>
+      <div class="vm-card-sub" id="kpi-leads-sub">Meta marcou: 7</div>
+    </div>
+    <div class="vm-card vm-kpi-card">
+      <div class="vm-card-title">⭐ Qualificados</div>
+      <div class="vm-card-value" id="kpi-qualif" style="color:var(--vm-ciano)">4</div>
+      <div class="vm-card-sub" id="kpi-qualif-sub">57% dos leads</div>
+    </div>
+    <div class="vm-card vm-kpi-card">
+      <div class="vm-card-title">📅 Reuniões</div>
+      <div class="vm-card-value" id="kpi-reun">0</div>
+      <div class="vm-card-sub">Em construção</div>
+    </div>
+    <div class="vm-card vm-kpi-card">
+      <div class="vm-card-title">💼 Vendas</div>
+      <div class="vm-card-value" id="kpi-vendas">0</div>
+      <div class="vm-card-sub">Ciclo inicial</div>
+    </div>
+    <div class="vm-card vm-kpi-card">
+      <div class="vm-card-title">🎯 CPL real</div>
+      <div class="vm-card-value" id="kpi-cpl" style="color:var(--vm-success)">R$ 26,85</div>
+      <div class="vm-card-sub" id="kpi-cpl-sub">✅ meta: R$ 30</div>
+    </div>
+  </div>
+
+  <!-- ROW 2 -->
+  <div class="vm-grid vm-row-mid">
+    <div class="vm-card">
+      <h3 class="vm-section-h">Funil de Conversão</h3>
+      <div class="vm-funnel" id="vm-funnel"></div>
+      <div class="vm-attribution">
+        <strong>⚡ Observação técnica:</strong> O Meta marca leads via clique direto pro WhatsApp. Quem vê o anúncio e procura o contato depois fica fora da contagem oficial — por isso o CRM costuma registrar um número igual ou maior que a plataforma.
+      </div>
+    </div>
+
+    <div class="vm-card">
+      <h3 class="vm-section-h">Top Criativos por CPL</h3>
+      <div style="font-size:10px;color:var(--vm-text-3);margin:-8px 0 10px;text-transform:uppercase;letter-spacing:0.5px">Período recente</div>
+      <div class="vm-tc-item">
+        <div>
+          <div class="vm-tc-name">Vídeo Aeroviário Topo</div>
+          <div class="vm-tc-meta">4 leads · CTR 0,89%</div>
+        </div>
+        <div class="vm-tc-cost">R$ 13,72</div>
+      </div>
+      <div class="vm-tc-item">
+        <div>
+          <div class="vm-tc-name">Imagem Institucional Aeroviário</div>
+          <div class="vm-tc-meta">CTR <strong style="color:var(--vm-ciano)">2,40%</strong> · o maior da conta</div>
+        </div>
+        <div class="vm-tc-cost">R$ 27,86</div>
+      </div>
+      <div class="vm-tc-item" style="border-left-color:var(--vm-warning);opacity:0.7">
+        <div>
+          <div class="vm-tc-name">Outros temas</div>
+          <div class="vm-tc-meta">Pausados · CPL acima do teto</div>
+        </div>
+        <div class="vm-tc-cost" style="color:var(--vm-warning)">› R$ 28</div>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:var(--vm-ciano-soft);border-radius:6px;font-size:11px;color:var(--vm-text);line-height:1.5">
+        <strong style="color:var(--vm-ciano)">📌 Padrão claro:</strong> o tema <strong>Aeroviário</strong> é o que mais converte. Vamos diversificar ângulos dentro dele na próxima semana.
+      </div>
+    </div>
+
+    <div class="vm-card">
+      <h3 class="vm-section-h">Custos do Funil</h3>
+      <div class="vm-cost-block">
+        <div class="vm-card-title">Custo por Lead</div>
+        <div class="vm-card-value" id="cost-cpl" style="color:var(--vm-success);font-size:22px">R$ 26,85</div>
+        <div class="vm-cost-bar"><div class="vm-cost-fill" id="cost-cpl-bar" style="background:var(--vm-success);width:60%"></div></div>
+        <div class="vm-card-sub" id="cost-cpl-sub" style="margin-top:6px">✅ dentro da meta R$ 30</div>
+      </div>
+      <div class="vm-cost-block">
+        <div class="vm-card-title">Custo por Lead Qualificado</div>
+        <div class="vm-card-value" id="cost-cplq" style="color:var(--vm-warning);font-size:22px">R$ 46,99</div>
+        <div class="vm-cost-bar"><div class="vm-cost-fill" id="cost-cplq-bar" style="background:var(--vm-warning);width:55%"></div></div>
+        <div class="vm-card-sub" style="margin-top:6px">Saudável para advocacia trabalhista</div>
+      </div>
+      <div class="vm-cost-block">
+        <div class="vm-card-title">Custo por Reunião</div>
+        <div class="vm-card-value" style="color:var(--vm-text-3);font-size:22px">—</div>
+        <div class="vm-card-sub" style="margin-top:6px">Primeiras reuniões em construção</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O QUE FIZEMOS -->
+  <div class="vm-done-card">
+    <div class="vm-done-h">✅ O que implementamos juntos esta semana</div>
+    <p class="vm-done-p">
+      Empresas que respondem um lead em <strong>menos de 5 minutos</strong> têm <span class="vm-stat-highlight">até 80% mais chance de avançar a venda</span> (Lead Response Management / HBR). Para garantir essa velocidade sem tirar o foco do Dr. Rodrigo dos casos em andamento, ativamos a <strong>IA de atendimento da Têmis</strong> para dar o primeiro retorno imediato e fazer a triagem inicial.
+    </p>
+    <p class="vm-done-p" style="font-size:12px;color:var(--vm-text-2)">
+      <strong style="color:var(--vm-text)">Status da primeira semana:</strong> é começo de operação, então estamos medindo de perto. Até agora a IA já está no ar e atuando na triagem.
+    </p>
+    <div class="vm-status-chips">
+      <div class="vm-chip"><strong>1</strong> lead qualificado pela IA (confirmado)</div>
+      <div class="vm-chip"><strong>0</strong> reuniões agendadas ainda — esperado nos primeiros dias</div>
+    </div>
+    <p class="vm-done-p" style="font-size:12px;color:var(--vm-text-2);margin-top:12px">
+      💡 <strong style="color:var(--vm-text)">Vale o Dr. Rodrigo abrir algumas conversas da IA:</strong> alguns contatos responderam e demonstraram interesse, aguardando o retorno humano para fechar o agendamento. A IA acelera o primeiro toque, mas o fechamento ganha muito com o contato pessoal.
+    </p>
+  </div>
+
+  <!-- PRÓXIMAS EVOLUÇÕES -->
+  <div class="vm-next-card">
+    <h3 class="vm-section-h">🚀 Próximas evoluções · Para chegarmos juntos no resultado</h3>
+    <p style="font-size:12.5px;color:var(--vm-text-2);line-height:1.6;margin-bottom:4px">
+      O ciclo está bem encaminhado: <strong style="color:var(--vm-success)">captação dentro do CPL planejado</strong> e <strong style="color:var(--vm-ciano)">qualificação subindo</strong>. Para destravar o próximo nível (reuniões → vendas), dividimos as frentes assim:
+    </p>
+    <div class="vm-next-grid">
+      <div class="vm-next-item">
+        <div class="vm-next-h">🎬 Frente Variantmidia · Captação</div>
+        <p class="vm-next-p">
+          Vamos produzir <strong>3 novos criativos</strong> com ângulos inéditos dentro do tema vencedor (Aeroviário):
+        </p>
+        <p class="vm-next-p" style="margin-top:6px">
+          → Insalubridade vs Periculosidade<br>
+          → Periculosidade no Abastecimento<br>
+          → Adicional Noturno no Aeroporto
+        </p>
+        <div class="vm-next-action">→ Roteiros até quinta · gravação na terça</div>
+      </div>
+
+      <div class="vm-next-item client">
+        <div class="vm-next-h">📞 Frente Dr. Rodrigo · Conversão final</div>
+        <p class="vm-next-p">
+          A IA acelera o primeiro contato, mas o fechamento ganha força com o <strong>toque humano</strong>. Pequenas ações que elevam o comparecimento:
+        </p>
+        <p class="vm-next-p" style="margin-top:6px">
+          → Lembrete pessoal no WhatsApp 24h e 2h antes<br>
+          → Reunião marcada o quanto antes (lead trabalhista esfria rápido)<br>
+          → Ligação ou vídeo curto de 5 min antes do dia
+        </p>
+        <div class="vm-next-action">→ Ações simples que sobem o show-up de forma relevante</div>
+      </div>
+
+      <div class="vm-next-item upsell">
+        <div class="vm-next-h">🤖 Upgrade no pacote mensal · IA com followups</div>
+        <p class="vm-next-p">
+          Podemos configurar a Têmis para fazer <strong>até 3 followups automáticos</strong> antes de considerar o lead perdido:
+        </p>
+        <p class="vm-next-p" style="margin-top:6px">
+          → 1º: 2h sem resposta · → 2º: 24h · → 3º: 72h
+        </p>
+        <p class="vm-next-p" style="margin-top:6px;font-style:italic">
+          Não substitui o followup humano (ligação / vídeo curto) — ele resgata quem parou de responder, e o toque pessoal fecha.
+        </p>
+        <div class="vm-next-action">→ Disponível quando avançarmos pro mensal com IA</div>
+      </div>
+
+      <div class="vm-next-item">
+        <div class="vm-next-h">📊 Frente Variantmidia · Escala</div>
+        <p class="vm-next-p">
+          Com o CPL dentro da meta, o próximo passo é <strong>escalar a verba</strong> e abrir uma <strong>campanha de remarketing</strong> com o criativo institucional (CTR 2,40%) para quem já engajou.
+        </p>
+        <div class="vm-next-action">→ Quando os 3 novos criativos estiverem no ar</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANO -->
+  <div class="vm-card">
+    <h3 class="vm-section-h">📅 Plano da Próxima Semana</h3>
+    <table class="vm-table">
+      <thead>
+        <tr><th>#</th><th>Ação</th><th>Responsável</th><th>Prazo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Confirmar os 3 roteiros</strong> propostos no WhatsApp</td><td>Dr. Rodrigo</td><td>Sexta</td></tr>
+        <tr><td>2</td><td><strong>Gravar os 3 vídeos</strong> de Aeroviário</td><td>Dr. Rodrigo</td><td>Terça</td></tr>
+        <tr><td>3</td><td><strong>Subir criativos</strong> e ajustar segmentação</td><td>Variantmidia</td><td>Quarta</td></tr>
+        <tr><td>4</td><td><strong>Escalar verba</strong> se o CPL se mantiver na meta</td><td>Variantmidia</td><td>Quinta</td></tr>
+        <tr><td>5</td><td><strong>Lembrete no WhatsApp</strong> antes de cada reunião marcada</td><td>Dr. Rodrigo</td><td>Contínuo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="vm-footer">
+    <div>Gerado em <span style="color:var(--vm-text-2)">26/06/2026</span> · dados Meta Ads + CRM</div>
+    <div>Produzido por <span class="vm-cyano">Variantmidia</span> · Matheus Valadão · Diretor Comercial</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Dados reais — Meta Ads (API) + CRM (Google Sheets)
+  const data = {
+    'maio': {
+      label: '01/05 a 31/05/2026', note: '· primeiro mês de operação',
+      spend: 193.25, imp: 12874, clicks: 99, ctr: '0,77%',
+      leads: 8, metaLeads: 6, qualif: 1, reun: 0, vendas: 0
+    },
+    'junho': {
+      label: '01/06 a 26/06/2026', note: '· mês corrente',
+      spend: 386.58, imp: 30475, clicks: 288, ctr: '0,95%',
+      leads: 17, metaLeads: 13, qualif: 5, reun: 0, vendas: 0
+    },
+    '7d': {
+      label: '19/06 a 25/06/2026', note: '· relatório enviado ao cliente',
+      spend: 187.96, imp: 10659, clicks: 161, ctr: '1,51%',
+      leads: 7, metaLeads: 7, qualif: 4, reun: 0, vendas: 0
+    },
+    '14d': {
+      label: '12/06 a 25/06/2026', note: '· quinzena',
+      spend: 286.29, imp: 23258, clicks: 243, ctr: '1,04%',
+      leads: 13, metaLeads: 13, qualif: 4, reun: 0, vendas: 0
+    },
+    'todo': {
+      label: '11/05 a 26/06/2026', note: '· desde o início',
+      spend: 579.83, imp: 43349, clicks: 387, ctr: '0,89%',
+      leads: 25, metaLeads: 26, qualif: 6, reun: 0, vendas: 0
+    }
+  };
+
+  const fmt = (n) => 'R$ ' + n.toFixed(2).replace('.', ',');
+  const num = (n) => n.toLocaleString('pt-BR');
+  // larguras visuais fixas do funil (escada), independente da escala real
+  const W = { imp: 100, clicks: 70, leads: 50, qualif: 34 };
+
+  function render(period) {
+    const d = data[period];
+    // período
+    document.getElementById('vm-period-text').textContent = d.label;
+    document.getElementById('vm-period-note').textContent = d.note;
+
+    // KPIs
+    document.getElementById('kpi-spend').textContent = fmt(d.spend);
+    document.getElementById('kpi-leads').textContent = d.leads;
+    document.getElementById('kpi-leads-sub').textContent = 'Meta marcou: ' + d.metaLeads;
+    document.getElementById('kpi-qualif').textContent = d.qualif;
+    const qpct = d.leads ? Math.round(d.qualif / d.leads * 100) : 0;
+    document.getElementById('kpi-qualif-sub').textContent = qpct + '% dos leads';
+    document.getElementById('kpi-reun').textContent = d.reun;
+    document.getElementById('kpi-vendas').textContent = d.vendas;
+    const cpl = d.leads ? d.spend / d.leads : 0;
+    const cplEl = document.getElementById('kpi-cpl');
+    cplEl.textContent = fmt(cpl);
+    const dentroMeta = cpl <= 30;
+    cplEl.style.color = dentroMeta ? 'var(--vm-success)' : 'var(--vm-warning)';
+    document.getElementById('kpi-cpl-sub').textContent = (dentroMeta ? '✅' : '⚠️') + ' meta: R$ 30';
+
+    // Funil
+    const convLead = d.clicks ? (d.leads / d.clicks * 100) : 0;
+    const stages = [
+      { name: 'Impressões', val: num(d.imp), meta: '<strong>100%</strong>', w: W.imp, empty: false },
+      { name: 'Cliques', val: num(d.clicks), meta: 'CTR <strong>' + d.ctr + '</strong>', w: W.clicks, empty: false },
+      { name: 'Leads (CRM)', val: d.leads, meta: 'Conv. <strong>' + convLead.toFixed(1).replace('.', ',') + '%</strong>', w: W.leads, empty: false },
+      { name: 'Qualificados', val: d.qualif, meta: 'Qualif. <strong>' + qpct + '%</strong>', w: W.qualif, empty: d.qualif === 0 },
+      { name: 'Reuniões', val: d.reun, meta: d.reun ? '<strong>' + d.reun + '</strong>' : '—', w: 16, empty: d.reun === 0 },
+      { name: 'Vendas', val: d.vendas, meta: d.vendas ? '<strong>' + d.vendas + '</strong>' : '—', w: 10, empty: d.vendas === 0 }
+    ];
+    document.getElementById('vm-funnel').innerHTML = stages.map(s => `
+      <div class="vm-funnel-row">
+        <div class="vm-funnel-name">${s.name}</div>
+        <div class="vm-funnel-bar">
+          <div class="vm-funnel-fill ${s.empty ? 'empty' : ''}" style="width:${s.empty ? 100 : s.w}%">${s.val}</div>
+        </div>
+        <div class="vm-funnel-meta">${s.meta}</div>
+      </div>`).join('');
+
+    // Custos
+    const cplBar = document.getElementById('cost-cpl');
+    cplBar.textContent = fmt(cpl);
+    cplBar.style.color = dentroMeta ? 'var(--vm-success)' : 'var(--vm-warning)';
+    document.getElementById('cost-cpl-bar').style.width = Math.min(cpl / 30 * 100, 100) + '%';
+    document.getElementById('cost-cpl-bar').style.background = dentroMeta ? 'var(--vm-success)' : 'var(--vm-warning)';
+    document.getElementById('cost-cpl-sub').textContent = (dentroMeta ? '✅ dentro' : '⚠️ acima') + ' da meta R$ 30';
+    const cplq = d.qualif ? d.spend / d.qualif : 0;
+    document.getElementById('cost-cplq').textContent = d.qualif ? fmt(cplq) : '—';
+    document.getElementById('cost-cplq-bar').style.width = d.qualif ? Math.min(cplq / 100 * 100, 100) + '%' : '0%';
+  }
+
+  const buttons = document.querySelectorAll('.vm-filter-btn');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      buttons.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      render(this.getAttribute('data-period'));
+    });
+  });
+  render('7d');
+})();
+</script>
+</body>
+</html>
