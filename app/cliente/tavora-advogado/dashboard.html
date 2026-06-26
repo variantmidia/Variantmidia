@@ -327,6 +327,23 @@
   }
   .vm-period-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .vm-period-right { font: 700 10px var(--f-mono, monospace); letter-spacing: .08em; text-transform: uppercase; color: var(--vm-text-3); }
+  .vm-live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    background: var(--vm-warning);
+    box-shadow: 0 0 0 3px rgba(245,158,11,.12);
+  }
+  .vm-live-dot.ok {
+    background: var(--vm-success);
+    box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+  }
+  .vm-live-dot.err {
+    background: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239,68,68,.12);
+  }
   .vm-card {
     background: linear-gradient(180deg, #20242C 0%, #181E27 100%);
     border-color: rgba(255,255,255,.08);
@@ -384,7 +401,7 @@
       Período selecionado: <span class="vm-period-pill" id="vm-period-text">01/06 a 26/06/2026</span>
       <span id="vm-period-note" style="color:var(--vm-text-3)">· acumulado até a data de referência</span>
     </div>
-    <div class="vm-period-right">Meta Ads + CRM</div>
+    <div class="vm-period-right"><span class="vm-live-dot" id="vm-live-dot"></span><span id="vm-live-status">Carregando Meta Ads</span></div>
   </div>
 
   <!-- KPIs -->
@@ -434,6 +451,7 @@
     <div class="vm-card">
       <h3 class="vm-section-h">Top Criativos por CPL</h3>
       <div style="font-size:10px;color:var(--vm-text-3);margin:-8px 0 10px;text-transform:uppercase;letter-spacing:0.5px">Período recente</div>
+      <div id="vm-top-creatives">
       <div class="vm-tc-item">
         <div>
           <div class="vm-tc-name">Vídeo Aeroviário Topo</div>
@@ -454,6 +472,7 @@
           <div class="vm-tc-meta">Pausados · CPL acima do teto</div>
         </div>
         <div class="vm-tc-cost" style="color:var(--vm-warning)">› R$ 28</div>
+      </div>
       </div>
       <div style="margin-top:12px;padding:10px;background:var(--vm-ciano-soft);border-radius:6px;font-size:11px;color:var(--vm-text);line-height:1.5">
         <strong style="color:var(--vm-ciano)">📌 Padrão claro:</strong> o tema <strong>Aeroviário</strong> é o que mais converte. Vamos diversificar ângulos dentro dele na próxima semana.
@@ -645,6 +664,75 @@
     return { ...data.todo, label: brDate(iso), note: '· fora do recorte diário embutido; exibindo todo período' };
   }
 
+  function setLiveStatus(kind, text) {
+    const dot = document.getElementById('vm-live-dot');
+    const label = document.getElementById('vm-live-status');
+    dot.className = 'vm-live-dot' + (kind ? ' ' + kind : '');
+    label.textContent = text;
+  }
+
+  function renderTopCreatives(topAds) {
+    if (!Array.isArray(topAds) || !topAds.length) return;
+
+    document.getElementById('vm-top-creatives').innerHTML = topAds.map((ad) => `
+      <div class="vm-tc-item">
+        <div>
+          <div class="vm-tc-name">${ad.name || 'Anúncio sem nome'}</div>
+          <div class="vm-tc-meta">${ad.leads || 0} leads · CTR ${Number(ad.ctr || 0).toFixed(2).replace('.', ',')}% · ${ad.clicks || 0} cliques</div>
+        </div>
+        <div class="vm-tc-cost">${ad.leads ? fmt(Number(ad.cpl || 0)) : '—'}</div>
+      </div>`).join('');
+  }
+
+  function mergeLiveData(period, live) {
+    const base = data[period] || dataForDate(dateInput.value);
+
+    return {
+      ...base,
+      ...live,
+      qualif: live.qualif ?? base.qualif,
+      reun: live.reun ?? base.reun,
+      vendas: live.vendas ?? base.vendas
+    };
+  }
+
+  async function fetchLiveData(period) {
+    const params = new URLSearchParams({
+      period,
+      date: dateInput.value || isoDate(new Date())
+    });
+
+    const response = await fetch('/api/meta/tavora?' + params.toString(), {
+      credentials: 'same-origin',
+      cache: 'no-store'
+    });
+
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || 'Erro ao carregar Meta Ads.');
+    return payload;
+  }
+
+  async function loadPeriod(period, fallbackData) {
+    const fallback = fallbackData || data[period] || dataForDate(dateInput.value);
+    render(period, fallback);
+    setLiveStatus('', 'Buscando Meta Ads');
+
+    try {
+      const live = await fetchLiveData(period);
+      if (!live.configured) {
+        setLiveStatus('err', 'Meta Ads não configurado');
+        return;
+      }
+      const merged = mergeLiveData(period, live);
+      render(period, merged);
+      renderTopCreatives(live.topAds);
+      setLiveStatus('ok', 'Meta Ads ao vivo');
+    } catch (error) {
+      setLiveStatus('err', 'Fallback estático');
+      console.warn(error);
+    }
+  }
+
   function render(period, overrideData) {
     const d = overrideData || data[period];
     if (!d) return;
@@ -661,7 +749,7 @@
     document.getElementById('kpi-qualif-sub').textContent = qpct + '% dos leads';
     document.getElementById('kpi-reun').textContent = d.reun;
     document.getElementById('kpi-vendas').textContent = d.vendas;
-    const cpl = d.leads ? d.spend / d.leads : 0;
+    const cpl = typeof d.cpl === 'number' ? d.cpl : (d.leads ? d.spend / d.leads : 0);
     const cplEl = document.getElementById('kpi-cpl');
     cplEl.textContent = fmt(cpl);
     const dentroMeta = cpl <= 30;
@@ -697,6 +785,7 @@
     const cplq = d.qualif ? d.spend / d.qualif : 0;
     document.getElementById('cost-cplq').textContent = d.qualif ? fmt(cplq) : '—';
     document.getElementById('cost-cplq-bar').style.width = d.qualif ? Math.min(cplq / 100 * 100, 100) + '%' : '0%';
+    if (d.topAds) renderTopCreatives(d.topAds);
   }
 
   const buttons = document.querySelectorAll('.vm-tool-btn[data-period]');
@@ -708,22 +797,22 @@
       if (period === 'hoje') {
         dateInput.value = isoDate(new Date());
       }
-      render(period);
+      loadPeriod(period);
     });
   });
   dateInput.addEventListener('change', function() {
     buttons.forEach(b => b.classList.remove('active'));
-    render('custom', dataForDate(this.value));
+    loadPeriod('hoje', dataForDate(this.value));
   });
 
   const today = isoDate(new Date());
   dateInput.value = today;
   if (today === '2026-06-26') {
     setActive('hoje');
-    render('hoje');
+    loadPeriod('hoje');
   } else {
     buttons.forEach(b => b.classList.remove('active'));
-    render('custom', dataForDate(today));
+    loadPeriod('hoje', dataForDate(today));
   }
 })();
 </script>
