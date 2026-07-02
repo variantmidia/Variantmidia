@@ -436,7 +436,7 @@
       <div class="vm-card-sub">Verba de mídia</div>
     </div>
     <div class="vm-card vm-kpi-card">
-      <div class="vm-card-title">📨 Leads (Meta)</div>
+      <div class="vm-card-title">📨 Leads (CRM)</div>
       <div class="vm-card-value" id="kpi-leads">7</div>
       <div class="vm-card-sub" id="kpi-leads-sub">Meta marcou: 7</div>
     </div>
@@ -448,7 +448,7 @@
     <div class="vm-card vm-kpi-card">
       <div class="vm-card-title">📅 Reuniões</div>
       <div class="vm-card-value" id="kpi-reun">0</div>
-      <div class="vm-card-sub">Em construção</div>
+      <div class="vm-card-sub" id="kpi-reun-sub">Em construção</div>
     </div>
     <div class="vm-card vm-kpi-card">
       <div class="vm-card-title">💼 Vendas</div>
@@ -519,8 +519,9 @@
       </div>
       <div class="vm-cost-block">
         <div class="vm-card-title">Custo por Reunião</div>
-        <div class="vm-card-value" style="color:var(--vm-text-3);font-size:22px">—</div>
-        <div class="vm-card-sub" style="margin-top:6px">Primeiras reuniões em construção</div>
+        <div class="vm-card-value" id="cost-reun" style="color:var(--vm-text-3);font-size:22px">—</div>
+        <div class="vm-cost-bar"><div class="vm-cost-fill" id="cost-reun-bar" style="background:var(--vm-ciano);width:0%"></div></div>
+        <div class="vm-card-sub" id="cost-reun-sub" style="margin-top:6px">Primeiras reuniões em construção</div>
       </div>
     </div>
   </div>
@@ -535,8 +536,8 @@
       <strong style="color:var(--vm-text)">Status da primeira semana:</strong> é começo de operação, então estamos medindo de perto. Até agora a IA já está no ar e atuando na triagem.
     </p>
     <div class="vm-status-chips">
-      <div class="vm-chip"><strong>1</strong> lead qualificado pela IA (confirmado)</div>
-      <div class="vm-chip"><strong>0</strong> reuniões agendadas ainda — esperado nos primeiros dias</div>
+      <div class="vm-chip"><strong>8</strong> leads qualificados no CRM até 01/07</div>
+      <div class="vm-chip"><strong>1</strong> reunião agendada — primeira entrevista do Dr. Rodrigo em 01/07</div>
     </div>
     <p class="vm-done-p" style="font-size:12px;color:var(--vm-text-2);margin-top:12px">
       💡 <strong style="color:var(--vm-text)">Vale o Dr. Rodrigo abrir algumas conversas da IA:</strong> alguns contatos responderam e demonstraram interesse, aguardando o retorno humano para fechar o agendamento. A IA acelera o primeiro toque, mas o fechamento ganha muito com o contato pessoal.
@@ -618,7 +619,7 @@
   </div>
 
   <div class="vm-footer">
-    <div>Gerado em <span style="color:var(--vm-text-2)">26/06/2026</span> · dados Meta Ads + CRM</div>
+    <div>Gerado em <span style="color:var(--vm-text-2)">02/07/2026</span> · dados Meta Ads + CRM</div>
     <div>Produzido por <span class="vm-cyano">Variantmidia</span> · Matheus Valadão · Diretor Comercial</div>
   </div>
   </main>
@@ -661,15 +662,20 @@
   };
 
   // Recorte CRM/Sheets conhecido neste relatório. Meta Ads entra ao vivo pela API;
-  // qualificados, reuniões e vendas precisam respeitar a data do CRM.
+  // leads, qualificados, reuniões e vendas precisam respeitar a data do CRM.
   const crmDaily = [
-    { date: '2026-05-20', qualif: 1, reun: 0, vendas: 0 },
-    { date: '2026-06-10', qualif: 1, reun: 0, vendas: 0 },
-    { date: '2026-06-20', qualif: 1, reun: 0, vendas: 0 },
-    { date: '2026-06-21', qualif: 1, reun: 0, vendas: 0 },
-    { date: '2026-06-24', qualif: 1, reun: 0, vendas: 0 },
-    { date: '2026-06-25', qualif: 1, reun: 0, vendas: 0 }
+    { date: '2026-05-20', leads: 8, qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-06-11', leads: 1, qualif: 0, reun: 0, vendas: 0 },
+    { date: '2026-06-17', leads: 4, qualif: 0, reun: 0, vendas: 0 },
+    { date: '2026-06-18', leads: 2, qualif: 0, reun: 0, vendas: 0 },
+    { date: '2026-06-22', leads: 1, qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-06-24', leads: 2, qualif: 0, reun: 0, vendas: 0 },
+    { date: '2026-06-25', leads: 4, qualif: 3, reun: 0, vendas: 0 },
+    { date: '2026-06-26', leads: 3, qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-06-30', leads: 5, qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-07-01', leads: 6, qualif: 1, reun: 1, vendas: 0 }
   ];
+  const latestCrmDate = crmDaily.reduce((latest, row) => row.date > latest ? row.date : latest, crmDaily[0].date);
 
   const fmt = (n) => 'R$ ' + n.toFixed(2).replace('.', ',');
   const num = (n) => n.toLocaleString('pt-BR');
@@ -722,10 +728,23 @@
     return crmDaily
       .filter((row) => row.date >= since && row.date <= until)
       .reduce((total, row) => ({
+        leads: total.leads + (row.leads || 0),
         qualif: total.qualif + (row.qualif || 0),
         reun: total.reun + (row.reun || 0),
         vendas: total.vendas + (row.vendas || 0)
-      }), { qualif: 0, reun: 0, vendas: 0 });
+      }), { leads: 0, qualif: 0, reun: 0, vendas: 0 });
+  }
+
+  function applyCrmMetrics(base, since, until) {
+    const crm = crmMetricsForRange(since, until);
+    return {
+      ...base,
+      leads: crm.leads,
+      qualif: crm.qualif,
+      reun: crm.reun,
+      vendas: crm.vendas,
+      crmSource: 'crm_by_date'
+    };
   }
 
   function setLiveStatus(kind, text) {
@@ -755,6 +774,8 @@
     return {
       ...base,
       ...live,
+      leads: crm.leads,
+      metaLeads: live.leads,
       qualif: crm.qualif,
       reun: crm.reun,
       vendas: crm.vendas,
@@ -786,7 +807,8 @@
   }
 
   async function loadPeriod(period, fallbackData) {
-    const fallback = fallbackData || data[period] || dataForRange(startInput.value, endInput.value);
+    const fallbackBase = fallbackData || data[period] || dataForRange(startInput.value, endInput.value);
+    const fallback = applyCrmMetrics(fallbackBase, startInput.value, endInput.value);
     render(period, fallback);
     setLiveStatus('', 'Buscando Meta Ads');
 
@@ -823,8 +845,9 @@
       ? qpct + '% dos leads · CRM'
       : (d.crmSource ? 'Sem qualificados no CRM no período' : '0% dos leads');
     document.getElementById('kpi-reun').textContent = d.reun;
+    document.getElementById('kpi-reun-sub').textContent = d.reun ? 'Agendada no período' : 'Em construção';
     document.getElementById('kpi-vendas').textContent = d.vendas;
-    const cpl = typeof d.cpl === 'number' ? d.cpl : (d.leads ? d.spend / d.leads : 0);
+    const cpl = d.leads ? d.spend / d.leads : 0;
     const cplEl = document.getElementById('kpi-cpl');
     cplEl.textContent = fmt(cpl);
     const dentroMeta = cpl <= 30;
@@ -836,7 +859,7 @@
     const stages = [
       { name: 'Impressões', val: num(d.imp), meta: '<strong>100%</strong>', w: W.imp, empty: false },
       { name: 'Cliques', val: num(d.clicks), meta: 'CTR <strong>' + d.ctr + '</strong>', w: W.clicks, empty: false },
-      { name: 'Leads (Meta)', val: d.leads, meta: 'Conv. <strong>' + convLead.toFixed(1).replace('.', ',') + '%</strong>', w: W.leads, empty: false },
+      { name: 'Leads (CRM)', val: d.leads, meta: 'Meta <strong>' + (d.metaLeads || 0) + '</strong> · Conv. <strong>' + convLead.toFixed(1).replace('.', ',') + '%</strong>', w: W.leads, empty: d.leads === 0 },
       { name: 'Qualificados', val: d.qualif, meta: d.qualif ? 'CRM <strong>' + qpct + '%</strong>' : 'CRM <strong>0</strong>', w: W.qualif, empty: d.qualif === 0 },
       { name: 'Reuniões', val: d.reun, meta: d.reun ? '<strong>' + d.reun + '</strong>' : '—', w: 16, empty: d.reun === 0 },
       { name: 'Vendas', val: d.vendas, meta: d.vendas ? '<strong>' + d.vendas + '</strong>' : '—', w: 10, empty: d.vendas === 0 }
@@ -863,6 +886,12 @@
     document.getElementById('cost-cplq-sub').textContent = d.qualif
       ? 'Calculado com qualificados do CRM'
       : 'Aguardando registro qualificado no CRM';
+    const cpr = d.reun ? d.spend / d.reun : 0;
+    const cprEl = document.getElementById('cost-reun');
+    cprEl.textContent = d.reun ? fmt(cpr) : '—';
+    cprEl.style.color = d.reun ? 'var(--vm-ciano)' : 'var(--vm-text-3)';
+    document.getElementById('cost-reun-bar').style.width = d.reun ? Math.min(cpr / 300 * 100, 100) + '%' : '0%';
+    document.getElementById('cost-reun-sub').textContent = d.reun ? d.reun + ' reunião agendada no período' : 'Primeiras reuniões em construção';
     if (d.topAds) renderTopCreatives(d.topAds);
   }
 
@@ -905,14 +934,15 @@
   });
 
   const today = isoDate(new Date());
-  startInput.value = today;
-  endInput.value = today;
-  if (today === '2026-06-26') {
+  const initialDate = today > latestCrmDate ? latestCrmDate : today;
+  startInput.value = initialDate;
+  endInput.value = initialDate;
+  if (initialDate === today) {
     setActive('hoje');
-    loadPeriod('hoje');
+    loadPeriod('hoje', dataForDate(initialDate));
   } else {
     buttons.forEach(b => b.classList.remove('active'));
-    loadPeriod('hoje', dataForDate(today));
+    loadPeriod('custom', dataForDate(initialDate));
   }
 })();
 </script>
