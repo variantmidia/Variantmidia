@@ -408,6 +408,7 @@
       <button class="vm-tool-btn" data-period="7d" type="button">7 dias</button>
       <button class="vm-tool-btn" data-period="14d" type="button">14 dias</button>
       <button class="vm-tool-btn" data-period="junho" type="button">Junho</button>
+      <button class="vm-tool-btn" data-period="todo" type="button">Todo período</button>
       <label class="vm-date-wrap" for="vm-date-start">
         <span>De</span>
         <input id="vm-date-start" type="date" value="2026-06-26">
@@ -537,7 +538,7 @@
     </p>
     <div class="vm-status-chips">
       <div class="vm-chip"><strong>8</strong> leads qualificados no CRM até 01/07</div>
-      <div class="vm-chip"><strong>1</strong> reunião agendada — primeira entrevista do Dr. Rodrigo em 01/07</div>
+      <div class="vm-chip"><strong>2</strong> reuniões agendadas no total — 22/05 e 01/07</div>
     </div>
     <p class="vm-done-p" style="font-size:12px;color:var(--vm-text-2);margin-top:12px">
       💡 <strong style="color:var(--vm-text)">Vale o Dr. Rodrigo abrir algumas conversas da IA:</strong> alguns contatos responderam e demonstraram interesse, aguardando o retorno humano para fechar o agendamento. A IA acelera o primeiro toque, mas o fechamento ganha muito com o contato pessoal.
@@ -655,7 +656,7 @@
       leads: 13, metaLeads: 13, qualif: 4, reun: 0, vendas: 0
     },
     'todo': {
-      label: '11/05 a 26/06/2026', note: '· desde o início',
+      label: '11/05 a 01/07/2026', note: '· desde o início',
       spend: 579.83, imp: 43349, clicks: 387, ctr: '0,89%',
       leads: 25, metaLeads: 26, qualif: 6, reun: 0, vendas: 0
     }
@@ -665,6 +666,7 @@
   // leads, qualificados, reuniões e vendas precisam respeitar a data do CRM.
   const crmDaily = [
     { date: '2026-05-20', leads: 8, qualif: 1, reun: 0, vendas: 0 },
+    { date: '2026-05-22', leads: 0, qualif: 0, reun: 1, vendas: 0 },
     { date: '2026-06-11', leads: 1, qualif: 0, reun: 0, vendas: 0 },
     { date: '2026-06-17', leads: 4, qualif: 0, reun: 0, vendas: 0 },
     { date: '2026-06-18', leads: 2, qualif: 0, reun: 0, vendas: 0 },
@@ -919,6 +921,10 @@
       if (period === 'junho') {
         startInput.value = todayValue.slice(0, 7) + '-01';
         endInput.value = todayValue;
+      }
+      if (period === 'todo') {
+        startInput.value = '2026-05-11';
+        endInput.value = latestCrmDate;
       }
       loadPeriod(period);
     });
