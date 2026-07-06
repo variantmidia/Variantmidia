@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variantmidia — Simulador de Crescimento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --bg-alt:#F7FAFA; --surface:#FFFFFF;
+  --panel:#0E1620; --panel-text:#D5DEE6;
+  --ink:#1A1A1A; --graphite:#2B2B2B; --muted:#5A5A52;
+  --line:#E2E2D6; --line-soft:#EFF4F6; --line-cool:#E6EEF2;
+  --ok:#1F9D6F; --warn:#C97A1B; --crit:#C03B3B;
+  --cyan:#16D4E8; --cyan-deep:#0FB8CC; --cyan-dim:rgba(22,212,232,.12);
+  --f-display:'Syne',sans-serif; --f-body:'DM Sans',sans-serif; --f-mono:'JetBrains Mono',monospace;
+  --r:12px; --r-sm:8px; --r-lg:16px; --r-pill:999px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--f-body);background:var(--bg-alt);color:var(--ink);min-height:100vh}
+.wrap{max-width:1240px;margin:0 auto;padding:32px 24px 80px}
+
+/* ───── Header ───── */
+header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px}
+.brand h1{font-family:var(--f-display);font-weight:800;font-size:26px;letter-spacing:-.5px}
+.brand h1 span{color:var(--cyan-deep)}
+.brand p{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.mode-toggle{display:flex;background:var(--surface);border:1px solid var(--line-cool);border-radius:var(--r-pill);padding:4px;gap:4px}
+.mode-toggle button{border:0;background:transparent;font-family:var(--f-mono);font-size:12px;letter-spacing:.5px;padding:10px 20px;border-radius:var(--r-pill);cursor:pointer;color:var(--muted);transition:.18s}
+.mode-toggle button.active{background:var(--panel);color:#fff}
+
+/* ───── Hero strip ───── */
+.hero{background:var(--panel);color:var(--panel-text);border-radius:var(--r-lg);padding:22px 26px;display:flex;gap:18px;align-items:center;margin-bottom:28px;flex-wrap:wrap}
+.hero .bolt{font-size:22px}
+.hero .txt b{color:#fff}
+.hero .txt{font-size:14px;line-height:1.55}
+.hero .tag{margin-left:auto;font-family:var(--f-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(255,255,255,.18);border-radius:var(--r-pill);padding:6px 14px;white-space:nowrap}
+
+/* ───── Layout ───── */
+.grid{display:grid;grid-template-columns:440px 1fr;gap:24px;align-items:start}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line-cool);border-radius:var(--r-lg);padding:24px}
+.card h2{font-family:var(--f-display);font-size:15px;font-weight:700;letter-spacing:-.2px;margin-bottom:4px}
+.card .sub{font-family:var(--f-mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:18px}
+
+/* ───── Inputs ───── */
+.sect{font-family:var(--f-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan-deep);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.sect::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+.sect:first-of-type{margin-top:0}
+.row{display:grid;grid-template-columns:1fr 108px 108px;gap:10px;align-items:center;padding:7px 0}
+.row label{font-size:13.5px;color:var(--graphite);line-height:1.3}
+.row label small{display:block;font-size:11px;color:var(--muted)}
+.row input{width:100%;font-family:var(--f-mono);font-size:13px;font-weight:600;padding:9px 10px;border:1px solid var(--line-cool);border-radius:var(--r-sm);background:var(--bg-alt);color:var(--ink);text-align:right}
+.row input:focus{outline:2px solid var(--cyan);border-color:transparent;background:#fff}
+.row input.meta-in{border-style:dashed;color:var(--cyan-deep)}
+.col-heads{display:grid;grid-template-columns:1fr 108px 108px;gap:10px;margin-bottom:2px}
+.col-heads span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-align:right}
+.mrr-only{display:none}
+body.mrr .mrr-only{display:grid}
+body.mrr .mrr-only.sect{display:flex}
+
+/* ───── Funnel results ───── */
+.funnel{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.stage{display:grid;grid-template-columns:1fr auto auto auto;gap:14px;align-items:center;background:var(--bg-alt);border:1px solid var(--line-soft);border-radius:var(--r);padding:12px 16px}
+.stage .nm{font-size:13px;font-weight:500;color:var(--graphite)}
+.stage .nm small{display:block;font-family:var(--f-mono);font-size:10px;color:var(--muted);margin-top:2px}
+.stage .v{font-family:var(--f-mono);font-weight:700;font-size:15px;text-align:right;min-width:74px}
+.stage .v small{display:block;font-size:9px;font-weight:400;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.stage .v.meta{color:var(--cyan-deep)}
+.stage .delta{font-family:var(--f-mono);font-size:11px;font-weight:600;min-width:64px;text-align:right}
+.delta.up{color:var(--ok)}.delta.down{color:var(--crit)}.delta.flat{color:var(--muted)}
+
+/* ───── Big KPIs ───── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:22px}
+.kpi{background:var(--panel);border-radius:var(--r);padding:18px 20px;color:var(--panel-text)}
+.kpi .lb{font-family:var(--f-mono);font-size:9.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+.kpi .num{font-family:var(--f-display);font-weight:800;font-size:26px;color:#fff;letter-spacing:-.5px;line-height:1.1}
+.kpi .cmp{font-family:var(--f-mono);font-size:11px;margin-top:6px;color:var(--panel-text)}
+.kpi .cmp b{color:var(--cyan)}
+.kpi.upside{background:linear-gradient(135deg,#0E1620 0%,#123A33 100%)}
+.kpi.upside .num{color:#4BE3A8}
+
+/* ───── Chart ───── */
+.chart-card{margin-top:24px}
+.chart-wrap{margin-top:8px}
+.legend{display:flex;gap:18px;margin-top:12px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+footer{margin-top:36px;text-align:center;font-family:var(--f-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+</style>
+</head>
+<body class="mrr">
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <h1>VARIANT<span>MIDIA</span></h1>
+    <p>Simulador de Crescimento · Advocacia</p>
+  </div>
+  <div class="mode-toggle">
+    <button id="btn-mrr" class="active" onclick="setMode(true)">COM MRR · Assessoria/B2B</button>
+    <button id="btn-nomrr" onclick="setMode(false)">SEM MRR · Trabalhista/Prev.</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="bolt">⚡</div>
+  <div class="txt"><b>Simulador de funil comercial.</b><br>
+  Preencha o cenário atual e a meta — os números se atualizam em tempo real.</div>
+  <div class="tag" id="mode-tag">Modo: honorários + mensalidade</div>
+</div>
+
+<div class="grid">
+
+  <!-- ═══════ INPUTS ═══════ -->
+  <div class="card">
+    <h2>Cenário do Funil</h2>
+    <div class="sub">Atual vs Meta Variantmidia</div>
+
+    <div class="col-heads"><span></span><span>Atual</span><span>Meta</span></div>
+
+    <div class="sect">Marketing</div>
+    <div class="row">
+      <label>Investimento em mídia<small>R$ / mês</small></label>
+      <input type="number" id="a_midia" value="3000" min="0" step="100">
+      <input type="number" id="m_midia" value="3000" min="0" step="100" class="meta-in">
+    </div>
+    <div class="row">
+      <label>Custo por lead (CPL)<small>R$ por lead qualificado</small></label>
+      <input type="number" id="a_cpl" value="60" min="1" step="5">
+      <input type="number" id="m_cpl" value="45" min="1" step="5" class="meta-in">
+    </div>
+
+    <div class="sect">Comercial</div>
+    <div class="row">
+      <label>Taxa de agendamento<small>% de leads que agendam consulta</small></label>
+      <input type="number" id="a_agend" value="30" min="0" max="100" step="1">
+      <input type="number" id="m_agend" value="40" min="0" max="100" step="1" class="meta-in">
+    </div>
+    <div class="row">
+      <label>Show rate<small>% que comparece à consulta</small></label>
+      <input type="number" id="a_show" value="60" min="0" max="100" step="1">
+      <input type="number" id="m_show" value="80" min="0" max="100" step="1" class="meta-in">
+    </div>
+    <div class="row">
+      <label>Taxa de fechamento<small>% de consultas que viram contrato</small></label>
+      <input type="number" id="a_fech" value="25" min="0" max="100" step="1">
+      <input type="number" id="m_fech" value="35" min="0" max="100" step="1" class="meta-in">
+    </div>
+    <div class="row">
+      <label>Ticket de entrada<small>R$ honorários iniciais por caso</small></label>
+      <input type="number" id="a_ticket" value="2500" min="0" step="100">
+      <input type="number" id="m_ticket" value="2500" min="0" step="100" class="meta-in">
+    </div>
+
+    <div class="sect mrr-only">Recorrência</div>
+    <div class="row mrr-only">
+      <label>Mensalidade média<small>R$ / mês por cliente (assessoria)</small></label>
+      <input type="number" id="a_mens" value="1200" min="0" step="100">
+      <input type="number" id="m_mens" value="1200" min="0" step="100" class="meta-in">
+    </div>
+    <div class="row mrr-only">
+      <label>Retenção média<small>meses de permanência</small></label>
+      <input type="number" id="a_ret" value="12" min="1" max="60" step="1">
+      <input type="number" id="m_ret" value="12" min="1" max="60" step="1" class="meta-in">
+    </div>
+  </div>
+
+  <!-- ═══════ RESULTADOS ═══════ -->
+  <div>
+    <div class="card">
+      <h2>Funil Projetado — mês a mês</h2>
+      <div class="sub">Atual → Meta · variação</div>
+      <div class="funnel" id="funnel"></div>
+      <div class="kpis" id="kpis"></div>
+    </div>
+
+    <div class="card chart-card">
+      <h2 id="chart-title">Receita acumulada — 12 meses</h2>
+      <div class="sub">Cenário atual vs meta Variantmidia</div>
+      <div class="chart-wrap"><svg id="chart" width="100%" height="240" viewBox="0 0 720 240" preserveAspectRatio="none"></svg></div>
+      <div class="legend">
+        <span><i style="background:#8A97A8"></i>Cenário atual</span>
+        <span><i style="background:var(--cyan-deep)"></i>Meta Variantmidia</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>Variantmidia · ferramenta interna de diagnóstico comercial · uso em reunião</footer>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmtBR = n => n.toLocaleString('pt-BR', {maximumFractionDigits: 0});
+const fmtR$ = n => 'R$ ' + fmtBR(Math.round(n));
+const fmt1 = n => n.toLocaleString('pt-BR', {maximumFractionDigits: 1});
+
+let MRR_MODE = true;
+
+function setMode(mrr){
+  MRR_MODE = mrr;
+  document.body.classList.toggle('mrr', mrr);
+  $('btn-mrr').classList.toggle('active', mrr);
+  $('btn-nomrr').classList.toggle('active', !mrr);
+  $('mode-tag').textContent = mrr ? 'Modo: honorários + mensalidade' : 'Modo: honorários por caso';
+  calc();
+}
+
+function readScenario(p){
+  const g = id => parseFloat($(p + '_' + id).value) || 0;
+  const midia = g('midia'), cpl = Math.max(g('cpl'), 1);
+  const leads = midia / cpl;
+  const agend = leads * g('agend') / 100;
+  const cons  = agend * g('show') / 100;
+  const contr = cons * g('fech') / 100;
+  const mens  = MRR_MODE ? g('mens') : 0;
+  const ret   = MRR_MODE ? Math.max(g('ret'), 1) : 0;
+  const ltv   = g('ticket') + mens * ret;
+  return {
+    midia, cpl, leads, agend, cons, contr,
+    ticket: g('ticket'), mens, ret, ltv,
+    entrada: contr * g('ticket'),
+    novoMRR: contr * mens,
+    valorGerado: contr * ltv,                    // valor total dos contratos fechados no mês
+    cac: contr > 0 ? midia / contr : 0,
+    custoConsulta: cons > 0 ? midia / cons : 0,
+    roas: midia > 0 ? (contr * ltv) / midia : 0,
+    txAgend: g('agend'), txShow: g('show'), txFech: g('fech')
+  };
+}
+
+/* Receita acumulada em 12 meses (coortes de MRR respeitando retenção) */
+function receita12m(s){
+  let acc = 0; const serie = [];
+  for(let m = 1; m <= 12; m++){
+    acc += s.entrada;                                    // entradas do mês
+    for(let c = 1; c <= m; c++){                         // coortes ativas pagando mensalidade
+      const idade = m - c;                               // meses desde a venda da coorte
+      if(MRR_MODE && idade >= 1 && idade <= s.ret) acc += s.novoMRR;
+    }
+    serie.push(acc);
+  }
+  return serie;
+}
+
+function deltaTag(a, b, moneyFmt){
+  if(a === 0 && b === 0) return '<span class="delta flat">—</span>';
+  const d = a > 0 ? ((b - a) / a) * 100 : 100;
+  const cls = d > 0.5 ? 'up' : d < -0.5 ? 'down' : 'flat';
+  const sig = d > 0 ? '+' : '';
+  return `<span class="delta ${cls}">${sig}${fmt1(d)}%</span>`;
+}
+
+function stageRow(nome, sub, va, vm, fmt){
+  return `<div class="stage">
+    <div class="nm">${nome}<small>${sub}</small></div>
+    <div class="v">${fmt(va)}<small>atual</small></div>
+    <div class="v meta">${fmt(vm)}<small>meta</small></div>
+    ${deltaTag(va, vm)}
+  </div>`;
+}
+
+function calc(){
+  const A = readScenario('a'), M = readScenario('m');
+
+  /* Funil */
+  $('funnel').innerHTML =
+    stageRow('Leads gerados', 'mídia ÷ CPL', A.leads, M.leads, fmtBR) +
+    stageRow('Consultas agendadas', `taxa de agendamento`, A.agend, M.agend, fmtBR) +
+    stageRow('Consultas realizadas', 'show rate', A.cons, M.cons, fmtBR) +
+    stageRow('Contratos fechados', 'taxa de fechamento', A.contr, M.contr, n => fmt1(n)) +
+    stageRow('Honorários de entrada / mês', 'contratos × ticket', A.entrada, M.entrada, fmtR$) +
+    (MRR_MODE ? stageRow('MRR adicionado / mês', 'contratos × mensalidade', A.novoMRR, M.novoMRR, fmtR$) : '');
+
+  /* KPIs */
+  const serieA = receita12m(A), serieM = receita12m(M);
+  const upside = serieM[11] - serieA[11];
+  $('kpis').innerHTML = `
+    <div class="kpi"><div class="lb">CAC</div><div class="num">${fmtR$(A.cac)}</div>
+      <div class="cmp">meta → <b>${fmtR$(M.cac)}</b></div></div>
+    <div class="kpi"><div class="lb">Custo por consulta</div><div class="num">${fmtR$(A.custoConsulta)}</div>
+      <div class="cmp">meta → <b>${fmtR$(M.custoConsulta)}</b></div></div>
+    <div class="kpi"><div class="lb">${MRR_MODE ? 'LTV por cliente' : 'Valor por caso'}</div><div class="num">${fmtR$(A.ltv)}</div>
+      <div class="cmp">ROAS atual: <b>${fmt1(A.roas)}x</b> · meta: <b>${fmt1(M.roas)}x</b></div></div>
+    <div class="kpi upside"><div class="lb">Upside em 12 meses</div><div class="num">${upside >= 0 ? '+' : ''}${fmtR$(upside)}</div>
+      <div class="cmp">diferença acumulada meta − atual</div></div>`;
+
+  drawChart(serieA, serieM);
+}
+
+function drawChart(sa, sm){
+  const W = 720, H = 240, P = {t: 14, r: 12, b: 26, l: 12};
+  const max = Math.max(...sm, ...sa, 1);
+  const x = i => P.l + (W - P.l - P.r) * i / 11;
+  const y = v => H - P.b - (H - P.t - P.b) * v / max;
+  const path = s => s.map((v, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join(' ');
+  const area = s => path(s) + ` L ${x(11)} ${H - P.b} L ${x(0)} ${H - P.b} Z`;
+  let g = '';
+  for(let i = 0; i < 12; i += 1){
+    g += `<text x="${x(i)}" y="${H - 8}" font-size="9" font-family="JetBrains Mono" fill="#8A97A8" text-anchor="middle">M${i + 1}</text>`;
+  }
+  $('chart').innerHTML = `
+    ${g}
+    <path d="${area(sm)}" fill="rgba(15,184,204,.10)"/>
+    <path d="${path(sa)}" fill="none" stroke="#8A97A8" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="${path(sm)}" fill="none" stroke="#0FB8CC" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="${x(11)}" cy="${y(sa[11])}" r="4" fill="#8A97A8"/>
+    <circle cx="${x(11)}" cy="${y(sm[11])}" r="4.5" fill="#0FB8CC"/>
+    <text x="${x(11) - 6}" y="${y(sm[11]) - 10}" font-size="11" font-weight="700" font-family="JetBrains Mono" fill="#0FB8CC" text-anchor="end">${fmtR$(sm[11])}</text>
+    <text x="${x(11) - 6}" y="${y(sa[11]) + 18}" font-size="11" font-family="JetBrains Mono" fill="#5A5A52" text-anchor="end">${fmtR$(sa[11])}</text>`;
+}
+
+document.querySelectorAll('input').forEach(el => el.addEventListener('input', calc));
+calc();
+</script>
+</body>
+</html>
