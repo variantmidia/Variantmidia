@@ -71,15 +71,30 @@ body.mrr .mrr-only.sect{display:flex}
 .stage .delta{font-family:var(--f-mono);font-size:11px;font-weight:600;min-width:64px;text-align:right}
 .delta.up{color:var(--ok)}.delta.down{color:var(--crit)}.delta.flat{color:var(--muted)}
 
-/* ───── Big KPIs ───── */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:22px}
-.kpi{background:var(--panel);border-radius:var(--r);padding:18px 20px;color:var(--panel-text)}
-.kpi .lb{font-family:var(--f-mono);font-size:9.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
-.kpi .num{font-family:var(--f-display);font-weight:800;font-size:26px;color:#fff;letter-spacing:-.5px;line-height:1.1}
-.kpi .cmp{font-family:var(--f-mono);font-size:11px;margin-top:6px;color:var(--panel-text)}
+/* ───── Upside HERO (destaque total) ───── */
+.upside-hero{background:linear-gradient(135deg,#0E1620 0%,#123A33 60%,#0FB8CC22 100%);
+  border-radius:var(--r-lg);padding:26px 30px;color:var(--panel-text);margin-top:22px;
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;position:relative;overflow:hidden}
+.upside-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%, rgba(75,227,168,.16), transparent 50%);pointer-events:none}
+.upside-hero .lb{font-family:var(--f-mono);font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:#4BE3A8;margin-bottom:10px;position:relative}
+.upside-hero .num{font-family:var(--f-display);font-weight:800;font-size:44px;color:#4BE3A8;letter-spacing:-1px;line-height:1;position:relative}
+.upside-hero .num.small{font-size:32px;color:#fff}
+.upside-hero .cmp{font-family:var(--f-mono);font-size:11px;margin-top:8px;color:var(--panel-text);position:relative;opacity:.85}
+.upside-hero .col{position:relative}
+.upside-hero .col + .col{border-left:1px solid rgba(255,255,255,.08);padding-left:24px}
+@media(max-width:640px){.upside-hero{grid-template-columns:1fr;gap:16px} .upside-hero .col+.col{border-left:0;border-top:1px solid rgba(255,255,255,.08);padding-left:0;padding-top:16px}}
+
+/* ───── KPIs secundários ───── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px}
+.kpi{background:var(--panel);border-radius:var(--r);padding:14px 18px;color:var(--panel-text)}
+.kpi .lb{font-family:var(--f-mono);font-size:9px;letter-spacing:1.6px;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+.kpi .num{font-family:var(--f-display);font-weight:800;font-size:21px;color:#fff;letter-spacing:-.5px;line-height:1.1}
+.kpi .cmp{font-family:var(--f-mono);font-size:10.5px;margin-top:5px;color:var(--panel-text)}
 .kpi .cmp b{color:var(--cyan)}
-.kpi.upside{background:linear-gradient(135deg,#0E1620 0%,#123A33 100%)}
-.kpi.upside .num{color:#4BE3A8}
+
+/* ───── Alerta de meta absurda ───── */
+.stage .delta.wild{color:var(--warn);position:relative}
+.stage .delta.wild::after{content:"⚠";margin-left:4px;font-size:10px}
 
 /* ───── Chart ───── */
 .chart-card{margin-top:24px}
@@ -140,8 +155,8 @@ footer{margin-top:36px;text-align:center;font-family:var(--f-mono);font-size:10p
     </div>
     <div class="row">
       <label>Show rate<small>% que comparece à consulta</small></label>
-      <input type="number" id="a_show" value="60" min="0" max="100" step="1">
-      <input type="number" id="m_show" value="80" min="0" max="100" step="1" class="meta-in">
+      <input type="number" id="a_show" value="60" min="0" max="95" step="1">
+      <input type="number" id="m_show" value="80" min="0" max="95" step="1" class="meta-in">
     </div>
     <div class="row">
       <label>Taxa de fechamento<small>% de consultas que viram contrato</small></label>
@@ -173,6 +188,7 @@ footer{margin-top:36px;text-align:center;font-family:var(--f-mono);font-size:10p
       <h2>Funil Projetado — mês a mês</h2>
       <div class="sub">Atual → Meta · variação</div>
       <div class="funnel" id="funnel"></div>
+      <div class="upside-hero" id="upside-hero"></div>
       <div class="kpis" id="kpis"></div>
     </div>
 
@@ -250,8 +266,10 @@ function deltaTag(a, b, moneyFmt){
   if(a === 0 && b === 0) return '<span class="delta flat">—</span>';
   const d = a > 0 ? ((b - a) / a) * 100 : 100;
   const cls = d > 0.5 ? 'up' : d < -0.5 ? 'down' : 'flat';
+  const wild = Math.abs(d) > 500 ? ' wild' : '';
   const sig = d > 0 ? '+' : '';
-  return `<span class="delta ${cls}">${sig}${fmt1(d)}%</span>`;
+  const title = wild ? ' title="Meta muito distante do atual — revise para não parecer irreal na reunião"' : '';
+  return `<span class="delta ${cls}${wild}"${title}>${sig}${fmt1(d)}%</span>`;
 }
 
 function stageRow(nome, sub, va, vm, fmt){
@@ -275,18 +293,31 @@ function calc(){
     stageRow('Honorários de entrada / mês', 'contratos × ticket', A.entrada, M.entrada, fmtR$) +
     (MRR_MODE ? stageRow('MRR adicionado / mês', 'contratos × mensalidade', A.novoMRR, M.novoMRR, fmtR$) : '');
 
-  /* KPIs */
+  /* Upside HERO (mês + 12 meses) */
   const serieA = receita12m(A), serieM = receita12m(M);
-  const upside = serieM[11] - serieA[11];
+  const upsideAno = serieM[11] - serieA[11];
+  const upsideMes = upsideAno / 12;
+  const sig = upsideAno >= 0 ? '+' : '';
+  $('upside-hero').innerHTML = `
+    <div class="col">
+      <div class="lb">Receita adicional / mês</div>
+      <div class="num">${sig}${fmtR$(upsideMes)}</div>
+      <div class="cmp">média mensal de ganho ao operar no cenário meta</div>
+    </div>
+    <div class="col">
+      <div class="lb">Acumulado em 12 meses</div>
+      <div class="num small">${sig}${fmtR$(upsideAno)}</div>
+      <div class="cmp">diferença total meta − atual, projetada ao longo do ano</div>
+    </div>`;
+
+  /* KPIs secundários */
   $('kpis').innerHTML = `
     <div class="kpi"><div class="lb">CAC</div><div class="num">${fmtR$(A.cac)}</div>
       <div class="cmp">meta → <b>${fmtR$(M.cac)}</b></div></div>
     <div class="kpi"><div class="lb">Custo por consulta</div><div class="num">${fmtR$(A.custoConsulta)}</div>
       <div class="cmp">meta → <b>${fmtR$(M.custoConsulta)}</b></div></div>
     <div class="kpi"><div class="lb">${MRR_MODE ? 'LTV por cliente' : 'Valor por caso'}</div><div class="num">${fmtR$(A.ltv)}</div>
-      <div class="cmp">ROAS atual: <b>${fmt1(A.roas)}x</b> · meta: <b>${fmt1(M.roas)}x</b></div></div>
-    <div class="kpi upside"><div class="lb">Upside em 12 meses</div><div class="num">${upside >= 0 ? '+' : ''}${fmtR$(upside)}</div>
-      <div class="cmp">diferença acumulada meta − atual</div></div>`;
+      <div class="cmp">ROAS atual: <b>${fmt1(A.roas)}x</b> · meta: <b>${fmt1(M.roas)}x</b></div></div>`;
 
   drawChart(serieA, serieM);
 }
