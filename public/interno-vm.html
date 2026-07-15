@@ -648,7 +648,7 @@ tr:hover td { background: var(--bg-alt); }
     <input id="sheet-id" type="text" value="1HUzi9pPREWx9bp1iOidEp-NoP_UPTBRaJi1sIV-2rYI">
     <button onclick="loadAll()">Recarregar</button>
     <div class="config-hint">
-      Dashboard puxa <strong>8 abas</strong>: 6 meses do Diário de Bordo (Jan→Jun) · Prospecções e Follow-up · Clientes Ativos. A planilha precisa estar com <em>"Qualquer pessoa com o link"</em> em modo leitor.
+      Dashboard puxa <strong>15 abas</strong>: 12 meses do Diário de Bordo (Jan→Dez) · Prospecções e Follow-up · Clientes Ativos · Semanais 2026. A planilha precisa estar com <em>"Qualquer pessoa com o link"</em> em modo leitor.
     </div>
   </div>
 
@@ -883,7 +883,7 @@ tr:hover td { background: var(--bg-alt); }
   <div class="section-rule">
     <span class="section-num">06</span>
     <h2 class="section-title">Ritmo Diário</h2>
-    <span class="section-tag">Junho 2026 · Meta 17 LD/dia</span>
+    <span class="section-tag">Mês corrente · Meta 17 LD/dia</span>
   </div>
   <div class="chart-card">
     <h3>Ligações Discadas por dia</h3>
@@ -1011,7 +1011,13 @@ const CONFIG = {
       Mar: 1243909087,
       Abr: 1589537166,
       Mai: 1596124703,
-      Jun: 225642064
+      Jun: 225642064,
+      Jul: 730446166,
+      Ago: 1261640222,
+      Set: 519073181,
+      Out: 354550362,
+      Nov: 837911753,
+      Dez: 1655495109
     }
   },
 
@@ -1028,6 +1034,7 @@ const DASH_STATE = {
   todosMeses: null,       // { Jan: [...], Fev: [...], ... } pra histórico
   crm: null,              // Prospecções e Follow-up
   clientesAtivos: null,   // aba Clientes Ativos (substitui hardcoded)
+  semanais: null,         // métricas por canal da aba Semanais 2026
   monthIdx: new Date().getMonth()
 };
 
@@ -1282,6 +1289,96 @@ function parseCRM(rows) {
     });
   }
   return out;
+}
+
+function parseSemanais(rows) {
+  if (!rows || rows.length < 2) return [];
+  const headers = rows[0].map(h => normalizeKey(h));
+  const find = (...names) => names.map(normalizeKey).map(n => headers.indexOf(n)).find(i => i >= 0) ?? -1;
+  const cols = {
+    data: find("Data"), canal: find("Canal"), ligacoes: find("Ligações", "Ligacoes"),
+    conexoes: find("Conexões", "Conexoes"), decisores: find("Decisores"),
+    reunioes: find("Reuniões", "Reunioes", "RM"), rr: find("RR", "R2 Realizadas"),
+    vendas: find("Vendas", "FR"), horas: find("Horas")
+  };
+  const at = (r, named, fallback) => r[named >= 0 ? named : fallback];
+  const byDayChannel = new Map();
+  rows.slice(1).filter(r => r && at(r, cols.canal, 1)).forEach(r => {
+    const item = {
+      data: at(r, cols.data, 0) || "",
+      canal: normalizeKey(at(r, cols.canal, 1)),
+      ligacoes: parseNum(at(r, cols.ligacoes, 2)),
+      conexoes: parseNum(at(r, cols.conexoes, 3)),
+      decisores: parseNum(at(r, cols.decisores, 4)),
+      reunioes: parseNum(at(r, cols.reunioes, 5)),
+      rr: parseNum(at(r, cols.rr, 6)),
+      vendas: parseNum(at(r, cols.vendas, 7)),
+      horas: parseNum(at(r, cols.horas, 8))
+    };
+    byDayChannel.set(`${item.data}|${item.canal}`, item);
+  });
+  return [...byDayChannel.values()];
+}
+
+function renderWeekly() {
+  const rows = DASH_STATE.semanais || [];
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setHours(0,0,0,0);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  let dated = rows.filter(r => {
+    const d = parseDataBR(r.data);
+    return d && d >= monday && d <= now;
+  });
+  let periodStart = monday;
+  if (!dated.length && rows.length) {
+    const latest = rows.map(r => parseDataBR(r.data)).filter(Boolean).sort((a,b) => b-a)[0];
+    periodStart = new Date(latest);
+    periodStart.setHours(0,0,0,0);
+    periodStart.setDate(latest.getDate() - ((latest.getDay() + 6) % 7));
+    const periodEnd = new Date(periodStart);
+    periodEnd.setDate(periodStart.getDate() + 6);
+    periodEnd.setHours(23,59,59,999);
+    dated = rows.filter(r => {
+      const d = parseDataBR(r.data);
+      return d && d >= periodStart && d <= periodEnd;
+    });
+  }
+  const source = dated;
+  const sumFor = aliases => source.filter(r => aliases.includes(r.canal)).reduce((a, r) => ({
+    ligacoes: a.ligacoes + r.ligacoes,
+    conexoes: a.conexoes + r.conexoes,
+    decisores: a.decisores + r.decisores,
+    reunioes: a.reunioes + r.reunioes,
+    rr: a.rr + r.rr,
+    vendas: a.vendas + r.vendas
+  }), { ligacoes:0, conexoes:0, decisores:0, reunioes:0, rr:0, vendas:0 });
+  const lig = sumFor(["ligacao", "ligacoes", "cold call"]);
+  const dis = sumFor(["disparo", "disparos", "whatsapp"]);
+  const fol = sumFor(["follow", "follows", "follow-up", "follow up"]);
+  const set = (id, value, format = fmtNum) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = format(value);
+    el.classList.remove("placeholder");
+  };
+  set("w-lig-ligacoes", lig.ligacoes);
+  set("w-lig-conexoes", lig.conexoes);
+  set("w-lig-decisores", lig.decisores);
+  set("w-lig-reunioes", lig.reunioes);
+  set("w-dis-qtd", dis.ligacoes);
+  set("w-dis-decisores", dis.decisores);
+  set("w-dis-reunioes", dis.reunioes);
+  set("w-dis-taxa", dis.ligacoes ? dis.reunioes / dis.ligacoes : 0, fmtPct);
+  set("w-fol-qtd", fol.ligacoes);
+  set("w-fol-decisores", fol.decisores);
+  set("w-fol-reunioes", fol.reunioes);
+  set("w-fol-taxa", fol.ligacoes ? fol.reunioes / fol.ligacoes : 0, fmtPct);
+  const placeholder = document.getElementById("weekly-placeholder");
+  if (placeholder) {
+    placeholder.style.display = rows.length ? "none" : "block";
+    if (!rows.length) placeholder.querySelector("strong").textContent = 'Sem registros válidos na aba "Semanais 2026"';
+  }
 }
 
 /* calcula Jornada de Compra (dias entre Entrada e Data Pagamento) */
@@ -1932,11 +2029,12 @@ async function loadAll() {
     const G = CONFIG.GIDS;
     const mesesEntries = Object.entries(G.meses); // [["Jan", 1911...], ...]
 
-    // Busca tudo em paralelo: 6 meses + Prospecções + Clientes Ativos
+    // Busca tudo em paralelo: meses + Prospecções + Clientes Ativos + Semanal por canal
     const promessas = [
       ...mesesEntries.map(([_, gid]) => fetchSheet(sheetId, gid)),
       fetchSheet(sheetId, G.prospeccoes),
-      fetchSheet(sheetId, G.clientesAtivos)
+      fetchSheet(sheetId, G.clientesAtivos),
+      fetchSheet(sheetId, G.semanais)
     ];
     const resultados = await Promise.all(promessas);
 
@@ -1944,6 +2042,7 @@ async function loadAll() {
     const mesesRows = resultados.slice(0, mesesEntries.length);
     const crmRows = resultados[mesesEntries.length];
     const clientesRows = resultados[mesesEntries.length + 1];
+    const semanaisRows = resultados[mesesEntries.length + 2];
 
     // Parse meses → objeto { Jan: [...], Fev: [...], ... }
     const todosMeses = {};
@@ -1960,7 +2059,7 @@ async function loadAll() {
     DASH_STATE.diarioBordo = todosMeses[mesAtualLabel] || [];
     // fallback: se mês atual vazio, pega último mês com dados
     if (!DASH_STATE.diarioBordo.length) {
-      const ordem = ["Jun","Mai","Abr","Mar","Fev","Jan"];
+      const ordem = CONFIG.meses.slice().reverse();
       for (const m of ordem) {
         if (todosMeses[m] && todosMeses[m].length) {
           DASH_STATE.diarioBordo = todosMeses[m];
@@ -1972,6 +2071,7 @@ async function loadAll() {
     // CRM e Clientes Ativos
     DASH_STATE.crm = parseCRM(crmRows);
     DASH_STATE.clientesAtivos = parseClientesAtivos(clientesRows);
+    DASH_STATE.semanais = parseSemanais(semanaisRows);
 
     // Render
     renderHeader();
@@ -1986,6 +2086,7 @@ async function loadAll() {
     renderDaily();
     renderCRM();
     renderJornadaCompra();
+    renderWeekly();
     document.getElementById("live-status").textContent = "Live";
   } catch (e) {
     document.getElementById("live-status").textContent = "Erro";
