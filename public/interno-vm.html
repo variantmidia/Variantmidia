@@ -1045,6 +1045,13 @@ const fmtBRL = n => "R$ " + Math.round(n).toLocaleString("pt-BR");
 const fmtNum = n => Math.round(n).toLocaleString("pt-BR");
 const fmtPct = n => (n*100).toFixed(1).replace(".",",") + "%";
 
+const normalizeKey = value => String(value || "")
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .trim()
+  .toLowerCase()
+  .replace(/\s+/g, " ");
+
 function parsePct(s) {
   if (!s) return 0;
   const m = String(s).replace(/\./g,"").replace(",",".").match(/[\d.]+/);
