@@ -1,9 +1,96 @@
 {
   "updatedAt": "06/09/2026, 11:14",
+  "lastPaymentAt": "17/08/2026",
   "period": {
     "label": "15/08/2026 a 05/09/2026",
     "previousLabel": "Antes do Max Conv",
     "currentLabel": "Max Conversoes aplicado"
+  },
+  "ranges": {
+    "7d": {
+      "label": "30/08/2026 a 05/09/2026",
+      "previousLabel": "Periodo anterior comparavel",
+      "current": {
+        "impressions": 420,
+        "clicks": 8,
+        "spend": 308,
+        "conversions": 8,
+        "totalLeads": 8,
+        "effectiveLeads": 6,
+        "qualifiedLeads": 3,
+        "sales": 0,
+        "avgCpc": 38.5,
+        "ctr": 1.9
+      },
+      "previous": {
+        "impressions": 280,
+        "clicks": 18,
+        "spend": 322.56,
+        "conversions": 8,
+        "totalLeads": 8,
+        "effectiveLeads": 6,
+        "qualifiedLeads": 2,
+        "sales": 0,
+        "avgCpc": 17.92,
+        "ctr": 6.43
+      }
+    },
+    "30d": {
+      "label": "Ultimos 30 dias ate 06/09/2026",
+      "previousLabel": "Antes do Max Conv",
+      "current": {
+        "impressions": 1714,
+        "clicks": 77,
+        "spend": 650.68,
+        "conversions": 14,
+        "totalLeads": 13,
+        "effectiveLeads": 10,
+        "qualifiedLeads": 5,
+        "sales": 0,
+        "avgCpc": 8.45,
+        "ctr": 4.49
+      },
+      "previous": {
+        "impressions": 1434,
+        "clicks": 59,
+        "spend": 328.12,
+        "conversions": 6,
+        "totalLeads": 4,
+        "effectiveLeads": 4,
+        "qualifiedLeads": 0,
+        "sales": 0,
+        "avgCpc": 5.56,
+        "ctr": 4.11
+      }
+    },
+    "all": {
+      "label": "15/08/2026 a 05/09/2026",
+      "previousLabel": "Max Cliques original",
+      "current": {
+        "impressions": 1714,
+        "clicks": 77,
+        "spend": 650.68,
+        "conversions": 14,
+        "totalLeads": 13,
+        "effectiveLeads": 10,
+        "qualifiedLeads": 5,
+        "sales": 0,
+        "avgCpc": 8.45,
+        "ctr": 4.49
+      },
+      "previous": {
+        "impressions": 1434,
+        "clicks": 59,
+        "spend": 328.12,
+        "conversions": 6,
+        "totalLeads": 4,
+        "effectiveLeads": 4,
+        "qualifiedLeads": 0,
+        "sales": 0,
+        "avgCpc": 5.56,
+        "ctr": 4.11
+      }
+    }
   },
   "budget": {
     "monthly": 1300,
@@ -36,14 +123,14 @@
     { "label": "Desconhecido", "conversions": 14, "spend": 650.68 }
   ],
   "daily": [
-    { "label": "29/08", "spend": 38, "leads": 0, "qualified": 0 },
-    { "label": "30/08", "spend": 62, "leads": 2, "qualified": 1 },
-    { "label": "31/08", "spend": 0, "leads": 0, "qualified": 0 },
-    { "label": "01/09", "spend": 48, "leads": 1, "qualified": 1 },
-    { "label": "02/09", "spend": 76, "leads": 2, "qualified": 1 },
-    { "label": "03/09", "spend": 45, "leads": 1, "qualified": 0 },
-    { "label": "04/09", "spend": 42, "leads": 1, "qualified": 0 },
-    { "label": "05/09", "spend": 35, "leads": 1, "qualified": 0 }
+    { "date": "2026-08-29", "label": "29/08", "spend": 38, "leads": 0, "effective": 0, "qualified": 0 },
+    { "date": "2026-08-30", "label": "30/08", "spend": 62, "leads": 2, "effective": 2, "qualified": 1 },
+    { "date": "2026-08-31", "label": "31/08", "spend": 0, "leads": 0, "effective": 0, "qualified": 0 },
+    { "date": "2026-09-01", "label": "01/09", "spend": 48, "leads": 1, "effective": 1, "qualified": 1 },
+    { "date": "2026-09-02", "label": "02/09", "spend": 76, "leads": 2, "effective": 2, "qualified": 1 },
+    { "date": "2026-09-03", "label": "03/09", "spend": 45, "leads": 1, "effective": 1, "qualified": 0 },
+    { "date": "2026-09-04", "label": "04/09", "spend": 42, "leads": 1, "effective": 1, "qualified": 0 },
+    { "date": "2026-09-05", "label": "05/09", "spend": 35, "leads": 1, "effective": 0, "qualified": 0 }
   ],
   "periods": [
     {
@@ -78,4 +165,3 @@
     }
   ]
 }
-

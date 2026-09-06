@@ -53,9 +53,9 @@ body {
 }
 
 .shell {
-  width: min(1480px, 100%);
+  width: min(1360px, 100%);
   margin: 0 auto;
-  padding: 28px clamp(16px, 3vw, 48px) 72px;
+  padding: 22px clamp(16px, 3vw, 40px) 64px;
 }
 
 .topbar {
@@ -64,7 +64,7 @@ body {
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   margin: -6px 0 24px;
   padding: 10px 12px;
   border: 1px solid var(--line-cool);
@@ -77,7 +77,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 210px;
+  min-width: 198px;
 }
 
 .brand-symbol {
@@ -91,7 +91,7 @@ body {
   display: block;
   color: var(--ink-2);
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -121,7 +121,7 @@ th {
 
 .nav a {
   flex: 0 0 auto;
-  padding: 8px 11px;
+  padding: 8px 10px;
   border-radius: 999px;
   color: var(--muted);
   font-size: 10px;
@@ -135,8 +135,52 @@ th {
   color: #fff;
 }
 
-.status-pill {
+.date-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-left: auto;
+  padding: 6px;
+  border: 1px solid var(--line-cool);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.date-filter button {
+  height: 32px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.date-filter button:hover,
+.date-filter button.active {
+  background: var(--ink-2);
+  color: #fff;
+}
+
+.date-range {
+  min-width: 238px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-left: 1px solid var(--line-cool);
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.status-pill {
   padding: 8px 12px;
   border-radius: 999px;
   background: var(--cyan-soft);
@@ -148,8 +192,8 @@ th {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr);
-  min-height: 290px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, .55fr);
+  min-height: 220px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,.08);
   border-radius: 8px;
@@ -161,11 +205,11 @@ th {
 .hero-main {
   display: grid;
   align-content: center;
-  padding: clamp(28px, 4vw, 54px);
+  padding: clamp(26px, 3.5vw, 42px);
 }
 
 .eyebrow {
-  margin: 0 0 18px;
+  margin: 0 0 14px;
   color: var(--cyan);
   font-family: var(--font-mono);
   font-size: 11px;
@@ -175,21 +219,21 @@ th {
 }
 
 h1 {
-  max-width: 780px;
+  max-width: 620px;
   margin: 0;
   color: #fff;
   font-family: var(--font-display);
-  font-size: clamp(36px, 5.4vw, 78px);
+  font-size: clamp(31px, 3.45vw, 48px);
   font-weight: 800;
-  line-height: .96;
+  line-height: 1.02;
   letter-spacing: 0;
 }
 
 .hero-copy {
-  max-width: 62ch;
-  margin: 22px 0 0;
+  max-width: 58ch;
+  margin: 16px 0 0;
   color: rgba(213,222,230,.82);
-  font-size: clamp(16px, 1.35vw, 19px);
+  font-size: clamp(14px, 1.15vw, 16px);
   line-height: 1.55;
 }
 
@@ -205,9 +249,10 @@ h1 {
 
 .side-metric {
   display: grid;
-  place-items: center;
+  align-content: center;
+  justify-items: center;
   min-height: 50%;
-  padding: 28px;
+  padding: 20px;
   text-align: center;
 }
 
@@ -217,20 +262,22 @@ h1 {
 
 .side-metric span {
   color: rgba(213,222,230,.72);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .side-metric strong {
   display: block;
-  margin-top: 8px;
+  max-width: 100%;
+  margin-top: 7px;
   font-family: var(--font-display);
-  font-size: clamp(34px, 4vw, 56px);
-  line-height: 1;
+  font-size: clamp(20px, 2.2vw, 30px);
+  line-height: 1.08;
+  text-wrap: balance;
 }
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: 1.15fr repeat(4, 1fr);
+  grid-template-columns: 1.15fr 1.15fr repeat(3, 1fr);
   gap: 14px;
   margin-top: 14px;
 }
@@ -244,35 +291,64 @@ h1 {
 }
 
 .card {
-  min-height: 154px;
-  padding: 18px;
+  min-height: 136px;
+  padding: 16px;
   text-align: center;
 }
 
 .label {
   display: block;
   color: var(--muted-2);
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 800;
 }
 
 .value {
   display: block;
-  margin-top: 15px;
+  margin-top: 12px;
   color: var(--ink-2);
   font-family: var(--font-display);
-  font-size: clamp(30px, 3vw, 46px);
+  font-size: clamp(24px, 1.95vw, 32px);
   font-weight: 800;
   line-height: 1;
 }
 
 .note {
   display: block;
-  min-height: 34px;
-  margin-top: 10px;
+  min-height: 30px;
+  margin-top: 8px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.3;
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--bg-alt);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.delta.good {
+  background: rgba(31,157,111,.1);
+  color: var(--ok);
+}
+
+.delta.bad {
+  background: rgba(192,59,59,.1);
+  color: var(--crit);
+}
+
+.budget-card .delta {
+  background: rgba(255,255,255,.08);
+  color: rgba(213,222,230,.82);
 }
 
 .note.good { color: var(--ok); font-weight: 800; }
@@ -313,7 +389,7 @@ h1 {
 
 .panel {
   min-width: 0;
-  padding: 20px;
+  padding: 18px;
 }
 
 .panel.dark {
@@ -334,7 +410,7 @@ h1 {
   margin: 0;
   color: inherit;
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 800;
   line-height: 1.08;
 }
@@ -342,7 +418,7 @@ h1 {
 .panel-sub {
   display: block;
   color: var(--muted-2);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.35;
   text-align: right;
 }
@@ -359,8 +435,8 @@ h1 {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  min-height: 56px;
-  padding: 0 18px;
+  min-height: 50px;
+  padding: 0 15px;
   border: 1px solid rgba(255,255,255,.08);
   border-radius: 8px;
   background: rgba(255,255,255,.045);
@@ -368,13 +444,13 @@ h1 {
 
 .funnel-step span {
   color: rgba(213,222,230,.72);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .funnel-step strong {
   color: #fff;
   font-family: var(--font-display);
-  font-size: 26px;
+  font-size: 22px;
 }
 
 .funnel-step.accent {
@@ -408,17 +484,17 @@ h1 {
   margin-top: 4px;
   color: var(--ink-2);
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 19px;
 }
 
 .chart-box {
   position: relative;
-  height: 310px;
+  height: 285px;
 }
 
 .donut-box {
   position: relative;
-  height: 260px;
+  height: 230px;
 }
 
 .wide-panel {
@@ -437,7 +513,7 @@ table {
 
 th,
 td {
-  padding: 14px 12px;
+  padding: 12px 10px;
   border-bottom: 1px solid var(--line-cool);
   text-align: center;
   vertical-align: middle;
@@ -456,7 +532,7 @@ th:first-child {
 
 td {
   color: var(--graphite);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 td strong {
@@ -500,6 +576,8 @@ td strong {
   .shell { padding: 16px 12px 48px; }
   .topbar { align-items: start; flex-wrap: wrap; }
   .brand { width: 100%; }
+  .date-filter { width: 100%; margin-left: 0; overflow-x: auto; }
+  .date-range { min-width: 190px; justify-content: flex-start; }
   .status-pill { margin-left: 0; }
   .hero-main { padding: 28px 22px; }
   .hero-side,
@@ -528,6 +606,12 @@ td strong {
       <a href="#publico">Publico</a>
       <a href="#periodos">Periodos</a>
     </nav>
+    <div class="date-filter" aria-label="Filtro de data">
+      <button type="button" data-range-button="7d">7 dias</button>
+      <button type="button" class="active" data-range-button="30d">30 dias</button>
+      <button type="button" data-range-button="all">Todo periodo</button>
+      <span class="date-range" data-bind="selectedRange">--</span>
+    </div>
     <div class="status-pill">Sessao protegida</div>
   </header>
 
@@ -555,26 +639,31 @@ td strong {
       <strong class="value" data-bind="remainingBudget">--</strong>
       <div class="meter" aria-hidden="true"><span data-meter></span></div>
       <span class="note" data-bind="budgetNote">--</span>
+      <small class="delta" data-bind="budgetDelta">Controle de caixa</small>
     </article>
     <article class="card">
       <span class="label">Investimento</span>
       <strong class="value" data-bind="spend">--</strong>
       <span class="note">Google Ads no periodo</span>
+      <small class="delta" data-bind="spendDelta">--</small>
     </article>
     <article class="card">
       <span class="label">Lead efetivo</span>
       <strong class="value" data-bind="effectiveLeads">--</strong>
       <span class="note good" data-bind="effectiveLeadCost">--</span>
+      <small class="delta" data-bind="effectiveDelta">--</small>
     </article>
     <article class="card">
       <span class="label">Lead qualificado</span>
       <strong class="value" data-bind="qualifiedLeads">--</strong>
       <span class="note good" data-bind="qualifiedLeadCost">--</span>
+      <small class="delta" data-bind="qualifiedDelta">--</small>
     </article>
     <article class="card">
       <span class="label">CAC</span>
       <strong class="value" data-bind="cac">--</strong>
       <span class="note warn">Aguardando venda registrada</span>
+      <small class="delta" data-bind="cacDelta">Sem venda no CRM</small>
     </article>
   </section>
 
@@ -684,10 +773,21 @@ td strong {
 const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const NUM = new Intl.NumberFormat("pt-BR");
 const PCT = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
+const RANGE_LABELS = { "7d": "7 dias", "30d": "30 dias", all: "Todo periodo" };
+let activeRange = "30d";
+let charts = {};
 
 function bind(key, value) {
   document.querySelectorAll(`[data-bind="${key}"]`).forEach((node) => {
     node.textContent = value;
+  });
+}
+
+function bindDelta(key, result) {
+  document.querySelectorAll(`[data-bind="${key}"]`).forEach((node) => {
+    node.textContent = result.text;
+    node.classList.remove("good", "bad");
+    if (result.tone) node.classList.add(result.tone);
   });
 }
 
@@ -697,6 +797,31 @@ function money(value) {
 
 function percent(value) {
   return `${PCT.format(Number(value || 0))}%`;
+}
+
+function cost(spend, volume) {
+  return volume > 0 ? spend / volume : 0;
+}
+
+function delta(current, previous, previousLabel, options = {}) {
+  const { lowerIsBetter = false, newSignal = "Novo sinal" } = options;
+
+  if (!previous && current > 0) {
+    return { text: `${newSignal} vs ${previousLabel}`, tone: "good" };
+  }
+
+  if (!previous && !current) {
+    return { text: `Sem base anterior`, tone: "" };
+  }
+
+  const change = ((current - previous) / previous) * 100;
+  const isGood = lowerIsBetter ? change <= 0 : change >= 0;
+  const prefix = change > 0 ? "+" : "";
+
+  return {
+    text: `${prefix}${percent(change)} vs ${previousLabel}`,
+    tone: isGood ? "good" : "bad"
+  };
 }
 
 async function getReport() {
@@ -714,7 +839,7 @@ function chartOptions(extra = {}) {
         labels: {
           color: "#5A5A52",
           boxWidth: 10,
-          font: { family: "DM Sans", size: 12, weight: "700" }
+          font: { family: "DM Sans", size: 11, weight: "700" }
         }
       },
       tooltip: {
@@ -729,15 +854,31 @@ function chartOptions(extra = {}) {
   };
 }
 
-function renderDaily(report) {
-  new Chart(document.getElementById("dailyTrend"), {
+function dailyForRange(report, rangeKey) {
+  if (rangeKey === "7d") {
+    return report.daily.slice(-7);
+  }
+
+  return report.daily;
+}
+
+function destroyChart(id) {
+  if (charts[id]) {
+    charts[id].destroy();
+    delete charts[id];
+  }
+}
+
+function renderDaily(days) {
+  destroyChart("dailyTrend");
+  charts.dailyTrend = new Chart(document.getElementById("dailyTrend"), {
     type: "line",
     data: {
-      labels: report.daily.map((day) => day.label),
+      labels: days.map((day) => day.label),
       datasets: [
         {
           label: "Investimento",
-          data: report.daily.map((day) => day.spend),
+          data: days.map((day) => day.spend),
           borderColor: "#101820",
           backgroundColor: "rgba(16,24,32,.09)",
           tension: .42,
@@ -746,7 +887,7 @@ function renderDaily(report) {
         },
         {
           label: "Leads",
-          data: report.daily.map((day) => day.leads),
+          data: days.map((day) => day.leads),
           borderColor: "#16D4E8",
           backgroundColor: "rgba(22,212,232,.12)",
           tension: .42,
@@ -754,7 +895,7 @@ function renderDaily(report) {
         },
         {
           label: "Qualificados",
-          data: report.daily.map((day) => day.qualified),
+          data: days.map((day) => day.qualified),
           borderColor: "#1F9D6F",
           backgroundColor: "rgba(31,157,111,.12)",
           tension: .42,
@@ -774,7 +915,8 @@ function renderDaily(report) {
 }
 
 function renderDonut(id, labels, values, colors) {
-  new Chart(document.getElementById(id), {
+  destroyChart(id);
+  charts[id] = new Chart(document.getElementById(id), {
     type: "doughnut",
     data: {
       labels,
@@ -785,7 +927,7 @@ function renderDonut(id, labels, values, colors) {
       plugins: {
         legend: {
           position: "bottom",
-          labels: { color: "#5A5A52", boxWidth: 10, font: { family: "DM Sans", size: 12, weight: "700" } }
+          labels: { color: "#5A5A52", boxWidth: 10, font: { family: "DM Sans", size: 11, weight: "700" } }
         }
       }
     })
@@ -811,35 +953,60 @@ function renderTable(periods) {
   document.querySelector('[data-table="periods"]').innerHTML = rows.join("");
 }
 
-async function init() {
-  const report = await getReport();
-  const { ads, crm, budget } = report;
-  const pageConversion = ads.clicks ? (crm.totalLeads / ads.clicks) * 100 : 0;
+function applyRange(report, rangeKey) {
+  const selected = report.ranges?.[rangeKey] || report.ranges?.["30d"];
+  const current = selected.current;
+  const previous = selected.previous;
+  const previousLabel = selected.previousLabel;
+  const budget = report.budget;
+  const pageConversion = current.clicks ? (current.totalLeads / current.clicks) * 100 : 0;
+  const currentEffectiveCost = cost(current.spend, current.effectiveLeads);
+  const previousEffectiveCost = cost(previous.spend, previous.effectiveLeads);
+  const currentQualifiedCost = cost(current.spend, current.qualifiedLeads);
+  const previousQualifiedCost = cost(previous.spend, previous.qualifiedLeads);
   const remainingRatio = Math.max(0, Math.min(1, budget.remaining / budget.monthly));
 
+  activeRange = rangeKey;
+  document.querySelectorAll("[data-range-button]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.rangeButton === rangeKey);
+  });
+
   bind("updatedAt", report.updatedAt);
-  bind("periodLabel", report.period.label);
+  bind("periodLabel", RANGE_LABELS[rangeKey] || selected.label);
+  bind("selectedRange", selected.label);
   bind("remainingBudget", money(budget.remaining));
   bind("budgetNote", budget.note);
   bind("dailyTarget", money(budget.dailyTarget));
-  bind("spend", money(ads.spend));
-  bind("effectiveLeads", NUM.format(crm.effectiveLeads));
-  bind("qualifiedLeads", NUM.format(crm.qualifiedLeads));
-  bind("effectiveLeadCost", crm.effectiveLeads ? `${money(ads.spend / crm.effectiveLeads)} por efetivo` : "Sem efetivos");
-  bind("qualifiedLeadCost", crm.qualifiedLeads ? `${money(ads.spend / crm.qualifiedLeads)} por qualificado` : "Sem qualificados");
-  bind("cac", crm.sales > 0 ? money(ads.spend / crm.sales) : "Sem venda");
-  bind("impressions", NUM.format(ads.impressions));
-  bind("clicks", NUM.format(ads.clicks));
-  bind("totalLeads", NUM.format(crm.totalLeads));
-  bind("ctr", percent(ads.ctr));
-  bind("avgCpc", money(ads.avgCpc));
+  bind("spend", money(current.spend));
+  bind("effectiveLeads", NUM.format(current.effectiveLeads));
+  bind("qualifiedLeads", NUM.format(current.qualifiedLeads));
+  bind("effectiveLeadCost", current.effectiveLeads ? `${money(currentEffectiveCost)} por efetivo` : "Sem efetivos");
+  bind("qualifiedLeadCost", current.qualifiedLeads ? `${money(currentQualifiedCost)} por qualificado` : "Sem qualificados");
+  bind("cac", current.sales > 0 ? money(current.spend / current.sales) : "Sem venda");
+  bind("impressions", NUM.format(current.impressions));
+  bind("clicks", NUM.format(current.clicks));
+  bind("totalLeads", NUM.format(current.totalLeads));
+  bind("ctr", percent(current.ctr));
+  bind("avgCpc", money(current.avgCpc));
   bind("pageConversion", percent(pageConversion));
+  bindDelta("spendDelta", delta(current.spend, previous.spend, previousLabel, { lowerIsBetter: true }));
+  bindDelta("effectiveDelta", delta(current.effectiveLeads, previous.effectiveLeads, previousLabel));
+  bindDelta("qualifiedDelta", delta(current.qualifiedLeads, previous.qualifiedLeads, previousLabel, { newSignal: "Lead qualificado apareceu" }));
+  bindDelta("cacDelta", { text: current.sales > 0 ? "Com venda no CRM" : "Sem venda no CRM", tone: "" });
   document.querySelector("[data-meter]").style.setProperty("--progress", `${remainingRatio * 100}%`);
 
-  renderDaily(report);
+  renderDaily(dailyForRange(report, rangeKey));
   renderDonut("genderChart", report.gender.map((item) => item.label), report.gender.map((item) => item.conversions), ["#16D4E8", "#0B6EFF", "#9A9A90"]);
-  renderDonut("qualityChart", ["Efetivos", "Qualificados", "Pendentes/desqualificados"], [crm.effectiveLeads, crm.qualifiedLeads, Math.max(0, crm.totalLeads - crm.effectiveLeads)], ["#16D4E8", "#1F9D6F", "#C03B3B"]);
+  renderDonut("qualityChart", ["Efetivos", "Qualificados", "Pendentes/desqualificados"], [current.effectiveLeads, current.qualifiedLeads, Math.max(0, current.totalLeads - current.effectiveLeads)], ["#16D4E8", "#1F9D6F", "#C03B3B"]);
   renderTable(report.periods);
+}
+
+async function init() {
+  const report = await getReport();
+  document.querySelectorAll("[data-range-button]").forEach((button) => {
+    button.addEventListener("click", () => applyRange(report, button.dataset.rangeButton || activeRange));
+  });
+  applyRange(report, activeRange);
 }
 
 init().catch((error) => {
@@ -848,4 +1015,3 @@ init().catch((error) => {
 </script>
 </body>
 </html>
-
