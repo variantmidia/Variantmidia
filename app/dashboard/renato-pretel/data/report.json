@@ -1,0 +1,81 @@
+{
+  "updatedAt": "06/09/2026, 11:14",
+  "period": {
+    "label": "15/08/2026 a 05/09/2026",
+    "previousLabel": "Antes do Max Conv",
+    "currentLabel": "Max Conversoes aplicado"
+  },
+  "budget": {
+    "monthly": 1300,
+    "remaining": 299.13,
+    "dailyTarget": 30,
+    "note": "Verba curta: priorizar dias uteis e controlar picos de gasto."
+  },
+  "ads": {
+    "source": "Google Ads API",
+    "status": "Base pronta para atualizacao automatica",
+    "impressions": 1714,
+    "clicks": 77,
+    "spend": 650.68,
+    "conversions": 14,
+    "avgCpc": 8.45,
+    "ctr": 4.49
+  },
+  "crm": {
+    "source": "Planilha de Acompanhamento de Leads",
+    "totalLeads": 13,
+    "effectiveLeads": 10,
+    "qualifiedLeads": 5,
+    "meetingsScheduled": 1,
+    "meetingsHeld": 1,
+    "sales": 0
+  },
+  "gender": [
+    { "label": "Masculino", "conversions": 0, "spend": 0 },
+    { "label": "Feminino", "conversions": 0, "spend": 0 },
+    { "label": "Desconhecido", "conversions": 14, "spend": 650.68 }
+  ],
+  "daily": [
+    { "label": "29/08", "spend": 38, "leads": 0, "qualified": 0 },
+    { "label": "30/08", "spend": 62, "leads": 2, "qualified": 1 },
+    { "label": "31/08", "spend": 0, "leads": 0, "qualified": 0 },
+    { "label": "01/09", "spend": 48, "leads": 1, "qualified": 1 },
+    { "label": "02/09", "spend": 76, "leads": 2, "qualified": 1 },
+    { "label": "03/09", "spend": 45, "leads": 1, "qualified": 0 },
+    { "label": "04/09", "spend": 42, "leads": 1, "qualified": 0 },
+    { "label": "05/09", "spend": 35, "leads": 1, "qualified": 0 }
+  ],
+  "periods": [
+    {
+      "name": "Max Cliques original",
+      "spend": 328.12,
+      "clicks": 59,
+      "effectiveLeads": 4,
+      "qualifiedLeads": 0,
+      "avgCpc": 5.56,
+      "ctr": 4.11,
+      "reading": "Muito clique, menor controle de qualidade."
+    },
+    {
+      "name": "Experimento Max Conv",
+      "spend": 322.56,
+      "clicks": 18,
+      "effectiveLeads": 6,
+      "qualifiedLeads": 2,
+      "avgCpc": 17.92,
+      "ctr": 6.43,
+      "reading": "Menos clique, melhor sinal de lead qualificado."
+    },
+    {
+      "name": "Campanha principal aplicada",
+      "spend": 346,
+      "clicks": 8,
+      "effectiveLeads": 5,
+      "qualifiedLeads": 3,
+      "avgCpc": 43.25,
+      "ctr": 4.8,
+      "reading": "Acompanhar picos de CPC e preservar dias com melhor qualidade."
+    }
+  ]
+}
+
