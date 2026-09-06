@@ -1,0 +1,8 @@
+AuthType Basic
+AuthName "Relatorio Renato Pretel"
+AuthUserFile /home/USUARIO_CPANEL/.htpasswds/renato-pretel/passwd
+Require user renato matheus
+
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+</IfModule>

@@ -1,1017 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Renato Pretel | Relatorio Google Ads</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<style>
-:root {
-  --cyan: #16D4E8;
-  --cyan-deep: #0FB8CC;
-  --cyan-soft: rgba(22, 212, 232, .14);
-  --bg: #F2F4F1;
-  --bg-alt: #F7FAFA;
-  --surface: #FFFFFF;
-  --line: #E2E2D6;
-  --line-cool: #E6EEF2;
-  --line-soft: #EFF4F6;
-  --ink: #1A1A1A;
-  --ink-2: #101820;
-  --graphite: #2B2B2B;
-  --muted: #5A5A52;
-  --muted-2: #6A6A60;
-  --muted-3: #9A9A90;
-  --panel: #0E1620;
-  --panel-2: #131C27;
-  --panel-text: #D5DEE6;
-  --ok: #1F9D6F;
-  --warn: #C97A1B;
-  --crit: #C03B3B;
-  --blue: #0B6EFF;
-  --font-display: "Syne", sans-serif;
-  --font-body: "DM Sans", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-}
-
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    linear-gradient(to right, rgba(230,238,242,.72) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(230,238,242,.72) 1px, transparent 1px),
-    linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 52%, #FFFFFF 100%);
-  background-size: 72px 72px, 72px 72px, auto;
-  color: var(--graphite);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-}
-
-.shell {
-  width: min(1360px, 100%);
-  margin: 0 auto;
-  padding: 22px clamp(16px, 3vw, 40px) 64px;
-}
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: -6px 0 24px;
-  padding: 10px 12px;
-  border: 1px solid var(--line-cool);
-  border-radius: 8px;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(16px);
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 198px;
-}
-
-.brand-symbol {
-  width: 32px;
-  height: 32px;
-  background: var(--cyan);
-  clip-path: polygon(0 0,50% 54%,100% 0,100% 26%,50% 86%,0 26%);
-}
-
-.brand strong {
-  display: block;
-  color: var(--ink-2);
-  font-family: var(--font-display);
-  font-size: 16px;
-  line-height: 1;
-}
-
-.brand span,
-.status-pill,
-.nav a,
-.label,
-th {
-  font-family: var(--font-mono);
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.brand span {
-  display: block;
-  margin-top: 3px;
-  color: var(--muted-2);
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.nav {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-}
-
-.nav a {
-  flex: 0 0 auto;
-  padding: 8px 10px;
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.nav a:hover,
-.nav a.active {
-  background: var(--ink-2);
-  color: #fff;
-}
-
-.date-filter {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-  padding: 6px;
-  border: 1px solid var(--line-cool);
-  border-radius: 8px;
-  background: var(--surface);
-}
-
-.date-filter button {
-  height: 32px;
-  padding: 0 11px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.date-filter button:hover,
-.date-filter button.active {
-  background: var(--ink-2);
-  color: #fff;
-}
-
-.date-range {
-  min-width: 238px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 12px;
-  border-left: 1px solid var(--line-cool);
-  color: var(--ink-2);
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.status-pill {
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: var(--cyan-soft);
-  color: var(--cyan-deep);
-  font-size: 10px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(300px, .55fr);
-  min-height: 220px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--panel) 0%, #111B26 52%, #17202B 100%);
-  color: #fff;
-  box-shadow: 0 32px 80px -52px rgba(16,24,32,.72);
-}
-
-.hero-main {
-  display: grid;
-  align-content: center;
-  padding: clamp(26px, 3.5vw, 42px);
-}
-
-.eyebrow {
-  margin: 0 0 14px;
-  color: var(--cyan);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-h1 {
-  max-width: 620px;
-  margin: 0;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: clamp(31px, 3.45vw, 48px);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: 0;
-}
-
-.hero-copy {
-  max-width: 58ch;
-  margin: 16px 0 0;
-  color: rgba(213,222,230,.82);
-  font-size: clamp(14px, 1.15vw, 16px);
-  line-height: 1.55;
-}
-
-.hero-side {
-  display: grid;
-  align-content: stretch;
-  border-left: 1px solid rgba(255,255,255,.08);
-  background:
-    linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px);
-  background-size: 38px 38px;
-}
-
-.side-metric {
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  min-height: 50%;
-  padding: 20px;
-  text-align: center;
-}
-
-.side-metric + .side-metric {
-  border-top: 1px solid rgba(255,255,255,.08);
-}
-
-.side-metric span {
-  color: rgba(213,222,230,.72);
-  font-size: 12px;
-}
-
-.side-metric strong {
-  display: block;
-  max-width: 100%;
-  margin-top: 7px;
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.2vw, 30px);
-  line-height: 1.08;
-  text-wrap: balance;
-}
-
-.kpi-grid {
-  display: grid;
-  grid-template-columns: 1.15fr 1.15fr repeat(3, 1fr);
-  gap: 14px;
-  margin-top: 14px;
-}
-
-.card,
-.panel {
-  border: 1px solid var(--line-cool);
-  border-radius: 8px;
-  background: rgba(255,255,255,.94);
-  box-shadow: 0 24px 52px -42px rgba(16,24,32,.3);
-}
-
-.card {
-  min-height: 136px;
-  padding: 16px;
-  text-align: center;
-}
-
-.label {
-  display: block;
-  color: var(--muted-2);
-  font-size: 9.5px;
-  font-weight: 800;
-}
-
-.value {
-  display: block;
-  margin-top: 12px;
-  color: var(--ink-2);
-  font-family: var(--font-display);
-  font-size: clamp(24px, 1.95vw, 32px);
-  font-weight: 800;
-  line-height: 1;
-}
-
-.note {
-  display: block;
-  min-height: 30px;
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.3;
-}
-
-.delta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 24px;
-  margin-top: 8px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: var(--bg-alt);
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.delta.good {
-  background: rgba(31,157,111,.1);
-  color: var(--ok);
-}
-
-.delta.bad {
-  background: rgba(192,59,59,.1);
-  color: var(--crit);
-}
-
-.budget-card .delta {
-  background: rgba(255,255,255,.08);
-  color: rgba(213,222,230,.82);
-}
-
-.note.good { color: var(--ok); font-weight: 800; }
-.note.warn { color: var(--warn); font-weight: 800; }
-
-.budget-card {
-  background: var(--panel);
-  color: #fff;
-}
-
-.budget-card .label,
-.budget-card .note { color: rgba(213,222,230,.72); }
-.budget-card .value { color: #fff; }
-
-.meter {
-  width: 100%;
-  height: 10px;
-  margin-top: 18px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255,255,255,.1);
-}
-
-.meter span {
-  display: block;
-  height: 100%;
-  width: var(--progress, 23%);
-  border-radius: inherit;
-  background: var(--cyan);
-}
-
-.grid-main {
-  display: grid;
-  grid-template-columns: 1.05fr 1.5fr 1fr;
-  gap: 14px;
-  margin-top: 14px;
-}
-
-.panel {
-  min-width: 0;
-  padding: 18px;
-}
-
-.panel.dark {
-  border-color: rgba(255,255,255,.08);
-  background: linear-gradient(180deg, var(--panel-2), var(--panel));
-  color: var(--panel-text);
-}
-
-.panel-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: start;
-  margin-bottom: 18px;
-}
-
-.panel-title {
-  margin: 0;
-  color: inherit;
-  font-family: var(--font-display);
-  font-size: 19px;
-  font-weight: 800;
-  line-height: 1.08;
-}
-
-.panel-sub {
-  display: block;
-  color: var(--muted-2);
-  font-size: 12px;
-  line-height: 1.35;
-  text-align: right;
-}
-
-.dark .panel-sub { color: rgba(213,222,230,.62); }
-
-.funnel {
-  display: grid;
-  gap: 8px;
-}
-
-.funnel-step {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-  min-height: 50px;
-  padding: 0 15px;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 8px;
-  background: rgba(255,255,255,.045);
-}
-
-.funnel-step span {
-  color: rgba(213,222,230,.72);
-  font-size: 12px;
-}
-
-.funnel-step strong {
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 22px;
-}
-
-.funnel-step.accent {
-  background: linear-gradient(90deg, rgba(22,212,232,.22), rgba(22,212,232,.06));
-  border-color: rgba(22,212,232,.38);
-}
-
-.mini-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.mini {
-  padding: 13px;
-  border: 1px solid var(--line-soft);
-  border-radius: 8px;
-  text-align: center;
-  background: var(--bg-alt);
-}
-
-.mini span {
-  display: block;
-  color: var(--muted-2);
-  font-size: 12px;
-}
-
-.mini strong {
-  display: block;
-  margin-top: 4px;
-  color: var(--ink-2);
-  font-family: var(--font-display);
-  font-size: 19px;
-}
-
-.chart-box {
-  position: relative;
-  height: 285px;
-}
-
-.donut-box {
-  position: relative;
-  height: 230px;
-}
-
-.wide-panel {
-  margin-top: 14px;
-}
-
-.table-wrap {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  min-width: 920px;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 12px 10px;
-  border-bottom: 1px solid var(--line-cool);
-  text-align: center;
-  vertical-align: middle;
-}
-
-th {
-  color: var(--muted-2);
-  font-size: 10px;
-  font-weight: 800;
-}
-
-td:first-child,
-th:first-child {
-  text-align: left;
-}
-
-td {
-  color: var(--graphite);
-  font-size: 13px;
-}
-
-td strong {
-  color: var(--ink-2);
-  font-weight: 800;
-}
-
-.reading {
-  max-width: 280px;
-  color: var(--muted);
-  text-align: left;
-}
-
-.footer-note {
-  margin: 18px 0 0;
-  color: var(--muted-2);
-  font-size: 12px;
-  text-align: center;
-}
-
-@media (max-width: 1120px) {
-  .hero,
-  .kpi-grid,
-  .grid-main {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-side {
-    grid-template-columns: 1fr 1fr;
-    border-left: 0;
-    border-top: 1px solid rgba(255,255,255,.08);
-  }
-
-  .side-metric + .side-metric {
-    border-top: 0;
-    border-left: 1px solid rgba(255,255,255,.08);
-  }
-}
-
-@media (max-width: 720px) {
-  .shell { padding: 16px 12px 48px; }
-  .topbar { align-items: start; flex-wrap: wrap; }
-  .brand { width: 100%; }
-  .date-filter { width: 100%; margin-left: 0; overflow-x: auto; }
-  .date-range { min-width: 190px; justify-content: flex-start; }
-  .status-pill { margin-left: 0; }
-  .hero-main { padding: 28px 22px; }
-  .hero-side,
-  .mini-grid {
-    grid-template-columns: 1fr;
-  }
-  .side-metric + .side-metric { border-left: 0; border-top: 1px solid rgba(255,255,255,.08); }
-  .panel-head { display: grid; }
-  .panel-sub { text-align: left; }
-}
-</style>
-</head>
-<body>
-<main class="shell">
-  <header class="topbar">
-    <div class="brand" aria-label="Variantmidia">
-      <div class="brand-symbol" aria-hidden="true"></div>
-      <div>
-        <strong>Variantmidia</strong>
-        <span>Relatorio restrito</span>
-      </div>
-    </div>
-    <nav class="nav" aria-label="Navegacao do relatorio">
-      <a class="active" href="#visao">Visao</a>
-      <a href="#funil">Funil</a>
-      <a href="#publico">Publico</a>
-      <a href="#periodos">Periodos</a>
-    </nav>
-    <div class="date-filter" aria-label="Filtro de data">
-      <button type="button" data-range-button="7d">7 dias</button>
-      <button type="button" class="active" data-range-button="30d">30 dias</button>
-      <button type="button" data-range-button="all">Todo periodo</button>
-      <span class="date-range" data-bind="selectedRange">--</span>
-    </div>
-    <div class="status-pill">Sessao protegida</div>
-  </header>
-
-  <section class="hero" id="visao">
-    <div class="hero-main">
-      <p class="eyebrow">Google Ads | Direito Trabalhista</p>
-      <h1>Renato Pretel Advocacia</h1>
-      <p class="hero-copy">Leitura executiva da evolucao da campanha, cruzando midia, comportamento da pagina e qualidade real dos leads no CRM.</p>
-    </div>
-    <aside class="hero-side" aria-label="Resumo">
-      <div class="side-metric">
-        <span>Atualizado em</span>
-        <strong data-bind="updatedAt">--</strong>
-      </div>
-      <div class="side-metric">
-        <span>Periodo analisado</span>
-        <strong data-bind="periodLabel">--</strong>
-      </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Relatorio Google Ads | Renato Pretel</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="/dashboard/renato-pretel/src/styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar" aria-label="Navegacao do relatorio">
+      <div class="brand-mark">V</div>
+      <nav>
+        <a class="nav-item active" href="#visao">Visao geral</a>
+        <a class="nav-item" href="#funil">Funil</a>
+        <a class="nav-item" href="#publico">Publico</a>
+        <a class="nav-item" href="#campanha">Campanha</a>
+      </nav>
     </aside>
-  </section>
 
-  <section class="kpi-grid" aria-label="Indicadores principais">
-    <article class="card budget-card">
-      <span class="label">Verba restante</span>
-      <strong class="value" data-bind="remainingBudget">--</strong>
-      <div class="meter" aria-hidden="true"><span data-meter></span></div>
-      <span class="note" data-bind="budgetNote">--</span>
-      <small class="delta" data-bind="budgetDelta">Controle de caixa</small>
-    </article>
-    <article class="card">
-      <span class="label">Investimento</span>
-      <strong class="value" data-bind="spend">--</strong>
-      <span class="note">Google Ads no periodo</span>
-      <small class="delta" data-bind="spendDelta">--</small>
-    </article>
-    <article class="card">
-      <span class="label">Lead efetivo</span>
-      <strong class="value" data-bind="effectiveLeads">--</strong>
-      <span class="note good" data-bind="effectiveLeadCost">--</span>
-      <small class="delta" data-bind="effectiveDelta">--</small>
-    </article>
-    <article class="card">
-      <span class="label">Lead qualificado</span>
-      <strong class="value" data-bind="qualifiedLeads">--</strong>
-      <span class="note good" data-bind="qualifiedLeadCost">--</span>
-      <small class="delta" data-bind="qualifiedDelta">--</small>
-    </article>
-    <article class="card">
-      <span class="label">CAC</span>
-      <strong class="value" data-bind="cac">--</strong>
-      <span class="note warn">Aguardando venda registrada</span>
-      <small class="delta" data-bind="cacDelta">Sem venda no CRM</small>
-    </article>
-  </section>
-
-  <section class="grid-main">
-    <article class="panel dark" id="funil">
-      <div class="panel-head">
-        <div>
-          <p class="panel-title">Funil de trafego</p>
+    <main class="dashboard-shell">
+      <header class="hero" id="visao">
+        <div class="hero-copy-block">
+          <p class="eyebrow">Google Ads | Direito Trabalhista</p>
+          <h1>Renato Pretel Advocacia</h1>
+          <p class="hero-copy">Relatorio executivo de progresso, leads e qualidade comercial.</p>
         </div>
-        <span class="panel-sub">Do clique ao qualificado</span>
-      </div>
-      <div class="funnel">
-        <div class="funnel-step"><span>Impressoes</span><strong data-bind="impressions">--</strong></div>
-        <div class="funnel-step"><span>Cliques</span><strong data-bind="clicks">--</strong></div>
-        <div class="funnel-step accent"><span>Leads</span><strong data-bind="totalLeads">--</strong></div>
-        <div class="funnel-step"><span>Efetivos</span><strong data-bind="effectiveLeads">--</strong></div>
-        <div class="funnel-step accent"><span>Qualificados</span><strong data-bind="qualifiedLeads">--</strong></div>
-      </div>
-    </article>
-
-    <article class="panel">
-      <div class="panel-head">
-        <div>
-          <p class="panel-title">Ritmo diario</p>
+        <div class="hero-status">
+          <span>Periodo analisado</span>
+          <strong data-bind="periodLabel">--</strong>
+          <span data-bind="periodDays" class="period-days">--</span>
+          <span data-bind="prevPeriodLabel" class="prev-period">--</span>
+          <span class="updated-label">Atualizado em</span>
+          <strong data-bind="updatedAt">--</strong>
         </div>
-        <span class="panel-sub">Investimento, leads e qualificados</span>
-      </div>
-      <div class="chart-box"><canvas id="dailyTrend"></canvas></div>
-    </article>
+      </header>
 
-    <article class="panel" id="publico">
-      <div class="panel-head">
-        <div>
-          <p class="panel-title">Publico</p>
+      <section class="filter-bar" aria-label="Filtro de datas">
+        <div class="filter-group">
+          <label>De <input type="date" id="startDate" /></label>
+          <label>Ate <input type="date" id="endDate" /></label>
         </div>
-        <span class="panel-sub">Conversoes por genero</span>
-      </div>
-      <div class="donut-box"><canvas id="genderChart"></canvas></div>
-    </article>
-  </section>
+        <div class="filter-group">
+          <button type="button" class="preset-btn" data-days="7">7 dias</button>
+          <button type="button" class="preset-btn" data-days="14">14 dias</button>
+          <button type="button" class="preset-btn" data-days="30">30 dias</button>
+        </div>
+        <label class="filter-compare">
+          <input type="checkbox" id="compareToggle" checked />
+          <span>Comparar com periodo anterior</span>
+        </label>
+      </section>
 
-  <section class="grid-main">
-    <article class="panel">
-      <div class="panel-head">
-        <p class="panel-title">Eficiencia</p>
-        <span class="panel-sub">Indicadores de trafego</span>
-      </div>
-      <div class="mini-grid">
-        <div class="mini"><span>CTR</span><strong data-bind="ctr">--</strong></div>
-        <div class="mini"><span>CPC medio</span><strong data-bind="avgCpc">--</strong></div>
-        <div class="mini"><span>Conversao da pagina</span><strong data-bind="pageConversion">--</strong></div>
-      </div>
-    </article>
+      <section class="metric-grid" aria-label="Indicadores principais">
+        <article class="budget-card">
+          <div class="card-label">Verba restante (mes)</div>
+          <div class="gauge">
+            <svg viewBox="0 0 180 96" role="img" aria-label="Uso de verba">
+              <path class="gauge-track" d="M 20 86 A 70 70 0 0 1 160 86" />
+              <path class="gauge-fill" data-gauge d="M 20 86 A 70 70 0 0 1 160 86" />
+            </svg>
+            <div class="gauge-value" data-bind="remainingBudget">--</div>
+          </div>
+          <div class="budget-scale">
+            <span>R$0</span>
+            <span data-bind="monthlyBudget">--</span>
+          </div>
+        </article>
 
-    <article class="panel">
-      <div class="panel-head">
-        <p class="panel-title">Qualidade do lead</p>
-        <span class="panel-sub">CRM Renato Pretel</span>
-      </div>
-      <div class="donut-box"><canvas id="qualityChart"></canvas></div>
-    </article>
+        <article class="metric-card">
+          <span>Investimento no periodo</span>
+          <strong data-bind="spend">--</strong>
+          <em class="metric-delta" data-delta="spend">--</em>
+        </article>
 
-    <article class="panel dark">
-      <div class="panel-head">
-        <p class="panel-title">Leitura</p>
-        <span class="panel-sub">Proximo foco</span>
-      </div>
-      <div class="funnel">
-        <div class="funnel-step accent"><span>Manter Max Conv</span><strong>Sim</strong></div>
-        <div class="funnel-step"><span>Controlar gasto cedo</span><strong>11h</strong></div>
-        <div class="funnel-step"><span>Verba diaria sugerida</span><strong data-bind="dailyTarget">--</strong></div>
-      </div>
-    </article>
-  </section>
+        <article class="metric-card">
+          <span>Conversoes (Ads)</span>
+          <strong data-bind="conversionsAds">--</strong>
+          <em class="metric-delta" data-delta="conversionsAds">--</em>
+        </article>
 
-  <section class="panel wide-panel" id="periodos">
-    <div class="panel-head">
-      <div>
-        <p class="panel-title">Comparativo de progresso</p>
-      </div>
-      <span class="panel-sub">Antes, experimento e campanha aplicada</span>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Periodo</th>
-            <th>Investimento</th>
-            <th>Cliques</th>
-            <th>CPC</th>
-            <th>CTR</th>
-            <th>Efetivos</th>
-            <th>Qualificados</th>
-            <th>Custo/qualificado</th>
-            <th>Leitura</th>
-          </tr>
-        </thead>
-        <tbody data-table="periods"></tbody>
-      </table>
-    </div>
-  </section>
+        <article class="metric-card">
+          <span>Lead qualificado (CRM)</span>
+          <strong data-bind="qualifiedLeads">--</strong>
+          <em data-bind="qualifiedLeadCost">--</em>
+        </article>
 
-  <p class="footer-note">Dados de midia e CRM devem ser lidos em conjunto: o objetivo e aumentar volume sem perder qualidade juridica.</p>
-</main>
+        <article class="metric-card warning">
+          <span>CAC</span>
+          <strong data-bind="cac">--</strong>
+          <em>Nenhuma venda registrada no periodo</em>
+        </article>
+      </section>
 
-<script>
-const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const NUM = new Intl.NumberFormat("pt-BR");
-const PCT = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
-const RANGE_LABELS = { "7d": "7 dias", "30d": "30 dias", all: "Todo periodo" };
-let activeRange = "30d";
-let charts = {};
+      <section class="content-grid">
+        <article class="panel funnel-panel" id="funil">
+          <div class="panel-heading">
+            <p>Funil de Trafego</p>
+            <span>Do clique ao lead qualificado</span>
+          </div>
+          <div class="funnel">
+            <div class="funnel-step step-1"><span>Impressoes</span><strong data-bind="impressions">--</strong></div>
+            <div class="funnel-step step-2"><span>Cliques</span><strong data-bind="clicks">--</strong></div>
+            <div class="funnel-step step-3"><span>Leads</span><strong data-bind="totalLeads">--</strong></div>
+            <div class="funnel-step step-4"><span>Efetivos</span><strong data-bind="effectiveLeads">--</strong></div>
+            <div class="funnel-step step-5"><span>Qualif.</span><strong data-bind="qualifiedLeads">--</strong></div>
+          </div>
+          <div class="mini-metrics">
+            <div>
+              <span>CTR</span><strong data-bind="ctr">--</strong>
+              <em class="metric-delta" data-delta="ctr">--</em>
+            </div>
+            <div>
+              <span>CPC medio</span><strong data-bind="avgCpc">--</strong>
+              <em class="metric-delta" data-delta="avgCpc">--</em>
+            </div>
+            <div>
+              <span>Conv. pagina</span><strong data-bind="pageConversion">--</strong>
+            </div>
+          </div>
+        </article>
 
-function bind(key, value) {
-  document.querySelectorAll(`[data-bind="${key}"]`).forEach((node) => {
-    node.textContent = value;
-  });
-}
+        <article class="panel trend-panel">
+          <div class="panel-heading">
+            <p>Evolucao diaria</p>
+            <span>Investimento e conversoes (linha tracejada = periodo anterior)</span>
+          </div>
+          <canvas id="dailyTrend" height="210"></canvas>
+        </article>
 
-function bindDelta(key, result) {
-  document.querySelectorAll(`[data-bind="${key}"]`).forEach((node) => {
-    node.textContent = result.text;
-    node.classList.remove("good", "bad");
-    if (result.tone) node.classList.add(result.tone);
-  });
-}
+        <article class="panel" id="publico">
+          <div class="panel-heading">
+            <p>Conversoes por genero</p>
+            <span>Fonte: Google Ads API</span>
+          </div>
+          <canvas id="genderChart" height="220"></canvas>
+        </article>
 
-function money(value) {
-  return BRL.format(Number(value || 0));
-}
+        <article class="panel">
+          <div class="panel-heading">
+            <p>Conversoes por idade</p>
+            <span>Fonte: Google Ads API</span>
+          </div>
+          <canvas id="ageChart" height="220"></canvas>
+        </article>
 
-function percent(value) {
-  return `${PCT.format(Number(value || 0))}%`;
-}
+        <article class="panel">
+          <div class="panel-heading">
+            <p>Qualidade dos leads</p>
+            <span>Rastreio offline e CRM</span>
+          </div>
+          <canvas id="qualityChart" height="220"></canvas>
+        </article>
+      </section>
 
-function cost(spend, volume) {
-  return volume > 0 ? spend / volume : 0;
-}
+      <section class="panel table-panel" id="campanha">
+        <div class="panel-heading">
+          <p>Campanhas e sinais de progresso</p>
+          <span>Comparativo simples para decisao comercial</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Periodo</th>
+                <th>Investimento</th>
+                <th>Cliques</th>
+                <th>Leads efetivos</th>
+                <th>Qualificados</th>
+                <th>Custo/qualificado</th>
+                <th>Leitura</th>
+              </tr>
+            </thead>
+            <tbody data-table="periods"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
 
-function delta(current, previous, previousLabel, options = {}) {
-  const { lowerIsBetter = false, newSignal = "Novo sinal" } = options;
-
-  if (!previous && current > 0) {
-    return { text: `${newSignal} vs ${previousLabel}`, tone: "good" };
-  }
-
-  if (!previous && !current) {
-    return { text: `Sem base anterior`, tone: "" };
-  }
-
-  const change = ((current - previous) / previous) * 100;
-  const isGood = lowerIsBetter ? change <= 0 : change >= 0;
-  const prefix = change > 0 ? "+" : "";
-
-  return {
-    text: `${prefix}${percent(change)} vs ${previousLabel}`,
-    tone: isGood ? "good" : "bad"
-  };
-}
-
-async function getReport() {
-  const response = await fetch("/dashboard/renato-pretel/data", { cache: "no-store" });
-  if (!response.ok) throw new Error("Nao foi possivel carregar os dados do relatorio.");
-  return response.json();
-}
-
-function chartOptions(extra = {}) {
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        labels: {
-          color: "#5A5A52",
-          boxWidth: 10,
-          font: { family: "DM Sans", size: 11, weight: "700" }
-        }
-      },
-      tooltip: {
-        backgroundColor: "#101820",
-        titleColor: "#fff",
-        bodyColor: "#D5DEE6",
-        borderColor: "rgba(22,212,232,.35)",
-        borderWidth: 1
-      }
-    },
-    ...extra
-  };
-}
-
-function dailyForRange(report, rangeKey) {
-  if (rangeKey === "7d") {
-    return report.daily.slice(-7);
-  }
-
-  return report.daily;
-}
-
-function destroyChart(id) {
-  if (charts[id]) {
-    charts[id].destroy();
-    delete charts[id];
-  }
-}
-
-function renderDaily(days) {
-  destroyChart("dailyTrend");
-  charts.dailyTrend = new Chart(document.getElementById("dailyTrend"), {
-    type: "line",
-    data: {
-      labels: days.map((day) => day.label),
-      datasets: [
-        {
-          label: "Investimento",
-          data: days.map((day) => day.spend),
-          borderColor: "#101820",
-          backgroundColor: "rgba(16,24,32,.09)",
-          tension: .42,
-          fill: true,
-          yAxisID: "money"
-        },
-        {
-          label: "Leads",
-          data: days.map((day) => day.leads),
-          borderColor: "#16D4E8",
-          backgroundColor: "rgba(22,212,232,.12)",
-          tension: .42,
-          yAxisID: "count"
-        },
-        {
-          label: "Qualificados",
-          data: days.map((day) => day.qualified),
-          borderColor: "#1F9D6F",
-          backgroundColor: "rgba(31,157,111,.12)",
-          tension: .42,
-          yAxisID: "count"
-        }
-      ]
-    },
-    options: chartOptions({
-      interaction: { mode: "index", intersect: false },
-      scales: {
-        x: { ticks: { color: "#6A6A60" }, grid: { color: "#EFF4F6" } },
-        money: { position: "left", ticks: { color: "#6A6A60", callback: (value) => `R$${value}` }, grid: { color: "#EFF4F6" } },
-        count: { position: "right", ticks: { color: "#6A6A60", precision: 0 }, grid: { drawOnChartArea: false } }
-      }
-    })
-  });
-}
-
-function renderDonut(id, labels, values, colors) {
-  destroyChart(id);
-  charts[id] = new Chart(document.getElementById(id), {
-    type: "doughnut",
-    data: {
-      labels,
-      datasets: [{ data: values, backgroundColor: colors, borderWidth: 0 }]
-    },
-    options: chartOptions({
-      cutout: "66%",
-      plugins: {
-        legend: {
-          position: "bottom",
-          labels: { color: "#5A5A52", boxWidth: 10, font: { family: "DM Sans", size: 11, weight: "700" } }
-        }
-      }
-    })
-  });
-}
-
-function renderTable(periods) {
-  const rows = periods.map((period) => {
-    const costPerQualified = period.qualifiedLeads > 0 ? money(period.spend / period.qualifiedLeads) : "Sem qualificado";
-    return `<tr>
-      <td><strong>${period.name}</strong></td>
-      <td>${money(period.spend)}</td>
-      <td>${NUM.format(period.clicks)}</td>
-      <td>${money(period.avgCpc)}</td>
-      <td>${percent(period.ctr)}</td>
-      <td>${NUM.format(period.effectiveLeads)}</td>
-      <td><strong>${NUM.format(period.qualifiedLeads)}</strong></td>
-      <td>${costPerQualified}</td>
-      <td class="reading">${period.reading}</td>
-    </tr>`;
-  });
-
-  document.querySelector('[data-table="periods"]').innerHTML = rows.join("");
-}
-
-function applyRange(report, rangeKey) {
-  const selected = report.ranges?.[rangeKey] || report.ranges?.["30d"];
-  const current = selected.current;
-  const previous = selected.previous;
-  const previousLabel = selected.previousLabel;
-  const budget = report.budget;
-  const pageConversion = current.clicks ? (current.totalLeads / current.clicks) * 100 : 0;
-  const currentEffectiveCost = cost(current.spend, current.effectiveLeads);
-  const previousEffectiveCost = cost(previous.spend, previous.effectiveLeads);
-  const currentQualifiedCost = cost(current.spend, current.qualifiedLeads);
-  const previousQualifiedCost = cost(previous.spend, previous.qualifiedLeads);
-  const remainingRatio = Math.max(0, Math.min(1, budget.remaining / budget.monthly));
-
-  activeRange = rangeKey;
-  document.querySelectorAll("[data-range-button]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.rangeButton === rangeKey);
-  });
-
-  bind("updatedAt", report.updatedAt);
-  bind("periodLabel", RANGE_LABELS[rangeKey] || selected.label);
-  bind("selectedRange", selected.label);
-  bind("remainingBudget", money(budget.remaining));
-  bind("budgetNote", budget.note);
-  bind("dailyTarget", money(budget.dailyTarget));
-  bind("spend", money(current.spend));
-  bind("effectiveLeads", NUM.format(current.effectiveLeads));
-  bind("qualifiedLeads", NUM.format(current.qualifiedLeads));
-  bind("effectiveLeadCost", current.effectiveLeads ? `${money(currentEffectiveCost)} por efetivo` : "Sem efetivos");
-  bind("qualifiedLeadCost", current.qualifiedLeads ? `${money(currentQualifiedCost)} por qualificado` : "Sem qualificados");
-  bind("cac", current.sales > 0 ? money(current.spend / current.sales) : "Sem venda");
-  bind("impressions", NUM.format(current.impressions));
-  bind("clicks", NUM.format(current.clicks));
-  bind("totalLeads", NUM.format(current.totalLeads));
-  bind("ctr", percent(current.ctr));
-  bind("avgCpc", money(current.avgCpc));
-  bind("pageConversion", percent(pageConversion));
-  bindDelta("spendDelta", delta(current.spend, previous.spend, previousLabel, { lowerIsBetter: true }));
-  bindDelta("effectiveDelta", delta(current.effectiveLeads, previous.effectiveLeads, previousLabel));
-  bindDelta("qualifiedDelta", delta(current.qualifiedLeads, previous.qualifiedLeads, previousLabel, { newSignal: "Lead qualificado apareceu" }));
-  bindDelta("cacDelta", { text: current.sales > 0 ? "Com venda no CRM" : "Sem venda no CRM", tone: "" });
-  document.querySelector("[data-meter]").style.setProperty("--progress", `${remainingRatio * 100}%`);
-
-  renderDaily(dailyForRange(report, rangeKey));
-  renderDonut("genderChart", report.gender.map((item) => item.label), report.gender.map((item) => item.conversions), ["#16D4E8", "#0B6EFF", "#9A9A90"]);
-  renderDonut("qualityChart", ["Efetivos", "Qualificados", "Pendentes/desqualificados"], [current.effectiveLeads, current.qualifiedLeads, Math.max(0, current.totalLeads - current.effectiveLeads)], ["#16D4E8", "#1F9D6F", "#C03B3B"]);
-  renderTable(report.periods);
-}
-
-async function init() {
-  const report = await getReport();
-  document.querySelectorAll("[data-range-button]").forEach((button) => {
-    button.addEventListener("click", () => applyRange(report, button.dataset.rangeButton || activeRange));
-  });
-  applyRange(report, activeRange);
-}
-
-init().catch((error) => {
-  document.body.insertAdjacentHTML("afterbegin", `<pre style="margin:16px;padding:14px;border:1px solid #C03B3B;color:#C03B3B;background:#fff">${error.message}</pre>`);
-});
-</script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <script type="module" src="/dashboard/renato-pretel/src/app.js"></script>
+  </body>
 </html>
