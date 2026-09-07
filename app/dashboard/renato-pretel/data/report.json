@@ -9,6 +9,9 @@
     "start": "2026-08-23",
     "end": "2026-09-05"
   },
+  "workPeriod": {
+    "start": "2026-07-13"
+  },
   "budget": {
     "monthly": 1300,
     "monthLabel": "Setembro/2026",
@@ -17,7 +20,7 @@
   },
   "crm": {
     "source": "Planilha de Rastreio (classificação por data)",
-    "totalLeads": 55,
+    "totalLeads": 27,
     "effectiveLeads": 20,
     "qualifiedLeads": 7,
     "effectiveOnlyLeads": 13,

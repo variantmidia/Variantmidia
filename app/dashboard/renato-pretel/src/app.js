@@ -58,13 +58,17 @@ const filterDaily = (rows, start, end) =>
 const sumMetric = (rows, key) =>
   rows.reduce((acc, r) => acc + (Number(r[key]) || 0), 0);
 
-const aggregateCrm = (rows) => rows.reduce((acc, row) => ({
-  totalLeads: acc.totalLeads + (Number(row.totalLeads) || 0),
-  effectiveOnlyLeads: acc.effectiveOnlyLeads + (Number(row.effectiveOnly) || 0),
-  qualifiedLeads: acc.qualifiedLeads + (Number(row.qualified) || 0),
-  effectiveLeads: acc.effectiveLeads + (Number(row.effectiveTotal) || 0),
+const aggregateCrm = (rows) => rows.reduce((acc, row) => {
+  const effectiveOnly = Number(row.effectiveOnly) || 0;
+  const qualified = Number(row.qualified) || 0;
+  return {
+  totalLeads: acc.totalLeads + effectiveOnly + qualified + qualified,
+  effectiveOnlyLeads: acc.effectiveOnlyLeads + effectiveOnly,
+  qualifiedLeads: acc.qualifiedLeads + qualified,
+  effectiveLeads: acc.effectiveLeads + effectiveOnly + qualified,
   sales: acc.sales + (Number(row.converted) || 0),
-}), {
+  };
+}, {
   totalLeads: 0,
   effectiveOnlyLeads: 0,
   qualifiedLeads: 0,
@@ -274,15 +278,14 @@ const buildAgeChart = (report, currentRows, prevRows) => {
 
 const buildQualityChart = (crm) => {
   destroyChart("qualityChart");
-  const { effectiveOnlyLeads, qualifiedLeads, totalLeads } = crm;
-  const remaining = Math.max(0, totalLeads - effectiveOnlyLeads - qualifiedLeads);
+  const { effectiveLeads, qualifiedLeads } = crm;
   state.charts.qualityChart = new Chart(document.getElementById("qualityChart"), {
     type: "doughnut",
     data: {
-      labels: ["Qualificados", "Efetivos sem qualificação", "Desqualificados/Pendentes"],
+      labels: ["Efetivos (inclui qualificados)", "Qualificados (subconjunto)", "Não contabilizados"],
       datasets: [{
-        data: [qualifiedLeads, effectiveOnlyLeads, remaining],
-        backgroundColor: ["#21c568", "#20a9e8", "#f06b72"],
+        data: [effectiveLeads, qualifiedLeads, 0],
+        backgroundColor: ["#20a9e8", "#21c568", "#8a95a1"],
         borderWidth: 0,
       }],
     },
@@ -406,6 +409,14 @@ const applyToday = () => {
   applyRange();
 };
 
+const applyWorkPeriod = () => {
+  state.activePreset = "work";
+  state.start = state.report.workPeriod?.start || state.report.dataStart;
+  state.end = todayISO();
+  syncInputs();
+  applyRange();
+};
+
 const syncInputs = () => {
   document.getElementById("startDate").value = state.start;
   document.getElementById("endDate").value = state.end;
@@ -427,9 +438,9 @@ const init = async () => {
 
   const startInput = document.getElementById("startDate");
   const endInput = document.getElementById("endDate");
-  startInput.min = report.dataStart;
+  startInput.min = report.workPeriod?.start || report.dataStart;
   startInput.max = maxIso(report.dataEnd, todayISO());
-  endInput.min = report.dataStart;
+  endInput.min = report.workPeriod?.start || report.dataStart;
   endInput.max = maxIso(report.dataEnd, todayISO());
   startInput.value = state.start;
   endInput.value = state.end;
@@ -456,6 +467,10 @@ const init = async () => {
     btn.addEventListener("click", () => {
       if (btn.dataset.preset === "today") {
         applyToday();
+        return;
+      }
+      if (btn.dataset.preset === "work") {
+        applyWorkPeriod();
         return;
       }
       applyPreset(Number(btn.dataset.days));

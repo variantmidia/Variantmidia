@@ -87,7 +87,6 @@ const fetchFromSheets = async (report) => {
       effectiveTotal: 0,
       converted: 0,
     };
-    current.totalLeads += 1;
     const classification = String(row[12] || "").trim().toLowerCase();
     if (classification === "leads efetivos") {
       current.effectiveOnly += 1;
@@ -98,6 +97,7 @@ const fetchFromSheets = async (report) => {
       current.effectiveTotal += 1;
     }
     if (String(row[16] || "").trim().toUpperCase() === "TRUE") current.converted += 1;
+    current.totalLeads = current.effectiveOnly + current.qualified + current.qualified;
     byDate.set(date, current);
   }
   const daily = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
