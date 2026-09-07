@@ -15,6 +15,17 @@ const isoToBR = (iso) => {
   const [y, m, d] = iso.split("-");
   return `${d}/${m}/${y}`;
 };
+const todayISO = () => {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${byType.year}-${byType.month}-${byType.day}`;
+};
+const maxIso = (...dates) => dates.filter(Boolean).sort().at(-1);
 const addDays = (isoDate, days) => {
   const d = new Date(`${isoDate}T00:00:00`);
   d.setDate(d.getDate() + days);
@@ -67,7 +78,7 @@ const pctChange = (current, previous) => {
 
 const loadReport = async () => {
   const response = await fetch("/dashboard/renato-pretel/data", { cache: "no-store" });
-  if (!response.ok) throw new Error("Nao foi possivel carregar os dados do relatorio");
+  if (!response.ok) throw new Error("Não foi possível carregar os dados do relatório");
   return response.json();
 };
 
@@ -364,8 +375,18 @@ const applyRange = () => {
 };
 
 const applyPreset = (days) => {
+  state.activePreset = String(days);
   state.end = state.report.dataEnd;
   state.start = addDays(state.end, -(days - 1));
+  syncInputs();
+  applyRange();
+};
+
+const applyToday = () => {
+  const today = todayISO();
+  state.activePreset = "today";
+  state.start = today;
+  state.end = today;
   syncInputs();
   applyRange();
 };
@@ -374,12 +395,16 @@ const syncInputs = () => {
   document.getElementById("startDate").value = state.start;
   document.getElementById("endDate").value = state.end;
   document.getElementById("compareToggle").checked = state.compare;
-  document.querySelectorAll(".preset-btn").forEach((btn) => btn.classList.remove("active"));
+  document.querySelectorAll(".preset-btn").forEach((btn) => {
+    const preset = btn.dataset.preset || btn.dataset.days;
+    btn.classList.toggle("active", preset === state.activePreset);
+  });
 };
 
 const init = async () => {
   const report = await loadReport();
   state.report = report;
+  state.activePreset = null;
   state.start = report.defaultRange?.start || addDays(report.dataEnd, -13);
   state.end = report.defaultRange?.end || report.dataEnd;
 
@@ -388,19 +413,21 @@ const init = async () => {
   const startInput = document.getElementById("startDate");
   const endInput = document.getElementById("endDate");
   startInput.min = report.dataStart;
-  startInput.max = report.dataEnd;
+  startInput.max = maxIso(report.dataEnd, todayISO());
   endInput.min = report.dataStart;
-  endInput.max = report.dataEnd;
+  endInput.max = maxIso(report.dataEnd, todayISO());
   startInput.value = state.start;
   endInput.value = state.end;
 
   startInput.addEventListener("change", (e) => {
+    state.activePreset = null;
     state.start = e.target.value;
     if (state.start > state.end) state.end = state.start;
     endInput.value = state.end;
     applyRange();
   });
   endInput.addEventListener("change", (e) => {
+    state.activePreset = null;
     state.end = e.target.value;
     if (state.end < state.start) state.start = state.end;
     startInput.value = state.start;
@@ -411,7 +438,13 @@ const init = async () => {
     applyRange();
   });
   document.querySelectorAll(".preset-btn").forEach((btn) => {
-    btn.addEventListener("click", () => applyPreset(Number(btn.dataset.days)));
+    btn.addEventListener("click", () => {
+      if (btn.dataset.preset === "today") {
+        applyToday();
+        return;
+      }
+      applyPreset(Number(btn.dataset.days));
+    });
   });
 
   applyRange();

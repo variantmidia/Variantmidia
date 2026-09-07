@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Relatorio Google Ads | Renato Pretel</title>
+    <title>Relatório Google Ads | Renato Pretel</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link rel="stylesheet" href="/dashboard/renato-pretel/src/styles.css" />
   </head>
   <body>
-    <aside class="sidebar" aria-label="Navegacao do relatorio">
+    <aside class="sidebar" aria-label="Navegação do relatório">
       <div class="brand-mark">V</div>
       <nav>
-        <a class="nav-item active" href="#visao">Visao geral</a>
+        <a class="nav-item active" href="#visao">Visão geral</a>
         <a class="nav-item" href="#funil">Funil</a>
-        <a class="nav-item" href="#publico">Publico</a>
+        <a class="nav-item" href="#publico">Público</a>
         <a class="nav-item" href="#campanha">Campanha</a>
       </nav>
     </aside>
@@ -23,10 +23,10 @@
         <div class="hero-copy-block">
           <p class="eyebrow">Google Ads | Direito Trabalhista</p>
           <h1>Renato Pretel Advocacia</h1>
-          <p class="hero-copy">Relatorio executivo de progresso, leads e qualidade comercial.</p>
+          <p class="hero-copy">Relatório executivo de progresso, leads e qualidade comercial.</p>
         </div>
         <div class="hero-status">
-          <span>Periodo analisado</span>
+          <span>Período analisado</span>
           <strong data-bind="periodLabel">--</strong>
           <span data-bind="periodDays" class="period-days">--</span>
           <span data-bind="prevPeriodLabel" class="prev-period">--</span>
@@ -38,22 +38,23 @@
       <section class="filter-bar" aria-label="Filtro de datas">
         <div class="filter-group">
           <label>De <input type="date" id="startDate" /></label>
-          <label>Ate <input type="date" id="endDate" /></label>
+          <label>Até <input type="date" id="endDate" /></label>
         </div>
         <div class="filter-group">
+          <button type="button" class="preset-btn" data-preset="today">Hoje</button>
           <button type="button" class="preset-btn" data-days="7">7 dias</button>
           <button type="button" class="preset-btn" data-days="14">14 dias</button>
           <button type="button" class="preset-btn" data-days="30">30 dias</button>
         </div>
         <label class="filter-compare">
           <input type="checkbox" id="compareToggle" checked />
-          <span>Comparar com periodo anterior</span>
+          <span>Comparar com período anterior</span>
         </label>
       </section>
 
       <section class="metric-grid" aria-label="Indicadores principais">
         <article class="budget-card">
-          <div class="card-label">Verba restante (mes)</div>
+          <div class="card-label">Verba restante (mês)</div>
           <div class="gauge">
             <svg viewBox="0 0 180 96" role="img" aria-label="Uso de verba">
               <path class="gauge-track" d="M 20 86 A 70 70 0 0 1 160 86" />
@@ -68,13 +69,13 @@
         </article>
 
         <article class="metric-card">
-          <span>Investimento no periodo</span>
+          <span>Investimento no período</span>
           <strong data-bind="spend">--</strong>
           <em class="metric-delta" data-delta="spend">--</em>
         </article>
 
         <article class="metric-card">
-          <span>Conversoes (Ads)</span>
+          <span>Conversões (Ads)</span>
           <strong data-bind="conversionsAds">--</strong>
           <em class="metric-delta" data-delta="conversionsAds">--</em>
         </article>
@@ -88,22 +89,22 @@
         <article class="metric-card warning">
           <span>CAC</span>
           <strong data-bind="cac">--</strong>
-          <em>Nenhuma venda registrada no periodo</em>
+          <em>Nenhuma venda registrada no período</em>
         </article>
       </section>
 
       <section class="content-grid">
         <article class="panel funnel-panel" id="funil">
           <div class="panel-heading">
-            <p>Funil de Trafego</p>
+            <p>Funil de Tráfego</p>
             <span>Do clique ao lead qualificado</span>
           </div>
           <div class="funnel">
-            <div class="funnel-step step-1"><span>Impressoes</span><strong data-bind="impressions">--</strong></div>
+            <div class="funnel-step step-1"><span>Impressões</span><strong data-bind="impressions">--</strong></div>
             <div class="funnel-step step-2"><span>Cliques</span><strong data-bind="clicks">--</strong></div>
             <div class="funnel-step step-3"><span>Leads</span><strong data-bind="totalLeads">--</strong></div>
             <div class="funnel-step step-4"><span>Efetivos</span><strong data-bind="effectiveLeads">--</strong></div>
-            <div class="funnel-step step-5"><span>Qualif.</span><strong data-bind="qualifiedLeads">--</strong></div>
+            <div class="funnel-step step-5"><span>Qualificados</span><strong data-bind="qualifiedLeads">--</strong></div>
           </div>
           <div class="mini-metrics">
             <div>
@@ -111,26 +112,26 @@
               <em class="metric-delta" data-delta="ctr">--</em>
             </div>
             <div>
-              <span>CPC medio</span><strong data-bind="avgCpc">--</strong>
+              <span>CPC médio</span><strong data-bind="avgCpc">--</strong>
               <em class="metric-delta" data-delta="avgCpc">--</em>
             </div>
             <div>
-              <span>Conv. pagina</span><strong data-bind="pageConversion">--</strong>
+              <span>Conv. página</span><strong data-bind="pageConversion">--</strong>
             </div>
           </div>
         </article>
 
         <article class="panel trend-panel">
           <div class="panel-heading">
-            <p>Evolucao diaria</p>
-            <span>Investimento e conversoes (linha tracejada = periodo anterior)</span>
+            <p>Evolução diária</p>
+            <span>Investimento e conversões (linha tracejada = período anterior)</span>
           </div>
           <canvas id="dailyTrend" height="210"></canvas>
         </article>
 
         <article class="panel" id="publico">
           <div class="panel-heading">
-            <p>Conversoes por genero</p>
+            <p>Conversões por gênero</p>
             <span>Fonte: Google Ads API</span>
           </div>
           <canvas id="genderChart" height="220"></canvas>
@@ -138,7 +139,7 @@
 
         <article class="panel">
           <div class="panel-heading">
-            <p>Conversoes por idade</p>
+            <p>Conversões por idade</p>
             <span>Fonte: Google Ads API</span>
           </div>
           <canvas id="ageChart" height="220"></canvas>
@@ -156,13 +157,13 @@
       <section class="panel table-panel" id="campanha">
         <div class="panel-heading">
           <p>Campanhas e sinais de progresso</p>
-          <span>Comparativo simples para decisao comercial</span>
+          <span>Comparativo simples para decisão comercial</span>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Periodo</th>
+                <th>Período</th>
                 <th>Investimento</th>
                 <th>Cliques</th>
                 <th>Leads efetivos</th>

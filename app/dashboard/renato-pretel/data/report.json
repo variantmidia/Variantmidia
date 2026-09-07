@@ -13,7 +13,7 @@
     "monthly": 1300,
     "monthLabel": "Setembro/2026",
     "dailyTarget": 50,
-    "note": "Verba diaria da campanha ativa em R$50; ritmo dentro da meta mensal"
+    "note": "Verba diária da campanha ativa em R$50; ritmo dentro da meta mensal"
   },
   "crm": {
     "source": "Planilha de Acompanhamento de Leads (14 dias)",
@@ -4337,7 +4337,7 @@
       "clicks": 64,
       "effectiveLeads": 22,
       "qualifiedLeads": 5,
-      "reading": "Max Conv sem teto rodando; 22 conversoes no periodo"
+      "reading": "Max Conv sem teto rodando; 22 conversões no período"
     }
   ]
 }

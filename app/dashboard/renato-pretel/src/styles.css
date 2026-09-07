@@ -272,17 +272,25 @@ h1 {
 }
 
 .funnel-step {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 48px;
-  padding: 0 22%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  min-height: 58px;
+  padding: 9px 18px;
   background: linear-gradient(90deg, var(--cyan), #1b77db);
   clip-path: polygon(5% 0, 95% 0, 88% 100%, 12% 100%);
+  text-align: center;
 }
 
-.funnel-step span { font-size: 11px; font-weight: 800; text-transform: uppercase; }
-.funnel-step strong { font-size: 20px; }
+.funnel-step span {
+  max-width: 100%;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.funnel-step strong { display: block; font-size: 22px; line-height: 1; }
 .step-1 { width: 96%; }
 .step-2 { width: 82%; }
 .step-3 { width: 68%; }
