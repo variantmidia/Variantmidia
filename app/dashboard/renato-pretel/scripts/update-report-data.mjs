@@ -9,6 +9,9 @@ const DEVELOPER_TOKEN = process.env.GOOGLE_ADS_DEVELOPER_TOKEN || "";
 const CLIENT_ID = process.env.GOOGLE_ADS_CLIENT_ID || "";
 const CLIENT_SECRET = process.env.GOOGLE_ADS_CLIENT_SECRET || "";
 const REFRESH_TOKEN = process.env.GOOGLE_ADS_REFRESH_TOKEN || "";
+const SHEETS_SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID || "1jw5y9dUV-XUUJEj249p3KBl1rYla2ylGxWqJ4pAfCfA";
+const SHEETS_TAB = process.env.GOOGLE_SHEETS_TAB || "Planilha de Rastreio NÃO ALTERAR";
+const SHEETS_SYNC_ENABLED = process.env.GOOGLE_SHEETS_SYNC !== "false";
 
 const hasApiCreds = () =>
   DEVELOPER_TOKEN && CLIENT_ID && CLIENT_SECRET && REFRESH_TOKEN;
@@ -60,6 +63,54 @@ const gaqlSearch = async (accessToken, query) => {
   const rows = [];
   for (const chunk of json) if (chunk.results) rows.push(...chunk.results);
   return rows;
+};
+
+const fetchFromSheets = async (report) => {
+  if (!SHEETS_SYNC_ENABLED || !hasApiCreds()) return;
+  const accessToken = await getAccessToken();
+  const range = `'${SHEETS_TAB.replace(/'/g, "''")}'!A2:Q1000`;
+  const url = new URL(`https://sheets.googleapis.com/v4/spreadsheets/${SHEETS_SPREADSHEET_ID}/values/${encodeURIComponent(range)}`);
+  url.searchParams.set("valueRenderOption", "FORMATTED_VALUE");
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+  if (!res.ok) throw new Error(`Sheets API failed: ${res.status} ${await res.text()}`);
+  const { values = [] } = await res.json();
+  const byDate = new Map();
+  for (const row of values) {
+    const match = String(row[0] || "").match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+    if (!match) continue;
+    const date = `${match[3]}-${match[2]}-${match[1]}`;
+    const current = byDate.get(date) || {
+      date,
+      totalLeads: 0,
+      effectiveOnly: 0,
+      qualified: 0,
+      effectiveTotal: 0,
+      converted: 0,
+    };
+    current.totalLeads += 1;
+    const classification = String(row[12] || "").trim().toLowerCase();
+    if (classification === "leads efetivos") {
+      current.effectiveOnly += 1;
+      current.effectiveTotal += 1;
+    }
+    if (classification === "leads qualificados") {
+      current.qualified += 1;
+      current.effectiveTotal += 1;
+    }
+    if (String(row[16] || "").trim().toUpperCase() === "TRUE") current.converted += 1;
+    byDate.set(date, current);
+  }
+  const daily = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+  report.crm = {
+    ...report.crm,
+    source: "Planilha de Rastreio (sincronizada automaticamente)",
+    totalLeads: daily.reduce((sum, row) => sum + row.totalLeads, 0),
+    effectiveLeads: daily.reduce((sum, row) => sum + row.effectiveTotal, 0),
+    effectiveOnlyLeads: daily.reduce((sum, row) => sum + row.effectiveOnly, 0),
+    qualifiedLeads: daily.reduce((sum, row) => sum + row.qualified, 0),
+    sales: daily.reduce((sum, row) => sum + row.converted, 0),
+    daily,
+  };
 };
 
 const fetchFromAds = async (report) => {
@@ -211,6 +262,12 @@ const main = async () => {
     } catch (err) {
       console.error("Falha ao consultar Google Ads API:", err.message);
       process.exitCode = 2;
+    }
+    try {
+      await fetchFromSheets(report);
+      console.log("Leads efetivos e qualificados atualizados via Google Sheets");
+    } catch (err) {
+      console.warn("Falha ao consultar Google Sheets; mantendo o último CRM sincronizado:", err.message);
     }
   } else {
     console.warn("Credenciais Google Ads ausentes; apenas o updatedAt sera atualizado.");

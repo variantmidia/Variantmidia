@@ -58,6 +58,20 @@ const filterDaily = (rows, start, end) =>
 const sumMetric = (rows, key) =>
   rows.reduce((acc, r) => acc + (Number(r[key]) || 0), 0);
 
+const aggregateCrm = (rows) => rows.reduce((acc, row) => ({
+  totalLeads: acc.totalLeads + (Number(row.totalLeads) || 0),
+  effectiveOnlyLeads: acc.effectiveOnlyLeads + (Number(row.effectiveOnly) || 0),
+  qualifiedLeads: acc.qualifiedLeads + (Number(row.qualified) || 0),
+  effectiveLeads: acc.effectiveLeads + (Number(row.effectiveTotal) || 0),
+  sales: acc.sales + (Number(row.converted) || 0),
+}), {
+  totalLeads: 0,
+  effectiveOnlyLeads: 0,
+  qualifiedLeads: 0,
+  effectiveLeads: 0,
+  sales: 0,
+});
+
 const aggregateByKey = (rows, keyField) => {
   const map = new Map();
   for (const r of rows) {
@@ -258,17 +272,17 @@ const buildAgeChart = (report, currentRows, prevRows) => {
   });
 };
 
-const buildQualityChart = (report) => {
+const buildQualityChart = (crm) => {
   destroyChart("qualityChart");
-  const { effectiveLeads, qualifiedLeads, totalLeads } = report.crm;
-  const remaining = Math.max(0, totalLeads - effectiveLeads);
+  const { effectiveOnlyLeads, qualifiedLeads, totalLeads } = crm;
+  const remaining = Math.max(0, totalLeads - effectiveOnlyLeads - qualifiedLeads);
   state.charts.qualityChart = new Chart(document.getElementById("qualityChart"), {
     type: "doughnut",
     data: {
-      labels: ["Efetivos", "Qualificados", "Desqualificados/Pendentes"],
+      labels: ["Qualificados", "Efetivos sem qualificação", "Desqualificados/Pendentes"],
       datasets: [{
-        data: [effectiveLeads, qualifiedLeads, remaining],
-        backgroundColor: ["#20a9e8", "#21c568", "#f06b72"],
+        data: [qualifiedLeads, effectiveOnlyLeads, remaining],
+        backgroundColor: ["#21c568", "#20a9e8", "#f06b72"],
         borderWidth: 0,
       }],
     },
@@ -305,6 +319,8 @@ const applyRange = () => {
 
   const curDaily = filterDaily(report.daily, start, end);
   const prevDaily = filterDaily(report.daily, prevStart, prevEnd);
+  const curCrmRows = filterDaily(report.crm.daily || [], start, end);
+  const curCrm = aggregateCrm(curCrmRows);
   const curGender = filterDaily(report.genderDaily, start, end);
   const prevGender = filterDaily(report.genderDaily, prevStart, prevEnd);
   const curAge = filterDaily(report.ageDaily, start, end);
@@ -344,15 +360,14 @@ const applyRange = () => {
   setDelta("ctr", state.compare ? pctChange(curCtr, prevCtr) : NaN);
   setDelta("avgCpc", state.compare ? pctChange(curCpc, prevCpc) : NaN);
 
-  // CRM stays static (source is CRM sheet, not date-filterable here)
-  const crm = report.crm;
-  bindText("effectiveLeads", formatNumber(crm.effectiveLeads));
-  bindText("qualifiedLeads", formatNumber(crm.qualifiedLeads));
-  bindText("effectiveLeadCost", crm.effectiveLeads ? `${formatCurrency(curTotals.spend / crm.effectiveLeads)} por efetivo` : "Sem efetivos");
-  bindText("qualifiedLeadCost", crm.qualifiedLeads ? `${formatCurrency(curTotals.spend / crm.qualifiedLeads)} por qualificado` : "Sem qualificados");
-  bindText("totalLeads", formatNumber(crm.totalLeads));
-  bindText("cac", crm.sales > 0 ? formatCurrency(curTotals.spend / crm.sales) : "Sem venda");
-  bindText("pageConversion", curTotals.clicks ? formatPercent((crm.totalLeads / curTotals.clicks) * 100) : "--");
+  // CRM is read from the tracking sheet and follows the selected date range.
+  bindText("effectiveLeads", formatNumber(curCrm.effectiveLeads));
+  bindText("qualifiedLeads", formatNumber(curCrm.qualifiedLeads));
+  bindText("effectiveLeadCost", curCrm.effectiveLeads ? `${formatCurrency(curTotals.spend / curCrm.effectiveLeads)} por efetivo` : "Sem efetivos");
+  bindText("qualifiedLeadCost", curCrm.qualifiedLeads ? `${formatCurrency(curTotals.spend / curCrm.qualifiedLeads)} por qualificado` : "Sem qualificados");
+  bindText("totalLeads", formatNumber(curCrm.totalLeads));
+  bindText("cac", curCrm.sales > 0 ? formatCurrency(curTotals.spend / curCrm.sales) : "Sem venda");
+  bindText("pageConversion", curTotals.clicks ? formatPercent((curCrm.totalLeads / curTotals.clicks) * 100) : "--");
 
   // Budget gauge — always uses MTD (month-to-date) regardless of range
   const monthPrefix = new Date().toISOString().slice(0, 7);
@@ -370,7 +385,7 @@ const applyRange = () => {
   buildLineChart(report, curDaily, prevDaily);
   buildGenderChart(report, curGender, prevGender);
   buildAgeChart(report, curAge, prevAge);
-  buildQualityChart(report);
+  buildQualityChart(curCrm);
   renderTable(report.periods);
 };
 
