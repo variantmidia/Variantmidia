@@ -1,5 +1,5 @@
 {
-  "updatedAt": "06/09/2026, 15:48",
+  "updatedAt": "10/09/2026, 09:39",
   "customerId": "2957414935",
   "customerName": "A860. Renato Pretel Advogado",
   "source": "Google Ads API (MCP google_ads_official)",
@@ -20,19 +20,19 @@
   },
   "crm": {
     "source": "Planilha de Rastreio (classificação por data)",
-    "totalLeads": 27,
-    "effectiveLeads": 20,
-    "qualifiedLeads": 7,
+    "totalLeads": 33,
+    "effectiveLeads": 23,
+    "qualifiedLeads": 10,
     "effectiveOnlyLeads": 13,
     "meetingsScheduled": 1,
     "meetingsHeld": 1,
     "sales": 0,
     "daily": [
       { "date": "2026-07-29", "totalLeads": 2, "effectiveOnly": 2, "qualified": 0, "effectiveTotal": 2, "converted": 0 },
-      { "date": "2026-08-01", "totalLeads": 2, "effectiveOnly": 0, "qualified": 2, "effectiveTotal": 2, "converted": 0 },
+      { "date": "2026-08-01", "totalLeads": 4, "effectiveOnly": 0, "qualified": 2, "effectiveTotal": 2, "converted": 0 },
       { "date": "2026-08-02", "totalLeads": 1, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
       { "date": "2026-08-03", "totalLeads": 3, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
-      { "date": "2026-08-04", "totalLeads": 1, "effectiveOnly": 0, "qualified": 1, "effectiveTotal": 1, "converted": 0 },
+      { "date": "2026-08-04", "totalLeads": 2, "effectiveOnly": 0, "qualified": 1, "effectiveTotal": 1, "converted": 0 },
       { "date": "2026-08-06", "totalLeads": 4, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
       { "date": "2026-08-07", "totalLeads": 2, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
       { "date": "2026-08-08", "totalLeads": 1, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
@@ -50,12 +50,13 @@
       { "date": "2026-08-28", "totalLeads": 2, "effectiveOnly": 1, "qualified": 0, "effectiveTotal": 1, "converted": 0 },
       { "date": "2026-08-29", "totalLeads": 2, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
       { "date": "2026-08-30", "totalLeads": 3, "effectiveOnly": 1, "qualified": 1, "effectiveTotal": 2, "converted": 0 },
-      { "date": "2026-09-01", "totalLeads": 1, "effectiveOnly": 0, "qualified": 1, "effectiveTotal": 1, "converted": 0 },
-      { "date": "2026-09-02", "totalLeads": 4, "effectiveOnly": 1, "qualified": 1, "effectiveTotal": 2, "converted": 0 },
-      { "date": "2026-09-03", "totalLeads": 2, "effectiveOnly": 1, "qualified": 0, "effectiveTotal": 1, "converted": 0 },
-      { "date": "2026-09-04", "totalLeads": 1, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
-      { "date": "2026-09-05", "totalLeads": 1, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
-      { "date": "2026-09-06", "totalLeads": 2, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 }
+      { "date": "2026-09-01", "totalLeads": 2, "effectiveOnly": 0, "qualified": 1, "effectiveTotal": 1, "converted": 0 },
+      { "date": "2026-09-02", "totalLeads": 3, "effectiveOnly": 1, "qualified": 1, "effectiveTotal": 2, "converted": 0 },
+      { "date": "2026-09-03", "totalLeads": 1, "effectiveOnly": 1, "qualified": 0, "effectiveTotal": 1, "converted": 0 },
+      { "date": "2026-09-04", "totalLeads": 0, "effectiveOnly": 0, "qualified": 0, "effectiveTotal": 0, "converted": 0 },
+      { "date": "2026-09-05", "totalLeads": 2, "effectiveOnly": 0, "qualified": 1, "effectiveTotal": 1, "converted": 0 },
+      { "date": "2026-09-06", "totalLeads": 2, "effectiveOnly": 0, "qualified": 1, "effectiveTotal": 1, "converted": 0 },
+      { "date": "2026-09-08", "totalLeads": 2, "effectiveOnly": 0, "qualified": 1, "effectiveTotal": 1, "converted": 0 }
     ]
   },
   "genderLabels": {
