@@ -62,10 +62,10 @@ const aggregateCrm = (rows) => rows.reduce((acc, row) => {
   const effectiveOnly = Number(row.effectiveOnly) || 0;
   const qualified = Number(row.qualified) || 0;
   return {
-  totalLeads: acc.totalLeads + effectiveOnly + qualified + qualified,
+  totalLeads: acc.totalLeads + (Number(row.totalLeads) || 0),
   effectiveOnlyLeads: acc.effectiveOnlyLeads + effectiveOnly,
   qualifiedLeads: acc.qualifiedLeads + qualified,
-  effectiveLeads: acc.effectiveLeads + effectiveOnly + qualified,
+  effectiveLeads: acc.effectiveLeads + (Number(row.effectiveTotal) || 0),
   sales: acc.sales + (Number(row.converted) || 0),
   };
 }, {
@@ -434,7 +434,7 @@ const init = async () => {
   state.start = report.defaultRange?.start || addDays(report.dataEnd, -13);
   state.end = report.defaultRange?.end || report.dataEnd;
 
-  bindText("updatedAt", report.updatedAt);
+  showSync(report);
 
   const startInput = document.getElementById("startDate");
   const endInput = document.getElementById("endDate");
@@ -478,7 +478,19 @@ const init = async () => {
   });
 
   applyRange();
+  setInterval(async () => {
+    try {
+      state.report = await loadReport();
+      showSync(state.report);
+      applyRange();
+    } catch { bindText("updatedAt", "Falha de conexao. Nova tentativa automatica em 60 segundos."); }
+  }, 60000);
 };
+
+function showSync(report) {
+  const errors = Object.entries(report.sync || {}).filter(([, value]) => value.status !== "live");
+  bindText("updatedAt", errors.length ? errors.map(([key, value]) => `${key.toUpperCase()}: ${value.message}. Dados antigos.`).join(" | ") : report.updatedAt);
+}
 
 init().catch((error) => {
   document.body.insertAdjacentHTML("afterbegin", `<pre class="load-error">${error.message}</pre>`);
