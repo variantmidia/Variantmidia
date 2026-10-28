@@ -3,6 +3,10 @@ import { join } from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 import { hasValidSession } from "../_auth";
 
+export const maxDuration = 60;
+export const dynamic = "force-dynamic";
+let adsCache: { expires: number; data: Record<string, unknown> } | undefined;
+
 const SHEETS_SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID || "1jw5y9dUV-XUUJEj249p3KBl1rYla2ylGxWqJ4pAfCfA";
 const RASTREIO_TAB = process.env.GOOGLE_SHEETS_RASTREIO_TAB || "Planilha de Rastreio NÂO ALTERAR";
 const CRM_TAB = process.env.GOOGLE_SHEETS_CRM_TAB || "CRM RENATO PRETEL";
@@ -171,6 +175,7 @@ export async function GET(request: NextRequest) {
 }
 
 async function syncAds() {
+  if (adsCache && adsCache.expires > Date.now()) return adsCache.data;
   const clean = (value?: string) => (value || "").trim();
   const response = await fetch("https://oauth2.googleapis.com/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ client_id: clean(process.env.GOOGLE_ADS_CLIENT_ID), client_secret: clean(process.env.GOOGLE_ADS_CLIENT_SECRET), refresh_token: clean(process.env.GOOGLE_ADS_REFRESH_TOKEN), grant_type: "refresh_token" }), cache: "no-store" });
   const auth = await response.json();
@@ -190,5 +195,7 @@ async function syncAds() {
   const daily = (await query("customer")).map(map);
   const genderDaily = (await query("gender_view", "ad_group_criterion.gender.type")).map((r: Record<string, any>) => ({ ...map(r), key: r.adGroupCriterion.gender.type }));
   const ageDaily = (await query("age_range_view", "ad_group_criterion.age_range.type")).map((r: Record<string, any>) => ({ ...map(r), key: r.adGroupCriterion.ageRange.type }));
-  return { daily, genderDaily, ageDaily, adsUpdatedAt: new Date().toISOString() };
+  const data = { daily, genderDaily, ageDaily, adsUpdatedAt: new Date().toISOString() };
+  adsCache = { expires: Date.now() + 60000, data };
+  return data;
 }
