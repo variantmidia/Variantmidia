@@ -181,7 +181,7 @@ async function syncAds() {
   const version = clean(process.env.GOOGLE_ADS_API_VERSION || "v22");
   const query = async (resource: string, dimension = "") => {
     const res = await fetch(`https://googleads.googleapis.com/${version}/customers/${customer}/googleAds:searchStream`, { method: "POST", headers, body: JSON.stringify({ query: `SELECT segments.date, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.conversions${dimension ? `, ${dimension}` : ""} FROM ${resource} WHERE segments.date >= '2026-07-13' AND segments.date <= '${new Date().toISOString().slice(0,10)}' ORDER BY segments.date` }), cache: "no-store" });
-    if (!res.ok) throw new Error(`Google Ads API: ${res.status}`);
+    if (!res.ok) { const detail = await res.json(); throw new Error(`Google Ads API: ${detail.error?.message || res.status}`); }
     const chunks = await res.json();
     return chunks.flatMap((chunk: { results?: Record<string, any>[] }) => chunk.results || []);
   };
