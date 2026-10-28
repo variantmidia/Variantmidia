@@ -178,10 +178,11 @@ async function syncAds() {
   const headers: Record<string, string> = { Authorization: `Bearer ${auth.access_token}`, "developer-token": clean(process.env.GOOGLE_ADS_DEVELOPER_TOKEN), "Content-Type": "application/json" };
   if (process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID) headers["login-customer-id"] = clean(process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID).replace(/-/g, "");
   const customer = clean(process.env.GOOGLE_ADS_CUSTOMER_ID || "2957414935").replace(/-/g, "");
-  const version = clean(process.env.GOOGLE_ADS_API_VERSION || "v22");
+  const configuredVersion = Number(clean(process.env.GOOGLE_ADS_API_VERSION).replace(/^v/, "")) || 26;
+  const version = `v${Math.max(26, configuredVersion)}`;
   const query = async (resource: string, dimension = "") => {
     const res = await fetch(`https://googleads.googleapis.com/${version}/customers/${customer}/googleAds:searchStream`, { method: "POST", headers, body: JSON.stringify({ query: `SELECT segments.date, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.conversions${dimension ? `, ${dimension}` : ""} FROM ${resource} WHERE segments.date >= '2026-07-13' AND segments.date <= '${new Date().toISOString().slice(0,10)}' ORDER BY segments.date` }), cache: "no-store" });
-    if (!res.ok) { const detail = await res.json(); throw new Error(`Google Ads API: ${JSON.stringify(detail).slice(0, 1500)}`); }
+    if (!res.ok) { const detail = await res.json(); const error = detail.error || detail[0]?.error; const reason = error?.details?.[0]?.errors?.[0]; throw new Error(`Google Ads: ${reason?.message || error?.message || res.status}`); }
     const chunks = await res.json();
     return chunks.flatMap((chunk: { results?: Record<string, any>[] }) => chunk.results || []);
   };

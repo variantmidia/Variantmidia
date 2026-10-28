@@ -390,6 +390,12 @@ const applyRange = () => {
   buildAgeChart(report, curAge, prevAge);
   buildQualityChart(curCrm);
   renderTable(report.periods);
+  if (report.sync?.ads?.status === "error") {
+    for (const key of ["spend", "impressions", "clicks", "conversionsAds", "ctr", "avgCpc", "remainingBudget", "effectiveLeadCost", "qualifiedLeadCost", "cac", "pageConversion"]) bindText(key, "Indisponivel");
+  }
+  if (report.sync?.crm?.status === "error") {
+    for (const key of ["totalLeads", "effectiveLeads", "qualifiedLeads", "effectiveLeadCost", "qualifiedLeadCost", "cac", "pageConversion"]) bindText(key, "Indisponivel");
+  }
 };
 
 const applyPreset = (days) => {
