@@ -43,6 +43,7 @@
         <div class="filter-group">
           <button type="button" class="preset-btn" data-preset="today">Hoje</button>
           <button type="button" class="preset-btn" data-preset="work">Todo o período</button>
+          <button type="button" class="preset-btn" data-preset="cycle">Ciclo 17/10 a 17/11</button>
           <button type="button" class="preset-btn" data-days="7">7 dias</button>
           <button type="button" class="preset-btn" data-days="14">14 dias</button>
           <button type="button" class="preset-btn" data-days="30">30 dias</button>
@@ -51,6 +52,12 @@
           <input type="checkbox" id="compareToggle" checked />
           <span>Comparar com período anterior</span>
         </label>
+      </section>
+
+      <section aria-label="Vendas confirmadas" style="padding:16px 0;border-bottom:1px solid #34454e;margin-bottom:20px;line-height:1.6">
+        <strong>Clientes fechados no total: <span data-bind="confirmedTotalClients">--</span></strong>
+        <p>Vendas no ciclo de 17/10 a 17/11/2026: <strong data-bind="confirmedCycleSales">--</strong> (incluidas no total). Ciclo em andamento.</p>
+        <p>Confirmacao do Renato em <span data-bind="salesConfirmedAt">--</span>. IDs dos leads, datas de assinatura e valores pendentes de conciliacao. Vendas confirmadas nao sao somadas novamente aos registros do CRM.</p>
       </section>
 
       <section class="metric-grid" aria-label="Indicadores principais">
@@ -90,7 +97,7 @@
         <article class="metric-card warning">
           <span>CAC</span>
           <strong data-bind="cac">--</strong>
-          <em>Nenhuma venda registrada no período</em>
+          <em data-bind="salesNote">--</em>
         </article>
       </section>
 

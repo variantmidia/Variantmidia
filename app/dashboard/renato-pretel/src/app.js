@@ -370,6 +370,22 @@ const applyRange = () => {
   bindText("qualifiedLeadCost", curCrm.qualifiedLeads ? `${formatCurrency(curTotals.spend / curCrm.qualifiedLeads)} por qualificado` : "Sem qualificados");
   bindText("totalLeads", formatNumber(curCrm.totalLeads));
   bindText("cac", curCrm.sales > 0 ? formatCurrency(curTotals.spend / curCrm.sales) : "Sem venda");
+  bindText("salesNote", `${curCrm.sales} venda(s) identificada(s) no CRM neste periodo`);
+  const confirmation = report.salesConfirmation;
+  if (confirmation) {
+    bindText("confirmedTotalClients", formatNumber(confirmation.totalClients));
+    bindText("confirmedCycleSales", formatNumber(confirmation.cycle.sales));
+    bindText("salesConfirmedAt", isoToBR(confirmation.confirmedAt));
+    const coversConfirmedCycle = start === confirmation.cycle.start && end >= confirmation.confirmedAt && end <= confirmation.cycle.end;
+    if (coversConfirmedCycle) {
+      const sales = Math.max(curCrm.sales, confirmation.cycle.sales);
+      bindText("cac", formatCurrency(curTotals.spend / sales));
+      bindText("salesNote", `CAC estimado: ${sales} vendas confirmadas; datas individuais pendentes`);
+    } else if (!curCrm.sales) {
+      bindText("cac", "A conciliar");
+      bindText("salesNote", "Ha vendas confirmadas no ciclo; faltam datas para atribuir a este filtro");
+    }
+  }
   bindText("pageConversion", curTotals.clicks ? formatPercent((curCrm.totalLeads / curTotals.clicks) * 100) : "--");
 
   // Budget gauge — always uses MTD (month-to-date) regardless of range
@@ -477,6 +493,14 @@ const init = async () => {
       }
       if (btn.dataset.preset === "work") {
         applyWorkPeriod();
+        return;
+      }
+      if (btn.dataset.preset === "cycle" && state.report.salesConfirmation) {
+        state.activePreset = "cycle";
+        state.start = state.report.salesConfirmation.cycle.start;
+        state.end = [todayISO(), state.report.salesConfirmation.cycle.end].sort()[0];
+        syncInputs();
+        applyRange();
         return;
       }
       applyPreset(Number(btn.dataset.days));

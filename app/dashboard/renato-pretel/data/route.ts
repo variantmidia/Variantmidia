@@ -143,6 +143,7 @@ export async function GET(request: NextRequest) {
 
   const json = await readFile(join(process.cwd(), "app", "dashboard", "renato-pretel", "data", "report.json"), "utf8");
   const report = JSON.parse(json) as Record<string, unknown>;
+  report.salesConfirmation = JSON.parse(await readFile(join(process.cwd(), "app", "dashboard", "renato-pretel", "data", "sales-confirmation.json"), "utf8"));
   const sync: Record<string, unknown> = {};
   try {
     const liveCrm = await syncCrmFromSheets();
