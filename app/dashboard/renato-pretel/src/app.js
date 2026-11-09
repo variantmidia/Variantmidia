@@ -94,6 +94,19 @@ const pctChange = (current, previous) => {
   return ((current - previous) / previous) * 100;
 };
 
+const resolveSales = (report, start, end, crmSales) => {
+  const confirmed = report.salesConfirmation;
+  if (!confirmed) return { count: crmSales, source: "CRM" };
+  const firstDate = report.workPeriod?.start || report.dataStart;
+  if (start <= firstDate && end >= confirmed.confirmedAt) {
+    return { count: Math.max(crmSales, confirmed.totalClients), source: "total confirmado pelo Renato" };
+  }
+  if (start === confirmed.cycle.start && end >= confirmed.confirmedAt && end <= confirmed.cycle.end) {
+    return { count: Math.max(crmSales, confirmed.cycle.sales), source: "ciclo confirmado pelo Renato" };
+  }
+  return { count: crmSales, source: "CRM; vendas confirmadas sem datas individuais neste filtro" };
+};
+
 const loadReport = async () => {
   const response = await fetch("/dashboard/renato-pretel/data", { cache: "no-store" });
   if (!response.ok) throw new Error("Não foi possível carregar os dados do relatório");
@@ -376,11 +389,10 @@ const applyRange = () => {
     bindText("confirmedTotalClients", formatNumber(confirmation.totalClients));
     bindText("confirmedCycleSales", formatNumber(confirmation.cycle.sales));
     bindText("salesConfirmedAt", isoToBR(confirmation.confirmedAt));
-    const coversConfirmedCycle = start === confirmation.cycle.start && end >= confirmation.confirmedAt && end <= confirmation.cycle.end;
-    if (coversConfirmedCycle) {
-      const sales = Math.max(curCrm.sales, confirmation.cycle.sales);
-      bindText("cac", formatCurrency(curTotals.spend / sales));
-      bindText("salesNote", `CAC estimado: ${sales} vendas confirmadas; datas individuais pendentes`);
+    const sales = resolveSales(report, start, end, curCrm.sales);
+    if (sales.count > 0) {
+      bindText("cac", formatCurrency(curTotals.spend / sales.count));
+      bindText("salesNote", `Investimento do filtro / ${sales.count} clientes (${sales.source})`);
     } else if (!curCrm.sales) {
       bindText("cac", "A conciliar");
       bindText("salesNote", "Ha vendas confirmadas no ciclo; faltam datas para atribuir a este filtro");
