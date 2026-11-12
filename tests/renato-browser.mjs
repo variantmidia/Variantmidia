@@ -17,9 +17,12 @@ try {
   await page.locator('[data-preset="work"]').click();
   let spend = report.daily.reduce((a, r) => a + r.spend, 0);
   assert.equal(await page.locator('[data-bind="cac"]').textContent(), currency(spend / 8));
+  assert.equal(await page.locator('[data-bind="sales"]').textContent(), '8');
   await page.locator('[data-preset="cycle"]').click();
   spend = report.daily.filter(r => r.date >= '2026-10-17' && r.date <= report.dataEnd).reduce((a, r) => a + r.spend, 0);
   assert.equal(await page.locator('[data-bind="cac"]').textContent(), currency(spend / 2));
+  assert.equal(await page.locator('[data-bind="sales"]').textContent(), '2');
+  assert.equal(await page.locator('[data-bind="estimatedCycleRevenue"]').textContent(), currency(6000));
   await page.locator('[data-days="14"]').click();
   await page.waitForTimeout(1000);
   await mkdir('artifacts', { recursive: true });

@@ -388,6 +388,8 @@ const applyRange = () => {
   bindText("qualifiedLeadCost", curCrm.qualifiedLeads ? `${formatCurrency(curTotals.spend / curCrm.qualifiedLeads)} por qualificado` : "Sem qualificados");
   bindText("totalLeads", formatNumber(curCrm.totalLeads));
   bindText("cac", curCrm.sales > 0 ? formatCurrency(curTotals.spend / curCrm.sales) : "Sem venda");
+  bindText("sales", formatNumber(curCrm.sales));
+  bindText("funnelSalesNote", "Vendas identificadas por data no CRM.");
   bindText("salesNote", `${curCrm.sales} venda(s) identificada(s) no CRM neste periodo`);
   const confirmation = report.salesConfirmation;
   if (confirmation) {
@@ -397,6 +399,8 @@ const applyRange = () => {
     bindText("estimatedCycleRevenue", formatCurrency(confirmation.cycle.sales * confirmation.cycle.estimatedFeePerClient));
     bindText("salesConfirmedAt", isoToBR(confirmation.confirmedAt));
     const sales = resolveSales(report, start, end, curCrm.sales);
+    bindText("sales", sales.count ? formatNumber(sales.count) : "A conciliar");
+    bindText("funnelSalesNote", sales.count ? `${sales.count} vendas: ${sales.source}. Honorarios estimados, recebimento nao confirmado.` : "As 2 vendas do ciclo ainda nao possuem datas individuais para atribuir a este filtro.");
     if (sales.count > 0) {
       bindText("cac", formatCurrency(curTotals.spend / sales.count));
       bindText("salesNote", `${formatCurrency(curTotals.spend)} / ${sales.count} clientes (${sales.source})`);
@@ -429,7 +433,7 @@ const applyRange = () => {
     for (const key of ["spend", "impressions", "clicks", "conversionsAds", "ctr", "avgCpc", "remainingBudget", "effectiveLeadCost", "qualifiedLeadCost", "cac", "pageConversion"]) bindText(key, "Indisponivel");
   }
   if (report.sync?.crm?.status === "error") {
-    for (const key of ["totalLeads", "effectiveLeads", "qualifiedLeads", "effectiveLeadCost", "qualifiedLeadCost", "cac", "pageConversion"]) bindText(key, "Indisponivel");
+    for (const key of ["totalLeads", "effectiveLeads", "qualifiedLeads", "effectiveLeadCost", "qualifiedLeadCost", "cac", "pageConversion", "sales"]) bindText(key, "Indisponivel");
   }
 };
 
