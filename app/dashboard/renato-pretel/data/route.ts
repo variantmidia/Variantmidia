@@ -166,6 +166,10 @@ export async function GET(request: NextRequest) {
   const end = new Date(`${report.dataEnd}T12:00:00Z`);
   end.setUTCDate(end.getUTCDate() - 13);
   report.defaultRange = { start: end.toISOString().slice(0, 10), end: report.dataEnd };
+  const confirmation = report.salesConfirmation as { cycle: { start: string; end: string } };
+  if (String(report.dataEnd) >= confirmation.cycle.start && String(report.dataEnd) <= confirmation.cycle.end) {
+    report.defaultRange = { start: confirmation.cycle.start, end: report.dataEnd };
+  }
 
   return new NextResponse(JSON.stringify(report), {
     headers: {

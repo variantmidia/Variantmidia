@@ -5,7 +5,9 @@
   "cycle": {
     "start": "2026-10-17",
     "end": "2026-11-17",
-    "sales": 2
+    "sales": 2,
+    "estimatedFeePerClient": 3000,
+    "revenueStatus": "Honorarios estimados / propostas; recebimento nao confirmado"
   },
   "note": "As 2 vendas do ciclo estao incluidas nos 8 clientes totais. IDs, datas de assinatura e valores ainda pendentes de conciliacao. Nao somar aos convertidos do CRM nem enviar automaticamente ao Google Ads."
 }

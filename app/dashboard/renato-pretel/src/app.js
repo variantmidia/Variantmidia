@@ -393,11 +393,13 @@ const applyRange = () => {
   if (confirmation) {
     bindText("confirmedTotalClients", formatNumber(confirmation.totalClients));
     bindText("confirmedCycleSales", formatNumber(confirmation.cycle.sales));
+    bindText("estimatedFeePerClient", formatCurrency(confirmation.cycle.estimatedFeePerClient));
+    bindText("estimatedCycleRevenue", formatCurrency(confirmation.cycle.sales * confirmation.cycle.estimatedFeePerClient));
     bindText("salesConfirmedAt", isoToBR(confirmation.confirmedAt));
     const sales = resolveSales(report, start, end, curCrm.sales);
     if (sales.count > 0) {
       bindText("cac", formatCurrency(curTotals.spend / sales.count));
-      bindText("salesNote", `Investimento do filtro / ${sales.count} clientes (${sales.source})`);
+      bindText("salesNote", `${formatCurrency(curTotals.spend)} / ${sales.count} clientes (${sales.source})`);
     } else if (!curCrm.sales) {
       bindText("cac", "A conciliar");
       bindText("salesNote", "Ha vendas confirmadas no ciclo; faltam datas para atribuir a este filtro");
@@ -477,6 +479,7 @@ const init = async () => {
   state.activePreset = null;
   state.start = report.defaultRange?.start || addDays(report.dataEnd, -13);
   state.end = report.defaultRange?.end || report.dataEnd;
+  if (report.salesConfirmation && state.start === report.salesConfirmation.cycle.start) state.activePreset = "cycle";
 
   showSync(report);
 
@@ -530,6 +533,7 @@ const init = async () => {
   });
 
   applyRange();
+  syncInputs();
   setInterval(async () => {
     try {
       state.report = await loadReport();
