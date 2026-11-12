@@ -135,7 +135,7 @@ const buildLineChart = (report, rows, prevRows) => {
     {
       label: "Investimento",
       data: rows.map((r) => r.spend),
-      borderColor: "#21c568",
+      borderColor: "#16aebf",
       backgroundColor: "rgba(33, 197, 104, 0.12)",
       tension: 0.35,
       yAxisID: "money",
@@ -143,7 +143,7 @@ const buildLineChart = (report, rows, prevRows) => {
     {
       label: "Conversões (Ads)",
       data: rows.map((r) => r.conversions),
-      borderColor: "#20a9e8",
+      borderColor: "#344e59",
       backgroundColor: "rgba(32, 169, 232, 0.12)",
       tension: 0.35,
       yAxisID: "count",
@@ -179,7 +179,7 @@ const buildLineChart = (report, rows, prevRows) => {
       maintainAspectRatio: false,
       interaction: { mode: "index", intersect: false },
       plugins: {
-        legend: { labels: { color: "#cfe2ea" } },
+        legend: { labels: { color: "#5e727b", boxWidth: 12, font: { size: 10 } } },
         tooltip: {
           callbacks: {
             title: (items) => {
@@ -210,13 +210,13 @@ const buildGenderChart = (report, currentRows, prevRows) => {
 
   const prevAgg = aggregateByKey(prevRows, "key");
   state.charts.genderChart = new Chart(document.getElementById("genderChart"), {
-    type: "pie",
-    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderColor: "#101315", borderWidth: 2 }] },
+    type: "doughnut",
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderColor: "#ffffff", borderWidth: 3 }] },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: "bottom", labels: { color: "#cfe2ea", boxWidth: 12 } },
+        legend: { position: "bottom", labels: { color: "#5e727b", boxWidth: 10, font: { size: 10 } } },
         tooltip: {
           callbacks: {
             label: (item) => {
@@ -258,7 +258,7 @@ const buildAgeChart = (report, currentRows, prevRows) => {
     datasets.push({
       label: "Período anterior",
       data: previous,
-      backgroundColor: "rgba(255,255,255,0.18)",
+      backgroundColor: "#dce6e9",
       borderWidth: 0,
       borderRadius: 6,
     });
@@ -270,7 +270,7 @@ const buildAgeChart = (report, currentRows, prevRows) => {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { display: state.compare, labels: { color: "#cfe2ea", boxWidth: 12 } },
+        legend: { display: state.compare, labels: { color: "#5e727b", boxWidth: 12 } },
         tooltip: {
           callbacks: {
             label: (item) => `${item.dataset.label}: ${item.parsed.y} conv.`,
@@ -295,10 +295,10 @@ const buildQualityChart = (crm) => {
   state.charts.qualityChart = new Chart(document.getElementById("qualityChart"), {
     type: "doughnut",
     data: {
-      labels: ["Efetivos (inclui qualificados)", "Qualificados (subconjunto)", "Não contabilizados"],
+      labels: ["Efetivos ainda nao qualificados", "Qualificados", "Nao efetivos / sem classificacao"],
       datasets: [{
-        data: [effectiveLeads, qualifiedLeads, 0],
-        backgroundColor: ["#20a9e8", "#21c568", "#8a95a1"],
+        data: [Math.max(0, effectiveLeads - qualifiedLeads), qualifiedLeads, Math.max(0, crm.totalLeads - effectiveLeads)],
+        backgroundColor: ["#16d4e8", "#187e8b", "#e1e9eb"],
         borderWidth: 0,
       }],
     },
@@ -306,7 +306,7 @@ const buildQualityChart = (crm) => {
       responsive: true,
       maintainAspectRatio: false,
       cutout: "62%",
-      plugins: { legend: { position: "bottom", labels: { color: "#cfe2ea", boxWidth: 10 } } },
+      plugins: { legend: { position: "bottom", labels: { color: "#5e727b", boxWidth: 10, font: { size: 9 } } } },
     },
   });
 };
@@ -366,6 +366,11 @@ const applyRange = () => {
   bindText("impressions", formatNumber(curTotals.impressions));
   bindText("clicks", formatNumber(curTotals.clicks));
   bindText("conversionsAds", formatNumber(curTotals.conversions));
+  const pageViews = report.pageViews;
+  const pageViewsAvailable = pageViews?.status === "live" && report.sync?.ads?.status === "live";
+  bindText("pageViews", pageViewsAvailable ? formatNumber(sumMetric(filterDaily(pageViews.daily, start, end), "events")) : "Indisponivel");
+  bindText("pageViewsNote", pageViewsAvailable ? `${pageViews.actionName} / Todas as conversoes` : pageViews?.message || "Fonte ainda nao conectada");
+  bindText("measurementNote", pageViewsAvailable ? "Page Views: eventos atribuidos pelo Google Ads na data do clique. Nao sao visitas unicas nem prova de perda de carregamento." : "Page Views indisponiveis. Cliques, registros de lead e efetivos continuam separados; nao estimamos visitas.");
   bindText("ctr", formatPercent(curCtr));
   bindText("avgCpc", formatCurrency(curCpc));
 
@@ -462,6 +467,11 @@ const syncInputs = () => {
 };
 
 const init = async () => {
+  if (typeof Chart !== "undefined") {
+    Chart.defaults.color = "#627780";
+    Chart.defaults.borderColor = "#e9eff0";
+    Chart.defaults.font.family = "DM Sans, sans-serif";
+  }
   const report = await loadReport();
   state.report = report;
   state.activePreset = null;
@@ -532,6 +542,7 @@ const init = async () => {
 function showSync(report) {
   const errors = Object.entries(report.sync || {}).filter(([, value]) => value.status !== "live");
   bindText("updatedAt", errors.length ? errors.map(([key, value]) => `${key.toUpperCase()}: ${value.message}. Dados antigos.`).join(" | ") : report.updatedAt);
+  bindText("connectionStatus", errors.length ? "Conexao parcial" : "Dados ao vivo");
 }
 
 init().catch((error) => {

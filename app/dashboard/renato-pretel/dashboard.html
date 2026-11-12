@@ -9,21 +9,25 @@
   </head>
   <body>
     <aside class="sidebar" aria-label="Navegação do relatório">
-      <div class="brand-mark">V</div>
+      <a class="brand-mark" href="#visao" aria-label="Variantmidia"><img src="/logos/horizontal-light.svg" alt="Variantmidia" /></a>
+      <div class="workspace"><span class="avatar">RP</span><div><strong>Renato Pretel</strong><small>Advocacia trabalhista</small></div></div>
+      <p class="nav-label">ACOMPANHAMENTO</p>
       <nav>
-        <a class="nav-item active" href="#visao">Visão geral</a>
-        <a class="nav-item" href="#funil">Funil</a>
-        <a class="nav-item" href="#publico">Público</a>
-        <a class="nav-item" href="#campanha">Campanha</a>
+        <a class="nav-item active" href="#visao"><i data-lucide="layout-dashboard"></i>Visão geral</a>
+        <a class="nav-item" href="#funil"><i data-lucide="filter"></i>Funil de aquisição</a>
+        <a class="nav-item" href="#publico"><i data-lucide="users"></i>Público</a>
+        <a class="nav-item" href="#campanha"><i data-lucide="chart-no-axes-combined"></i>Campanha</a>
       </nav>
+      <div class="sidebar-footer"><span class="live-dot"></span>Conectado ao Google Ads e CRM<small>Variantmidia / Performance jurídica</small></div>
     </aside>
 
     <main class="dashboard-shell">
+      <div class="topbar"><span>Área do cliente <b>/</b> Relatório de performance</span><span class="connection-status" data-bind="connectionStatus">Conectando</span></div>
       <header class="hero" id="visao">
         <div class="hero-copy-block">
-          <p class="eyebrow">Google Ads | Direito Trabalhista</p>
+          <p class="eyebrow">PERFORMANCE / GOOGLE ADS</p>
           <h1>Renato Pretel Advocacia</h1>
-          <p class="hero-copy">Relatório executivo de progresso, leads e qualidade comercial.</p>
+          <p class="hero-copy">Aquisição, qualidade e resultados comerciais.</p>
         </div>
         <div class="hero-status">
           <span>Período analisado</span>
@@ -54,7 +58,7 @@
         </label>
       </section>
 
-      <section aria-label="Vendas confirmadas" style="padding:16px 0;border-bottom:1px solid #34454e;margin-bottom:20px;line-height:1.6">
+      <section class="sales-summary" aria-label="Vendas confirmadas">
         <strong>Clientes fechados no total: <span data-bind="confirmedTotalClients">--</span></strong>
         <p>Vendas no ciclo de 17/10 a 17/11/2026: <strong data-bind="confirmedCycleSales">--</strong> (incluidas no total). Ciclo em andamento.</p>
         <p>Confirmacao do Renato em <span data-bind="salesConfirmedAt">--</span>. IDs dos leads, datas de assinatura e valores pendentes de conciliacao. Vendas confirmadas nao sao somadas novamente aos registros do CRM.</p>
@@ -99,6 +103,11 @@
           <strong data-bind="cac">--</strong>
           <em data-bind="salesNote">--</em>
         </article>
+        <article class="metric-card pageview-card">
+          <span>Page Views rastreados <i data-lucide="scan-eye"></i></span>
+          <strong data-bind="pageViews">--</strong>
+          <em data-bind="pageViewsNote">Google Ads / ação secundária</em>
+        </article>
       </section>
 
       <section class="content-grid">
@@ -110,10 +119,12 @@
           <div class="funnel">
             <div class="funnel-step step-1"><span>Impressões</span><strong data-bind="impressions">--</strong></div>
             <div class="funnel-step step-2"><span>Cliques</span><strong data-bind="clicks">--</strong></div>
+            <div class="funnel-step pageview-step"><span>Page Views (eventos)</span><strong data-bind="pageViews">--</strong></div>
             <div class="funnel-step step-3"><span>Leads</span><strong data-bind="totalLeads">--</strong></div>
             <div class="funnel-step step-4"><span>Efetivos</span><strong data-bind="effectiveLeads">--</strong></div>
             <div class="funnel-step step-5"><span>Qualificados</span><strong data-bind="qualifiedLeads">--</strong></div>
           </div>
+          <p class="measurement-note" data-bind="measurementNote">Page Views são eventos rastreados, não visitantes únicos.</p>
           <div class="mini-metrics">
             <div>
               <span>CTR</span><strong data-bind="ctr">--</strong>
@@ -134,7 +145,7 @@
             <p>Evolução diária</p>
             <span>Investimento e conversões (linha tracejada = período anterior)</span>
           </div>
-          <canvas id="dailyTrend" height="210"></canvas>
+          <div class="chart-area trend-chart"><canvas id="dailyTrend" height="210"></canvas></div>
         </article>
 
         <article class="panel" id="publico">
@@ -142,7 +153,7 @@
             <p>Conversões por gênero</p>
             <span>Fonte: Google Ads API</span>
           </div>
-          <canvas id="genderChart" height="220"></canvas>
+          <div class="chart-area"><canvas id="genderChart" height="220"></canvas></div>
         </article>
 
         <article class="panel">
@@ -150,7 +161,7 @@
             <p>Conversões por idade</p>
             <span>Fonte: Google Ads API</span>
           </div>
-          <canvas id="ageChart" height="220"></canvas>
+          <div class="chart-area"><canvas id="ageChart" height="220"></canvas></div>
         </article>
 
         <article class="panel">
@@ -158,7 +169,7 @@
             <p>Qualidade dos leads</p>
             <span>Rastreio offline e CRM</span>
           </div>
-          <canvas id="qualityChart" height="220"></canvas>
+          <div class="chart-area"><canvas id="qualityChart" height="220"></canvas></div>
         </article>
       </section>
 
@@ -186,6 +197,8 @@
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+    <script>if(window.lucide) lucide.createIcons();</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
     <script type="module" src="/dashboard/renato-pretel/src/app.js"></script>
   </body>

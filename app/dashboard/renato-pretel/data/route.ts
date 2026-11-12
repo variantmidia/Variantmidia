@@ -186,17 +186,29 @@ async function syncAds() {
   const customer = clean(process.env.GOOGLE_ADS_CUSTOMER_ID || "2957414935").replace(/-/g, "");
   const configuredVersion = Number(clean(process.env.GOOGLE_ADS_API_VERSION).replace(/^v/, "")) || 26;
   const version = `v${Math.max(26, configuredVersion)}`;
-  const query = async (resource: string, dimension = "") => {
-    const res = await fetch(`https://googleads.googleapis.com/${version}/customers/${customer}/googleAds:searchStream`, { method: "POST", headers, body: JSON.stringify({ query: `SELECT segments.date, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.conversions${dimension ? `, ${dimension}` : ""} FROM ${resource} WHERE segments.date >= '2026-07-13' AND segments.date <= '${new Date().toISOString().slice(0,10)}' ORDER BY segments.date` }), cache: "no-store" });
+  const search = async (gaql: string) => {
+    const res = await fetch(`https://googleads.googleapis.com/${version}/customers/${customer}/googleAds:searchStream`, { method: "POST", headers, body: JSON.stringify({ query: gaql }), cache: "no-store" });
     if (!res.ok) { const detail = await res.json(); const error = detail.error || detail[0]?.error; const reason = error?.details?.[0]?.errors?.[0]; throw new Error(`Google Ads: ${reason?.message || error?.message || res.status}`); }
     const chunks = await res.json();
     return chunks.flatMap((chunk: { results?: Record<string, any>[] }) => chunk.results || []);
   };
+  const query = (resource: string, dimension = "") => search(`SELECT segments.date, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.conversions${dimension ? `, ${dimension}` : ""} FROM ${resource} WHERE segments.date >= '2026-07-13' AND segments.date <= '${new Date().toISOString().slice(0,10)}' ORDER BY segments.date`);
   const map = (r: Record<string, any>) => ({ date: r.segments.date, label: r.segments.date.slice(5).split("-").reverse().join("/"), impressions: Number(r.metrics.impressions || 0), clicks: Number(r.metrics.clicks || 0), spend: Number(r.metrics.costMicros || 0) / 1e6, conversions: Number(r.metrics.conversions || 0) });
   const daily = (await query("customer")).map(map);
   const genderDaily = (await query("gender_view", "ad_group_criterion.gender.type")).map((r: Record<string, any>) => ({ ...map(r), key: r.adGroupCriterion.gender.type }));
   const ageDaily = (await query("age_range_view", "ad_group_criterion.age_range.type")).map((r: Record<string, any>) => ({ ...map(r), key: r.adGroupCriterion.ageRange.type }));
-  const data = { daily, genderDaily, ageDaily, adsUpdatedAt: new Date().toISOString() };
+  let pageViews: Record<string, unknown>;
+  try {
+    const actions = (await search("SELECT conversion_action.resource_name, conversion_action.name, conversion_action.category, conversion_action.counting_type, conversion_action.primary_for_goal FROM conversion_action WHERE conversion_action.status = 'ENABLED'"))
+      .map((r: Record<string, any>) => r.conversionAction)
+      .filter((a: Record<string, any>) => a.category === "PAGE_VIEW" || /page[ _-]?view|visualiza.*p[aá]gina/i.test(a.name));
+    if (actions.length === 1) {
+      const action = actions[0];
+      const rows = await search(`SELECT segments.date, metrics.all_conversions FROM customer WHERE segments.conversion_action = '${action.resourceName}' AND segments.date >= '2026-07-13' AND segments.date <= '${new Date().toISOString().slice(0,10)}' ORDER BY segments.date`);
+      pageViews = { status: "live", actionName: action.name, countingType: action.countingType, primary: action.primaryForGoal, source: "Google Ads / Todas as conversoes / data do clique", daily: rows.map((r: Record<string, any>) => ({ date: r.segments.date, events: Number(r.metrics.allConversions || 0) })) };
+    } else pageViews = { status: "unavailable", message: actions.length ? "Mais de uma acao de Page View: selecionar a fonte para evitar duplicidade." : "Nenhuma acao de Page View ativa encontrada.", actions: actions.map((a: Record<string, any>) => a.name), daily: [] };
+  } catch { pageViews = { status: "unavailable", message: "Consulta de Page View indisponivel; demais metricas preservadas.", daily: [] }; }
+  const data = { daily, genderDaily, ageDaily, pageViews, adsUpdatedAt: new Date().toISOString() };
   adsCache = { expires: Date.now() + 60000, data };
   return data;
 }
