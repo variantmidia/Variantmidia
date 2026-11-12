@@ -204,7 +204,7 @@ async function syncAds() {
       .filter((a: Record<string, any>) => a.category === "PAGE_VIEW" || /page[ _-]?view|visualiza.*p[aá]gina/i.test(a.name));
     if (actions.length === 1) {
       const action = actions[0];
-      const rows = await search(`SELECT segments.date, metrics.all_conversions FROM customer WHERE segments.conversion_action = '${action.resourceName}' AND segments.date >= '2026-07-13' AND segments.date <= '${new Date().toISOString().slice(0,10)}' ORDER BY segments.date`);
+      const rows = await search(`SELECT segments.date, segments.conversion_action, metrics.all_conversions FROM customer WHERE segments.conversion_action = '${action.resourceName}' AND segments.date >= '2026-07-13' AND segments.date <= '${new Date().toISOString().slice(0,10)}' ORDER BY segments.date`);
       pageViews = { status: "live", actionName: action.name, countingType: action.countingType, primary: action.primaryForGoal, source: "Google Ads / Todas as conversoes / data do clique", daily: rows.map((r: Record<string, any>) => ({ date: r.segments.date, events: Number(r.metrics.allConversions || 0) })) };
     } else pageViews = { status: "unavailable", message: actions.length ? "Mais de uma acao de Page View: selecionar a fonte para evitar duplicidade." : "Nenhuma acao de Page View ativa encontrada.", actions: actions.map((a: Record<string, any>) => a.name), daily: [] };
   } catch (error) { pageViews = { status: "unavailable", message: error instanceof Error ? error.message : "Consulta de Page View indisponivel; demais metricas preservadas.", daily: [] }; }
