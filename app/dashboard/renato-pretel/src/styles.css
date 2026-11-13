@@ -20,4 +20,6 @@
 @media(max-width:700px){.budget-card .gauge-value{font-size:23px}.budget-detail{font-size:8px}.metric-card strong{font-size:21px}}
 .conversion-summary{display:flex;align-items:center;gap:28px;padding:16px 0;border-bottom:1px solid var(--line);margin-top:8px}.conversion-summary>div{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;min-width:320px}.conversion-summary span,.funnel-conversion span{font-size:11px;font-weight:600}.conversion-summary strong{font-size:24px;color:#087582}.conversion-summary small{font-size:10px;color:var(--muted)}.conversion-summary p{margin:0;font-size:10px;line-height:1.6;color:var(--muted)}.funnel-conversion{display:flex;justify-content:space-between;align-items:center;border-block:1px solid var(--line);padding:12px 0;margin-top:12px;gap:8px}.funnel-conversion strong{font-size:19px;color:#087582}
 @media(max-width:700px){.conversion-summary{display:block}.conversion-summary>div{min-width:0}.conversion-summary p{margin-top:8px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.gauge-fill{transition:stroke .3s ease,stroke-dashoffset .3s ease}
+@media(max-width:700px){.budget-card .gauge{height:76px;margin-top:6px;flex-shrink:0}.budget-card .gauge svg{display:block;position:absolute;right:0;top:0;width:56px;height:34px}.budget-card .gauge-value{padding-top:35px;font-size:21px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.gauge-fill{transition:none}}

@@ -95,6 +95,7 @@ const pctChange = (current, previous) => {
 };
 
 const qualifiedSalesRate = (sales, qualified) => qualified > 0 && Number.isFinite(sales) && sales >= 0 ? (sales / qualified) * 100 : null;
+const budgetColor = ratio => ratio >= 0.8 ? "#d94141" : ratio >= 0.5 ? "#e4ae20" : "#169fc7";
 
 const resolveSales = (report, start, end, crmSales) => {
   const confirmed = report.salesConfirmation;
@@ -445,6 +446,7 @@ const applyRange = () => {
   const gauge = document.querySelector("[data-gauge]");
   if (gauge) {
     gauge.style.strokeDashoffset = String(220 - budget.usedRatio * 220);
+    gauge.style.stroke = budgetColor(budget.usedRatio);
     gauge.setAttribute("aria-label", `${formatPercent(budget.usedRatio * 100)} do orcamento utilizado`);
   }
 
@@ -455,7 +457,7 @@ const applyRange = () => {
   renderTable(report.periods);
   if (report.sync?.ads?.status === "error") {
     for (const key of ["spend", "impressions", "clicks", "conversionsAds", "ctr", "avgCpc", "remainingBudget", "effectiveLeadCost", "qualifiedLeadCost", "costPerEffectiveLead", "costPerQualifiedLead", "budgetUsage", "cac", "pageConversion"]) bindText(key, "Indisponivel");
-    if (gauge) gauge.style.strokeDashoffset = "220";
+    if (gauge) { gauge.style.strokeDashoffset = "220"; gauge.style.stroke = "#a3afb3"; }
   }
   if (report.sync?.crm?.status === "error") {
     for (const key of ["totalLeads", "effectiveLeads", "qualifiedLeads", "effectiveLeadCost", "qualifiedLeadCost", "costPerEffectiveLead", "costPerQualifiedLead", "effectiveCostBasis", "qualifiedCostBasis", "cac", "pageConversion", "sales", "qualifiedSalesRate", "qualifiedSalesBasis"]) bindText(key, "Indisponivel");

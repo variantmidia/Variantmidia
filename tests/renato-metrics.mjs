@@ -4,7 +4,7 @@ import vm from 'node:vm';
 
 const source = readFileSync('app/dashboard/renato-pretel/src/app.js', 'utf8').split('init().catch')[0];
 const context = vm.createContext({ Intl, Date });
-vm.runInContext(source + '\nglobalThis.aggregate = aggregateCrm; globalThis.resolveSales = resolveSales; globalThis.resolveBudget = resolveBudget; globalThis.rate = qualifiedSalesRate;', context);
+vm.runInContext(source + '\nglobalThis.aggregate = aggregateCrm; globalThis.resolveSales = resolveSales; globalThis.resolveBudget = resolveBudget; globalThis.rate = qualifiedSalesRate; globalThis.budgetColor = budgetColor;', context);
 const result = context.aggregate([
   { totalLeads: 10, effectiveTotal: 6, effectiveOnly: 4, qualified: 2, converted: 1 },
   { totalLeads: 4, effectiveTotal: 3, effectiveOnly: 2, qualified: 1, converted: 0 },
@@ -47,3 +47,8 @@ assert.equal(context.rate(0, 13), 0);
 assert.equal(context.rate(2, 0), null);
 assert.equal(context.rate(null, 13), null);
 console.log('Qualified-to-sale rate: 2/13 = 15.38%; missing denominator or sales is not zero');
+assert.equal(context.budgetColor(0), '#169fc7');
+assert.equal(context.budgetColor(0.49), '#169fc7');
+assert.equal(context.budgetColor(0.5), '#e4ae20');
+assert.equal(context.budgetColor(0.8), '#d94141');
+assert.equal(context.budgetColor(1), '#d94141');

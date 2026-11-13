@@ -33,6 +33,8 @@ try {
   assert.equal(await page.locator('[data-bind="costPerEffectiveLead"]').textContent(), currency(spend / effective));
   assert.equal(await page.locator('[data-bind="costPerQualifiedLead"]').textContent(), currency(spend / qualified));
   assert.ok(Math.abs(Number(await page.locator('[data-gauge]').evaluate(el => el.style.strokeDashoffset)) - (220 - Math.min(1, spend / report.budget.monthly) * 220)) < 0.001);
+  const ratio = spend / report.budget.monthly;
+  assert.equal(await page.locator('[data-gauge]').evaluate(el => el.style.stroke), ratio >= 0.8 ? 'rgb(217, 65, 65)' : ratio >= 0.5 ? 'rgb(228, 174, 32)' : 'rgb(22, 159, 199)');
   await page.locator('[data-days="14"]').click();
   assert.equal(await page.locator('[data-bind="remainingBudget"]').textContent(), remaining);
   await page.waitForTimeout(1000);
