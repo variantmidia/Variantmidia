@@ -107,6 +107,18 @@ const resolveSales = (report, start, end, crmSales) => {
   return { count: crmSales, source: "CRM; vendas confirmadas sem datas individuais neste filtro" };
 };
 
+const resolveBudget = (report, today) => {
+  const anchorDay = Number(report.salesConfirmation?.cycle.start.slice(8, 10)) || 1;
+  const date = new Date(`${today}T12:00:00Z`);
+  const startDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() - (date.getUTCDate() < anchorDay ? 1 : 0), anchorDay, 12));
+  const nextDate = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth() + 1, anchorDay, 12));
+  const start = startDate.toISOString().slice(0, 10);
+  const next = nextDate.toISOString().slice(0, 10);
+  const amount = Number(report.budget.monthly) || 0;
+  const spent = sumMetric(report.daily.filter(r => r.date >= start && r.date < next && r.date <= today), "spend");
+  return { start, next, amount, spent, remaining: Math.max(0, amount - spent), usedRatio: amount > 0 ? Math.max(0, Math.min(1, spent / amount)) : 0 };
+};
+
 const loadReport = async () => {
   const response = await fetch("/dashboard/renato-pretel/data", { cache: "no-store" });
   if (!response.ok) throw new Error("Não foi possível carregar os dados do relatório");
@@ -386,6 +398,10 @@ const applyRange = () => {
   bindText("qualifiedLeads", formatNumber(curCrm.qualifiedLeads));
   bindText("effectiveLeadCost", curCrm.effectiveLeads ? `${formatCurrency(curTotals.spend / curCrm.effectiveLeads)} por efetivo` : "Sem efetivos");
   bindText("qualifiedLeadCost", curCrm.qualifiedLeads ? `${formatCurrency(curTotals.spend / curCrm.qualifiedLeads)} por qualificado` : "Sem qualificados");
+  bindText("costPerEffectiveLead", curCrm.effectiveLeads ? formatCurrency(curTotals.spend / curCrm.effectiveLeads) : "Sem efetivos");
+  bindText("costPerQualifiedLead", curCrm.qualifiedLeads ? formatCurrency(curTotals.spend / curCrm.qualifiedLeads) : "Sem qualificados");
+  bindText("effectiveCostBasis", `${formatNumber(curCrm.effectiveLeads)} efetivos no periodo / CRM`);
+  bindText("qualifiedCostBasis", `${formatNumber(curCrm.qualifiedLeads)} qualificados no periodo / CRM`);
   bindText("totalLeads", formatNumber(curCrm.totalLeads));
   bindText("cac", curCrm.sales > 0 ? formatCurrency(curTotals.spend / curCrm.sales) : "Sem venda");
   bindText("sales", formatNumber(curCrm.sales));
@@ -411,17 +427,17 @@ const applyRange = () => {
   }
   bindText("pageConversion", curTotals.clicks ? formatPercent((curCrm.totalLeads / curTotals.clicks) * 100) : "--");
 
-  // Budget gauge — always uses MTD (month-to-date) regardless of range
-  const monthPrefix = new Date().toISOString().slice(0, 7);
-  const mtdSpend = sumMetric(report.daily.filter((r) => r.date.startsWith(monthPrefix)), "spend");
-  const remaining = Math.max(0, report.budget.monthly - mtdSpend);
-  bindText("remainingBudget", formatCurrency(remaining));
-  bindText("monthlyBudget", formatCurrency(report.budget.monthly));
+  // Budget belongs to the billing cycle, independently of the analysis filter.
+  const budget = resolveBudget(report, todayISO());
+  bindText("remainingBudget", formatCurrency(budget.remaining));
+  bindText("monthlyBudget", formatCurrency(budget.amount));
+  bindText("budgetCycle", `Ciclo ${isoToBR(budget.start)} a ${isoToBR(budget.next)}`);
+  bindText("budgetUsage", `${formatPercent(budget.usedRatio * 100)} utilizado / ${formatCurrency(budget.spent)}`);
   bindText("spendNote", report.budget.note);
   const gauge = document.querySelector("[data-gauge]");
   if (gauge) {
-    const ratio = Math.max(0, Math.min(1, remaining / report.budget.monthly));
-    gauge.style.strokeDashoffset = String(220 - ratio * 220);
+    gauge.style.strokeDashoffset = String(220 - budget.usedRatio * 220);
+    gauge.setAttribute("aria-label", `${formatPercent(budget.usedRatio * 100)} do orcamento utilizado`);
   }
 
   buildLineChart(report, curDaily, prevDaily);
@@ -430,10 +446,11 @@ const applyRange = () => {
   buildQualityChart(curCrm);
   renderTable(report.periods);
   if (report.sync?.ads?.status === "error") {
-    for (const key of ["spend", "impressions", "clicks", "conversionsAds", "ctr", "avgCpc", "remainingBudget", "effectiveLeadCost", "qualifiedLeadCost", "cac", "pageConversion"]) bindText(key, "Indisponivel");
+    for (const key of ["spend", "impressions", "clicks", "conversionsAds", "ctr", "avgCpc", "remainingBudget", "effectiveLeadCost", "qualifiedLeadCost", "costPerEffectiveLead", "costPerQualifiedLead", "budgetUsage", "cac", "pageConversion"]) bindText(key, "Indisponivel");
+    if (gauge) gauge.style.strokeDashoffset = "220";
   }
   if (report.sync?.crm?.status === "error") {
-    for (const key of ["totalLeads", "effectiveLeads", "qualifiedLeads", "effectiveLeadCost", "qualifiedLeadCost", "cac", "pageConversion", "sales"]) bindText(key, "Indisponivel");
+    for (const key of ["totalLeads", "effectiveLeads", "qualifiedLeads", "effectiveLeadCost", "qualifiedLeadCost", "costPerEffectiveLead", "costPerQualifiedLead", "effectiveCostBasis", "qualifiedCostBasis", "cac", "pageConversion", "sales"]) bindText(key, "Indisponivel");
   }
 };
 

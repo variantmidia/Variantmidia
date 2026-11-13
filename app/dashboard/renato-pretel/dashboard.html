@@ -67,7 +67,7 @@
 
       <section class="metric-grid" aria-label="Indicadores principais">
         <article class="budget-card">
-          <div class="card-label">Verba restante (mês)</div>
+          <div class="card-label">Verba restante (ciclo)</div>
           <div class="gauge">
             <svg viewBox="0 0 180 96" role="img" aria-label="Uso de verba">
               <path class="gauge-track" d="M 20 86 A 70 70 0 0 1 160 86" />
@@ -79,6 +79,7 @@
             <span>R$0</span>
             <span data-bind="monthlyBudget">--</span>
           </div>
+          <div class="budget-detail"><span data-bind="budgetCycle">--</span><span data-bind="budgetUsage">--</span></div>
         </article>
 
         <article class="metric-card">
@@ -103,6 +104,16 @@
           <span>CAC</span>
           <strong data-bind="cac">--</strong>
           <em data-bind="salesNote">--</em>
+        </article>
+        <article class="metric-card lead-cost-card">
+          <span>Custo por lead efetivo</span>
+          <strong data-bind="costPerEffectiveLead">--</strong>
+          <em data-bind="effectiveCostBasis">--</em>
+        </article>
+        <article class="metric-card lead-cost-card">
+          <span>Custo por lead qualificado</span>
+          <strong data-bind="costPerQualifiedLead">--</strong>
+          <em data-bind="qualifiedCostBasis">--</em>
         </article>
         <article class="metric-card pageview-card">
           <span>Page Views rastreados <i data-lucide="scan-eye"></i></span>

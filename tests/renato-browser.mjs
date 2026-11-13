@@ -23,7 +23,16 @@ try {
   assert.equal(await page.locator('[data-bind="cac"]').textContent(), currency(spend / 2));
   assert.equal(await page.locator('[data-bind="sales"]').textContent(), '2');
   assert.equal(await page.locator('[data-bind="estimatedCycleRevenue"]').textContent(), currency(6000));
+  assert.equal(await page.locator('[data-bind="remainingBudget"]').textContent(), currency(Math.max(0, report.budget.monthly - spend)));
+  const remaining = await page.locator('[data-bind="remainingBudget"]').textContent();
+  const crm = report.crm.daily.filter(r => r.date >= '2026-10-17' && r.date <= report.dataEnd);
+  const effective = crm.reduce((a, r) => a + r.effectiveTotal, 0);
+  const qualified = crm.reduce((a, r) => a + r.qualified, 0);
+  assert.equal(await page.locator('[data-bind="costPerEffectiveLead"]').textContent(), currency(spend / effective));
+  assert.equal(await page.locator('[data-bind="costPerQualifiedLead"]').textContent(), currency(spend / qualified));
+  assert.ok(Math.abs(Number(await page.locator('[data-gauge]').evaluate(el => el.style.strokeDashoffset)) - (220 - Math.min(1, spend / report.budget.monthly) * 220)) < 0.001);
   await page.locator('[data-days="14"]').click();
+  assert.equal(await page.locator('[data-bind="remainingBudget"]').textContent(), remaining);
   await page.waitForTimeout(1000);
   await mkdir('artifacts', { recursive: true });
   await page.screenshot({ path: 'artifacts/renato-desktop.png', fullPage: true });
