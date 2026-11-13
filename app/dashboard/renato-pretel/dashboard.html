@@ -122,6 +122,11 @@
         </article>
       </section>
 
+      <section class="conversion-summary" aria-label="Conversão comercial">
+        <div><span>Qualificados → vendas</span><strong data-bind="qualifiedSalesRate">--</strong><small data-bind="qualifiedSalesBasis">--</small></div>
+        <p>Indicador agregado do período, não uma coorte de leads identificados. Sem reuniões marcadas e realizadas, não é possível localizar a etapa exata da perda comercial.</p>
+      </section>
+
       <section class="content-grid">
         <article class="panel funnel-panel" id="funil">
           <div class="panel-heading">
@@ -138,6 +143,7 @@
             <div class="funnel-step step-6"><span>Vendas</span><strong data-bind="sales">--</strong></div>
           </div>
           <p class="measurement-note" data-bind="funnelSalesNote">--</p>
+          <div class="funnel-conversion"><span>Qualificados → vendas</span><strong data-bind="qualifiedSalesRate">--</strong></div>
           <p class="measurement-note" data-bind="measurementNote">Page Views são eventos rastreados, não visitantes únicos.</p>
           <div class="mini-metrics">
             <div>

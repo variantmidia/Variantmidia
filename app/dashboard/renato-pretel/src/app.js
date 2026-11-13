@@ -94,6 +94,8 @@ const pctChange = (current, previous) => {
   return ((current - previous) / previous) * 100;
 };
 
+const qualifiedSalesRate = (sales, qualified) => qualified > 0 && Number.isFinite(sales) && sales >= 0 ? (sales / qualified) * 100 : null;
+
 const resolveSales = (report, start, end, crmSales) => {
   const confirmed = report.salesConfirmation;
   if (!confirmed) return { count: crmSales, source: "CRM" };
@@ -405,6 +407,7 @@ const applyRange = () => {
   bindText("totalLeads", formatNumber(curCrm.totalLeads));
   bindText("cac", curCrm.sales > 0 ? formatCurrency(curTotals.spend / curCrm.sales) : "Sem venda");
   bindText("sales", formatNumber(curCrm.sales));
+  let conversionSales = curCrm.sales;
   bindText("funnelSalesNote", "Vendas identificadas por data no CRM.");
   bindText("salesNote", `${curCrm.sales} venda(s) identificada(s) no CRM neste periodo`);
   const confirmation = report.salesConfirmation;
@@ -415,6 +418,7 @@ const applyRange = () => {
     bindText("estimatedCycleRevenue", formatCurrency(confirmation.cycle.sales * confirmation.cycle.estimatedFeePerClient));
     bindText("salesConfirmedAt", isoToBR(confirmation.confirmedAt));
     const sales = resolveSales(report, start, end, curCrm.sales);
+    conversionSales = sales.count > 0 ? sales.count : null;
     bindText("sales", sales.count ? formatNumber(sales.count) : "A conciliar");
     bindText("funnelSalesNote", sales.count ? `${sales.count} vendas: ${sales.source}. Honorarios estimados, recebimento nao confirmado.` : "As 2 vendas do ciclo ainda nao possuem datas individuais para atribuir a este filtro.");
     if (sales.count > 0) {
@@ -425,6 +429,10 @@ const applyRange = () => {
       bindText("salesNote", "Ha vendas confirmadas no ciclo; faltam datas para atribuir a este filtro");
     }
   }
+
+  const salesRate = qualifiedSalesRate(conversionSales, curCrm.qualifiedLeads);
+  bindText("qualifiedSalesRate", salesRate === null ? "A conciliar" : formatPercent(salesRate));
+  bindText("qualifiedSalesBasis", salesRate === null ? "Sem vendas atribuidas ou qualificados neste filtro" : `${formatNumber(conversionSales)} vendas / ${formatNumber(curCrm.qualifiedLeads)} qualificados no periodo`);
   bindText("pageConversion", curTotals.clicks ? formatPercent((curCrm.totalLeads / curTotals.clicks) * 100) : "--");
 
   // Budget belongs to the billing cycle, independently of the analysis filter.
@@ -450,7 +458,7 @@ const applyRange = () => {
     if (gauge) gauge.style.strokeDashoffset = "220";
   }
   if (report.sync?.crm?.status === "error") {
-    for (const key of ["totalLeads", "effectiveLeads", "qualifiedLeads", "effectiveLeadCost", "qualifiedLeadCost", "costPerEffectiveLead", "costPerQualifiedLead", "effectiveCostBasis", "qualifiedCostBasis", "cac", "pageConversion", "sales"]) bindText(key, "Indisponivel");
+    for (const key of ["totalLeads", "effectiveLeads", "qualifiedLeads", "effectiveLeadCost", "qualifiedLeadCost", "costPerEffectiveLead", "costPerQualifiedLead", "effectiveCostBasis", "qualifiedCostBasis", "cac", "pageConversion", "sales", "qualifiedSalesRate", "qualifiedSalesBasis"]) bindText(key, "Indisponivel");
   }
 };
 

@@ -4,7 +4,7 @@ import vm from 'node:vm';
 
 const source = readFileSync('app/dashboard/renato-pretel/src/app.js', 'utf8').split('init().catch')[0];
 const context = vm.createContext({ Intl, Date });
-vm.runInContext(source + '\nglobalThis.aggregate = aggregateCrm; globalThis.resolveSales = resolveSales; globalThis.resolveBudget = resolveBudget;', context);
+vm.runInContext(source + '\nglobalThis.aggregate = aggregateCrm; globalThis.resolveSales = resolveSales; globalThis.resolveBudget = resolveBudget; globalThis.rate = qualifiedSalesRate;', context);
 const result = context.aggregate([
   { totalLeads: 10, effectiveTotal: 6, effectiveOnly: 4, qualified: 2, converted: 1 },
   { totalLeads: 4, effectiveTotal: 3, effectiveOnly: 2, qualified: 1, converted: 0 },
@@ -42,3 +42,8 @@ assert.equal(reset.remaining, 1275);
 assert.equal(context.resolveBudget({ ...budgetReport, budget: { monthly: 0 } }, '2026-11-13').usedRatio, 0);
 assert.equal(context.resolveBudget({ ...budgetReport, budget: { monthly: 100 } }, '2026-11-13').remaining, 0);
 console.log('Cycle budget: R$1300 - R$1080.41 = R$219.59; gauge tracks spent, not remaining');
+assert.ok(Math.abs(context.rate(2, 13) - 15.3846153846) < 0.00001);
+assert.equal(context.rate(0, 13), 0);
+assert.equal(context.rate(2, 0), null);
+assert.equal(context.rate(null, 13), null);
+console.log('Qualified-to-sale rate: 2/13 = 15.38%; missing denominator or sales is not zero');

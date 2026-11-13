@@ -28,6 +28,8 @@ try {
   const crm = report.crm.daily.filter(r => r.date >= '2026-10-17' && r.date <= report.dataEnd);
   const effective = crm.reduce((a, r) => a + r.effectiveTotal, 0);
   const qualified = crm.reduce((a, r) => a + r.qualified, 0);
+  const percent = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 }).format(2 / qualified * 100) + '%';
+  for (const rate of await page.locator('[data-bind="qualifiedSalesRate"]').allTextContents()) assert.equal(rate, percent);
   assert.equal(await page.locator('[data-bind="costPerEffectiveLead"]').textContent(), currency(spend / effective));
   assert.equal(await page.locator('[data-bind="costPerQualifiedLead"]').textContent(), currency(spend / qualified));
   assert.ok(Math.abs(Number(await page.locator('[data-gauge]').evaluate(el => el.style.strokeDashoffset)) - (220 - Math.min(1, spend / report.budget.monthly) * 220)) < 0.001);
