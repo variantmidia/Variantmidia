@@ -12,7 +12,7 @@ const saleDate = (value: string) => {
 };
 
 export function collectSalesDaily(tracking: string[][], crm: string[][]) {
-  const findColumn = (header: string[]) => header.findIndex(h => /^(data (da |de )?(venda|assinatura|contrato)|sale date|sold at)$/.test(normalized(h)));
+  const findColumn = (header: string[]) => header.findIndex(h => /^(data (da |de |do )?(venda|assinatura|contrato)|sale date|sold at)$/.test(normalized(h)));
   const trackColumn = findColumn(tracking[0] || []);
   const crmColumn = findColumn(crm[0] || []);
   const track = new Map<string, number>(), aggregate = new Map<string, number>();
