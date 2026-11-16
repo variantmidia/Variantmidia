@@ -3,6 +3,7 @@
   const $ = id => document.getElementById(id);
   const money = value => value === null ? '–' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   const number = value => new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 }).format(value);
+  const quantity = (count, singular, plural) => `${number(count)} ${count === 1 ? singular : plural}`;
   const percent = value => value === null ? '–' : `${number(value)}%`;
   const divide = (total, count) => count > 0 ? total / count : null;
   const dateLabel = value => value.split('-').reverse().join('/');
@@ -19,8 +20,8 @@
       ['Investimento', money(spend), 'Campanhas [TÊMIIS] · Meta Ads'],
       ['Leads', number(counts.leads), `${number(report.metaLeads)} leads na Meta · total CRM acima`],
       ['Custo por lead', money(divide(spend, counts.leads)), 'Investimento ÷ leads CRM'],
-      ['Custo por qualificado', money(divide(spend, counts.qualified)), `${number(counts.qualified)} leads qualificados`],
-      ['Custo por reunião realizada', money(divide(spend, counts.held)), `${number(counts.held)} reuniões realizadas · métrica principal`],
+      ['Custo por qualificado', money(divide(spend, counts.qualified)), quantity(counts.qualified, 'lead qualificado', 'leads qualificados')],
+      ['Custo por reunião realizada', money(divide(spend, counts.held)), `${quantity(counts.held, 'reunião realizada', 'reuniões realizadas')} · métrica principal`],
       ['Vendas', number(counts.sales), `Custo por venda: ${money(divide(spend, counts.sales))}`],
     ];
     $('metrics').innerHTML = cards.map(([label, value, note], i) => `<article class="metric-card${i === 4 ? ' featured' : ''}"><div class="metric-label"><span>${label}</span><span class="metric-index">0${i + 1}</span></div><strong>${value}</strong><small>${note}</small></article>`).join('');
@@ -29,7 +30,7 @@
     $('responseArc').style.strokeDashoffset = String(364.425 * (1 - (report.contact.responseRate || 0) / 100));
     $('averageAttempts').textContent = report.contact.averageAttempts === null ? '–' : number(report.contact.averageAttempts);
     $('respondedCount').textContent = `${number(counts.responded)} de ${number(counts.leads)}`;
-    $('attemptsNote').textContent = `${number(report.contact.attemptsCount)} respostas com tentativas registradas.${report.contact.missingAttempts ? ` ${number(report.contact.missingAttempts)} sem valor válido, excluídas da média.` : ''}`;
+    $('attemptsNote').textContent = `${quantity(report.contact.attemptsCount, 'resposta', 'respostas')} com tentativas registradas.${report.contact.missingAttempts ? ` ${number(report.contact.missingAttempts)} sem valor válido, excluídas da média.` : ''}`;
     $('adRows').innerHTML = report.ads.length ? report.ads.map(ad => `<tr${ad.unmatched ? ' class="unmatched"' : ''}><td>${esc(ad.name)}</td><td>${ad.unmatched ? '–' : money(ad.spend)}</td><td>${ad.unmatched ? '–' : number(ad.metaLeads)}</td><td>${number(ad.crmLeads)}</td><td>${number(ad.qualified)}</td><td>${number(ad.held)}</td><td>${ad.unmatched ? '–' : money(ad.cpl)}</td><td>${ad.unmatched ? '–' : money(ad.cpq)}</td></tr>`).join('') : '<tr><td colspan="8">Nenhum anúncio ou lead encontrado neste período.</td></tr>';
     $('warnings').replaceChildren(...report.warnings.map(warning => { const p = document.createElement('p'); p.textContent = warning; return p; }));
     $('periodLabel').textContent = `${dateLabel(report.period.since)} — ${dateLabel(report.period.until)}`;
