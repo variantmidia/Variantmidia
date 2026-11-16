@@ -1,6 +1,7 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { cyclePeriod } from "./src/report-logic";
 
 export const printHeaders = {
   "X-Robots-Tag": "noindex, nofollow",
@@ -29,12 +30,20 @@ export function printMonth(value: string | null, now = new Date()) {
   return { start, end, title: `Relatório de ${name[0].toUpperCase() + name.slice(1)} de ${year}` };
 }
 
+export function printCycle(value: string) {
+  const cycle = cyclePeriod(value);
+  if (!cycle) return null;
+  const short = (iso: string) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}`;
+  return { ...cycle, title: `Relatório do ciclo ${short(cycle.start)} a ${short(cycle.end)}/${cycle.end.slice(0, 4)}` };
+}
+
 export async function renderPrint(report: Record<string, any>, period: NonNullable<ReturnType<typeof printMonth>>, nonce: string) {
   const root = join(process.cwd(), "app", "dashboard", "renato-pretel");
-  const [template, stylesheet, application, chart, logo] = await Promise.all([
+  const [template, stylesheet, application, logic, chart, logo] = await Promise.all([
     readFile(join(root, "dashboard.html"), "utf8"),
     readFile(join(root, "src", "styles.css"), "utf8"),
     readFile(join(root, "src", "app.js"), "utf8"),
+    readFile(join(root, "src", "report-logic.js"), "utf8"),
     readFile(join(process.cwd(), "public", "vendor", "chart-4.4.6.umd.js"), "utf8"),
     readFile(join(process.cwd(), "public", "logos", "horizontal-light.svg")),
   ]);
@@ -54,6 +63,7 @@ export async function renderPrint(report: Record<string, any>, period: NonNullab
     .funnel-panel{grid-column:span 2!important;grid-row:2!important}.content-grid>#publico{grid-column:3/span 2!important;grid-row:2!important}
     .content-grid>.panel:nth-child(4){grid-column:span 6!important;grid-row:3!important}.content-grid>.panel:last-child{grid-column:5/span 2!important;grid-row:2!important}
     .conversion-summary{display:flex!important}.gauge svg{display:block!important}.gauge-fill{transition:none!important}*{animation:none!important;transition:none!important}
+    .metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.metric-card:nth-child(2){order:-5}.sales-card{order:-4}.metric-card.warning{order:-3;min-height:155px;border-top:3px solid #16b4c5}.metric-card.warning strong{font-size:32px}
     ${report.salesConfirmation?.confirmedAt > period.end ? ".sales-summary{display:none!important}" : ""}
   `;
   return template
@@ -65,6 +75,6 @@ export async function renderPrint(report: Record<string, any>, period: NonNullab
     .replace(/<title>[^<]*<\/title>/, `<title>${period.title} | Renato Pretel</title>`)
     .replace("</head>", `<meta name="robots" content="noindex, nofollow"><meta name="referrer" content="no-referrer"><style>${css}\n${printCss}</style></head>`)
     .replace("<body>", '<body class="print-report" data-print-ready="false">')
-    .replace('<main class="dashboard-shell">', `<main class="dashboard-shell"><div class="print-heading"><h1>${period.title}</h1><img src="data:image/svg+xml;base64,${logo.toString("base64")}" alt="Variantmidia"></div>`)
-    .replace("</body>", `${script(`window.__RENATO_PRINT__=${serialized};`)}${script(chart.replace(/\/\/# sourceMappingURL=.*$/gm, ""))}${script(application)}</body>`);
+    .replace('<main class="dashboard-shell">', `<main class="dashboard-shell"><div class="print-heading"><h1>${period.title}</h1><img src="data:image/svg+xml;base64,${logo.toString("base64")}" alt="Variantmidia"></div>${period.end >= report.dataEnd ? `<p>Dados parciais até ${String(report.dataEnd).split("-").reverse().join("/")}; o último dia do período ainda pode estar em andamento.</p>` : ""}`)
+    .replace("</body>", `${script(`window.__RENATO_PRINT__=${serialized};`)}${script(chart.replace(/\/\/# sourceMappingURL=.*$/gm, ""))}${script(logic)}${script(application)}</body>`);
 }

@@ -5,6 +5,7 @@ import { hasValidSession } from "../../_auth";
 
 const ASSET_TYPES: Record<string, string> = {
   "app.js": "text/javascript; charset=utf-8",
+  "report-logic.js": "text/javascript; charset=utf-8",
   "styles.css": "text/css; charset=utf-8",
 };
 

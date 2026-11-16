@@ -120,6 +120,11 @@
           <strong data-bind="pageViews">--</strong>
           <em data-bind="pageViewsNote">Google Ads / ação secundária</em>
         </article>
+        <article class="metric-card sales-card">
+          <span>Vendas no período</span>
+          <strong data-bind="sales">--</strong>
+          <em data-bind="salesCountNote">--</em>
+        </article>
       </section>
 
       <section class="conversion-summary" aria-label="Conversão comercial">
@@ -220,6 +225,7 @@
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
     <script>if(window.lucide) lucide.createIcons();</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
-    <script type="module" src="/dashboard/renato-pretel/src/app.js?v=20261113-budget"></script>
+    <script src="/dashboard/renato-pretel/src/report-logic.js?v=20261116"></script>
+    <script type="module" src="/dashboard/renato-pretel/src/app.js?v=20261116"></script>
   </body>
 </html>

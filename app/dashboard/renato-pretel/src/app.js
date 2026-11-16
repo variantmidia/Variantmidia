@@ -97,21 +97,10 @@ const pctChange = (current, previous) => {
 const qualifiedSalesRate = (sales, qualified) => qualified > 0 && Number.isFinite(sales) && sales >= 0 ? (sales / qualified) * 100 : null;
 const budgetColor = ratio => ratio >= 0.8 ? "#d94141" : ratio >= 0.5 ? "#e4ae20" : "#169fc7";
 
-const resolveSales = (report, start, end, crmSales) => {
-  const confirmed = report.salesConfirmation;
-  if (!confirmed) return { count: crmSales, source: "CRM" };
-  const firstDate = report.workPeriod?.start || report.dataStart;
-  if (start <= firstDate && end >= confirmed.confirmedAt) {
-    return { count: Math.max(crmSales, confirmed.totalClients), source: "total confirmado pelo Renato" };
-  }
-  if (start === confirmed.cycle.start && end >= confirmed.confirmedAt && end <= confirmed.cycle.end) {
-    return { count: Math.max(crmSales, confirmed.cycle.sales), source: "ciclo confirmado pelo Renato" };
-  }
-  return { count: crmSales, source: "CRM; vendas confirmadas sem datas individuais neste filtro" };
-};
+const resolveSales = (report, start, end) => globalThis.RenatoReportLogic.resolveSales(report, start, end);
 
 const resolveBudget = (report, today) => {
-  if (report.printMode && report.budgetRange) {
+  if (report.budgetRange) {
     const amount = Number(report.budget.monthly) || 0;
     const spent = sumMetric(filterDaily(report.daily, report.budgetRange.start, report.budgetRange.end), "spend");
     return { start: report.budgetRange.start, next: report.budgetRange.end, amount, spent, remaining: Math.max(0, amount - spent), usedRatio: amount > 0 ? Math.max(0, Math.min(1, spent / amount)) : 0 };
@@ -412,11 +401,13 @@ const applyRange = () => {
   bindText("effectiveCostBasis", `${formatNumber(curCrm.effectiveLeads)} efetivos no periodo / CRM`);
   bindText("qualifiedCostBasis", `${formatNumber(curCrm.qualifiedLeads)} qualificados no periodo / CRM`);
   bindText("totalLeads", formatNumber(curCrm.totalLeads));
-  bindText("cac", curCrm.sales > 0 ? formatCurrency(curTotals.spend / curCrm.sales) : "Sem venda");
-  bindText("sales", formatNumber(curCrm.sales));
-  let conversionSales = curCrm.sales;
-  bindText("funnelSalesNote", "Vendas identificadas por data no CRM.");
-  bindText("salesNote", `${curCrm.sales} venda(s) identificada(s) no CRM neste periodo`);
+  const sales = resolveSales(report, start, end);
+  const conversionSales = sales.pending ? null : sales.count;
+  bindText("sales", sales.pending ? "Datas pendentes" : formatNumber(sales.count));
+  bindText("cac", sales.count > 0 ? formatCurrency(curTotals.spend / sales.count) : sales.pending ? "Datas pendentes" : "Sem vendas no período");
+  bindText("salesNote", sales.count > 0 ? `${formatCurrency(curTotals.spend)} ÷ ${sales.count} vendas` : sales.pending ? "Datas de assinatura necessarias para este recorte" : "Investimento ÷ vendas: nenhuma venda registrada");
+  bindText("salesCountNote", sales.source);
+  bindText("funnelSalesNote", sales.source);
   const confirmation = report.salesConfirmation;
   if (confirmation) {
     bindText("confirmedTotalClients", formatNumber(confirmation.totalClients));
@@ -424,17 +415,6 @@ const applyRange = () => {
     bindText("estimatedFeePerClient", formatCurrency(confirmation.cycle.estimatedFeePerClient));
     bindText("estimatedCycleRevenue", formatCurrency(confirmation.cycle.sales * confirmation.cycle.estimatedFeePerClient));
     bindText("salesConfirmedAt", isoToBR(confirmation.confirmedAt));
-    const sales = resolveSales(report, start, end, curCrm.sales);
-    conversionSales = sales.count > 0 ? sales.count : null;
-    bindText("sales", sales.count ? formatNumber(sales.count) : "A conciliar");
-    bindText("funnelSalesNote", sales.count ? `${sales.count} vendas: ${sales.source}. Honorarios estimados, recebimento nao confirmado.` : "As 2 vendas do ciclo ainda nao possuem datas individuais para atribuir a este filtro.");
-    if (sales.count > 0) {
-      bindText("cac", formatCurrency(curTotals.spend / sales.count));
-      bindText("salesNote", `${formatCurrency(curTotals.spend)} / ${sales.count} clientes (${sales.source})`);
-    } else if (!curCrm.sales) {
-      bindText("cac", "A conciliar");
-      bindText("salesNote", "Ha vendas confirmadas no ciclo; faltam datas para atribuir a este filtro");
-    }
   }
 
   const salesRate = qualifiedSalesRate(conversionSales, curCrm.qualifiedLeads);
@@ -443,7 +423,7 @@ const applyRange = () => {
   bindText("pageConversion", curTotals.clicks ? formatPercent((curCrm.totalLeads / curTotals.clicks) * 100) : "--");
 
   // Budget belongs to the billing cycle, independently of the analysis filter.
-  const budget = resolveBudget(report, todayISO());
+  const budget = resolveBudget(state.activePreset === "cycle" ? { ...report, budgetRange: { start, end } } : report, todayISO());
   bindText("remainingBudget", formatCurrency(budget.remaining));
   bindText("monthlyBudget", formatCurrency(budget.amount));
   bindText("budgetCycle", `Ciclo ${isoToBR(budget.start)} a ${isoToBR(budget.next)}`);
@@ -534,7 +514,7 @@ const init = async () => {
   startInput.min = report.workPeriod?.start || report.dataStart;
   startInput.max = maxIso(report.dataEnd, todayISO());
   endInput.min = report.workPeriod?.start || report.dataStart;
-  endInput.max = maxIso(report.dataEnd, todayISO());
+  endInput.max = maxIso(report.dataEnd, todayISO(), report.salesConfirmation?.cycle.end);
   startInput.value = state.start;
   endInput.value = state.end;
 
@@ -568,8 +548,10 @@ const init = async () => {
       }
       if (btn.dataset.preset === "cycle" && state.report.salesConfirmation) {
         state.activePreset = "cycle";
-        state.start = state.report.salesConfirmation.cycle.start;
-        state.end = [todayISO(), state.report.salesConfirmation.cycle.end].sort()[0];
+        const cycle = globalThis.RenatoReportLogic.cyclePeriod(new URLSearchParams(location.search).get("ciclo") || state.report.salesConfirmation.cycle.end);
+        if (!cycle) return;
+        state.start = cycle.start;
+        state.end = cycle.end;
         syncInputs();
         applyRange();
         return;

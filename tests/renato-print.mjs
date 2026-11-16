@@ -19,7 +19,8 @@ const load = async (file, overrides = {}) => {
   await module.evaluate();
   return module.namespace;
 };
-const print = await load('app/dashboard/renato-pretel/_print.ts');
+const logic = require('../app/dashboard/renato-pretel/src/report-logic.js');
+const print = await load('app/dashboard/renato-pretel/_print.ts', { './src/report-logic': logic });
 assert.ok(print.validPrintToken(token, token));
 for (const expected of ['', undefined, ' ']) assert.equal(print.validPrintToken(token, expected), false);
 assert.equal(print.validPrintToken(null, token), false);
@@ -30,6 +31,10 @@ assert.equal(print.printMonth(null, new Date('2026-01-01T02:00:00Z')).start, '20
 assert.equal(print.printMonth('2024-02').end, '2024-02-29');
 assert.equal(print.printMonth('2026-13'), null);
 assert.equal(print.printMonth('<script>'), null);
+assert.equal(print.printCycle('2026-11-17').start, '2026-10-17');
+assert.equal(print.printCycle('2026-11-17').end, '2026-11-17');
+assert.equal(print.printCycle('2026-11-18'), null);
+assert.equal(print.printCycle('2026-99-17'), null);
 const { GET } = await load('app/dashboard/renato-pretel/print/route.ts', { '../_print': print, '../_report': { loadReport: async () => report } });
 const { NextRequest } = require('next/server');
 const request = query => new NextRequest(`https://example.com/dashboard/renato-pretel/print${query}`);
@@ -42,6 +47,11 @@ try {
     assert.equal(await response.text(), '');
   }
   assert.equal((await GET(request(`?token=${token}&mes=2026-13`))).status, 404);
+  for (const cycle of ['2026-11-18', 'wrong', '2026-02-30']) assert.equal((await GET(request(`?token=${token}&ciclo=${cycle}`))).status, 400);
+  assert.equal((await GET(request('?token=wrong&ciclo=invalid'))).status, 404);
+  const cycleResponse = await GET(request(`?token=${token}&ciclo=2026-11-17`));
+  assert.equal(cycleResponse.status, 200);
+  assert.ok((await cycleResponse.text()).includes('Relatório do ciclo 17/10 a 17/11/2026'));
   const response = await GET(request(`?token=${token}&mes=2026-10`));
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('set-cookie'), null);
@@ -75,3 +85,12 @@ try {
   else process.env.PRINT_TOKEN_RENATO_PRETEL = saved;
 }
 console.log('Print security, fail-closed route, month selection, isolation, inline assets and headers: passed');
+const saleDates = await load('app/dashboard/renato-pretel/_sale-dates.ts');
+const header = Array(18).fill(''); header[17] = 'Data da venda';
+const row = Array(18).fill(''); row[0] = '01/09/2026'; row[4] = 'test'; row[16] = 'TRUE'; row[17] = '05/11/2026';
+const actual = saleDates.collectSalesDaily([header, row, row], []);
+assert.equal(actual.length, 1);
+assert.equal(actual[0].date, '2026-11-05');
+assert.equal(actual[0].sales, 1);
+row[17] = '';
+assert.equal(saleDates.collectSalesDaily([header, row], []).length, 0);

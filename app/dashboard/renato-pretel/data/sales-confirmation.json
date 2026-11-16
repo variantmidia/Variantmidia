@@ -2,6 +2,14 @@
   "confirmedAt": "2026-11-09",
   "source": "Confirmacao do Renato, informada pelo gestor",
   "totalClients": 8,
+  "periodConfirmations": [
+    {
+      "start": "2026-10-18",
+      "end": "2026-11-16",
+      "sales": 2,
+      "source": "Gestor confirmou duas vendas nos ultimos 30 dias em 16/11/2026; nao representa datas individuais de assinatura"
+    }
+  ],
   "cycle": {
     "start": "2026-10-17",
     "end": "2026-11-17",

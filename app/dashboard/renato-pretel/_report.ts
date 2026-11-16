@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { collectSalesDaily } from "./_sale-dates";
 let adsCache: { expires: number; data: Record<string, unknown> } | undefined;
 
 const SHEETS_SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID || "1jw5y9dUV-XUUJEj249p3KBl1rYla2ylGxWqJ4pAfCfA";
@@ -69,10 +70,11 @@ const syncCrmFromSheets = async () => {
   const trackingTab = tabs.find(t => t.properties.sheetId === 1253000786)?.properties.title || tabs.find(t => t.properties.title === RASTREIO_TAB)?.properties.title;
   if (!trackingTab) throw new Error("Aba de rastreio nao encontrada");
 
-  const [rastreioRows, crmRows] = await Promise.all([
-    readSheetValues(accessToken, trackingTab, "A2:Q"),
-    readSheetValues(accessToken, CRM_TAB, "A2:I"),
+  const [trackingTable, crmTable] = await Promise.all([
+    readSheetValues(accessToken, trackingTab, "A1:AZ"),
+    readSheetValues(accessToken, CRM_TAB, "A1:AZ"),
   ]);
+  const rastreioRows = trackingTable.slice(1), crmRows = crmTable.slice(1);
   const daily = new Map<string, CrmDailyRow>();
   const getRow = (date: string) => daily.get(date) || {
     date,
@@ -128,6 +130,7 @@ const syncCrmFromSheets = async () => {
     qualifiedLeads: dailyRows.reduce((sum, row) => sum + row.qualified, 0),
     sales: dailyRows.reduce((sum, row) => sum + row.converted, 0),
     daily: dailyRows,
+    salesDaily: collectSalesDaily(trackingTable, crmTable),
   };
 };
 

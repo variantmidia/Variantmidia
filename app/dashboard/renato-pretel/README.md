@@ -6,6 +6,11 @@ Dashboard visual para relatorio executivo da campanha de Google Ads do Renato Pr
 
 `GET /dashboard/renato-pretel/print?token=<SEGREDO>&mes=2026-10`
 
+Para o envio no dia 17: `GET /dashboard/renato-pretel/print?token=<SEGREDO>&ciclo=2026-11-17`.
+O ciclo e a opcao do dashboard usam `src/report-logic.js`: inicio em 17 do mes anterior e fim em 17 do mes indicado, ambos inclusivos (datas locais America/Sao_Paulo). O dia 17 ainda pode estar parcial quando o envio ocorre; o print avisa quando o periodo nao esta encerrado. Nao combine `mes` e `ciclo`; retorna 400. Token incorreto sempre retorna 404 antes de validar datas.
+
+O CAC usa investimento do filtro dividido pelas vendas datadas. Uma coluna explicita `Data da venda`, `Data de assinatura` ou `Data do contrato` no rastreio/CRM alimenta `salesDaily`; nunca substituimos pela data de criacao do lead. Totais confirmados por intervalo sao usados apenas se o filtro contem todo esse intervalo, sem inventar assinaturas. As duas vendas dos ultimos 30 dias foram confirmadas pelo gestor em 16/11; suas datas individuais continuam pendentes. Um recorte que corta um intervalo sem datas mostra `Datas pendentes`, nunca um CAC ficticio.
+
 - Sem `mes`, seleciona o mes anterior completo no fuso America/Sao_Paulo.
 - Configure `PRINT_TOKEN_RENATO_PRETEL` como Sensitive em Vercel > variantmidia > Settings > Environment Variables > Production. Use 32 bytes aleatorios (64 caracteres hex) e publique novamente apos rotacao.
 - Acesso somente ao HTML de print. Nao cria cookies, nao autentica APIs nem outras paginas. Token ausente/incorreto ou configuracao vazia retorna 404.
