@@ -69,7 +69,7 @@ export function aggregateCrm(table: SheetCell[][]) {
     if (!known.has(status)) unknownStages++;
     for (const stage of STAGES) if (!stage.statuses || stage.statuses.some(value => normalize(value) === status)) bucket[stage.key]++;
     if (STAGES[1].statuses.some(value => normalize(value) === status)) {
-      const text = String(row[attemptsCol] || "").trim().replace(",", ".");
+      const text = String(row[attemptsCol] ?? "").trim().replace(",", ".");
       const attempts = Number(text);
       if (text && Number.isFinite(attempts) && attempts >= 0) { bucket.attemptsSum += attempts; bucket.attemptsCount++; }
     }
