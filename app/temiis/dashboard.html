@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Têmiis · Funil de aquisição | Variantmidia</title>
+  <link rel="stylesheet" href="/temiis/src/styles.css">
+  <script src="/temiis/src/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar" aria-label="Navegação do dashboard">
+    <div class="brand-mark">variant<span>midia</span><i></i></div>
+    <div class="workspace"><div class="avatar">t.</div><div><strong>Têmiis</strong><small>Aquisição & conversão</small></div></div>
+    <p class="nav-label">ACOMPANHAMENTO</p>
+    <nav>
+      <a class="nav-item active" href="#visao"><span aria-hidden="true">▦</span> Visão geral</a>
+      <a class="nav-item" href="#funil"><span aria-hidden="true">▽</span> Funil comercial</a>
+      <a class="nav-item" href="#anuncios"><span aria-hidden="true">▤</span> Anúncios</a>
+      <a class="nav-item" href="#contato"><span aria-hidden="true">◌</span> Contato</a>
+    </nav>
+    <div class="sidebar-note"><span class="mini-mark">têmiis<span>▪</span></span><p>Da primeira conversa<br>à próxima venda.</p><small>Inteligência para crescer<br>com método.</small></div>
+    <div class="sidebar-footer">Variantmidia <span>×</span> Têmiis<small>Dados agregados · somente leitura</small></div>
+  </aside>
+  <main class="dashboard-shell" id="visao">
+    <div class="topbar"><span>Marketing <b>/</b> Dashboard de aquisição</span><span class="connection-status" id="connection">Conectando fontes</span></div>
+    <header class="hero"><div><p class="eyebrow">INTELIGÊNCIA COMERCIAL</p><h1>Cada etapa tem um custo.</h1><p class="hero-copy">Acompanhe o caminho do investimento à venda da Têmiis.</p></div><div class="hero-brand">têmiis<span>▪</span><small>PAINEL DE RESULTADOS</small></div></header>
+    <section class="filter-bar" aria-label="Filtro de período">
+      <div class="filter-group" id="presets"><button class="preset-btn active" data-period="all" aria-pressed="true">Desde o início</button><button class="preset-btn" data-period="7" aria-pressed="false">Últimos 7 dias</button><button class="preset-btn" data-period="30" aria-pressed="false">Últimos 30 dias</button><button class="preset-btn" data-period="month" aria-pressed="false">Este mês</button><button class="preset-btn" data-period="custom" aria-pressed="false">Personalizado</button></div>
+      <form id="dates" class="filter-group" hidden><label>De <input type="date" id="since" required></label><label>Até <input type="date" id="until" required></label><button class="apply-btn">Aplicar</button></form>
+      <span class="period-label" id="periodLabel">Todo o histórico disponível</span>
+    </section>
+    <div id="notice" class="notice" role="alert" hidden></div>
+    <div id="loading" class="loading" role="status">Buscando investimento e etapas do CRM…</div>
+    <div id="results" hidden>
+      <section class="metric-grid" aria-label="Indicadores principais" id="metrics"></section>
+      <section class="content-grid">
+        <article class="panel trend-panel"><div class="panel-heading"><div><p class="section-kicker">EVOLUÇÃO</p><h2>Investimento & leads</h2><span class="panel-description">Mesmo período. Duas fontes, uma visão.</span></div><div class="legend"><span><i class="bar-dot"></i>Investimento</span><span><i class="line-dot"></i>Leads CRM</span></div></div><div id="dailyChart" class="daily-chart"></div><p class="measurement-note">Barras: investimento Meta (R$, eixo esquerdo). Linha: entrada de leads no CRM (eixo direito). Passe sobre o gráfico para ver cada dia.</p></article>
+        <article class="panel funnel-panel" id="funil"><div class="panel-heading"><div><p class="section-kicker">DA CAPTAÇÃO À VENDA</p><h2>Funil comercial</h2></div><span class="badge">Acumulado</span></div><div class="funnel" id="funnel"></div><p class="measurement-note">Etapa atual dos leads que entraram no período. A porcentagem compara com a etapa anterior; os custos usam o investimento total do período.</p></article>
+        <article class="panel contact-panel" id="contato"><div class="panel-heading"><div><p class="section-kicker">CONVERSAS QUE AVANÇAM</p><h2>Tentativas de contato</h2></div><span class="contact-icon" aria-hidden="true">↗</span></div><div class="response-ring"><svg viewBox="0 0 140 140" aria-hidden="true"><circle class="ring-track" cx="70" cy="70" r="58"/><circle id="responseArc" cx="70" cy="70" r="58"/></svg><div><strong id="responseRate">–</strong><span>taxa de resposta</span></div></div><div class="contact-detail"><span>Média de tentativas<br>até responder</span><strong id="averageAttempts">–</strong></div><p class="measurement-note" id="attemptsNote"></p><div class="contact-bottom"><span>Leads que responderam</span><strong id="respondedCount">–</strong></div><p class="measurement-note">Considera as tentativas registradas dos leads nas etapas de resposta. Não mede o tempo até responder.</p></article>
+      </section>
+      <section class="panel table-panel" id="anuncios"><div class="panel-heading"><div><p class="section-kicker">ORIGEM DO RESULTADO</p><h2>Desempenho por anúncio</h2></div><span class="badge">Meta Ads + CRM</span></div><div class="table-wrap"><table><caption class="sr-only">Investimento e etapas comerciais por anúncio no período selecionado</caption><thead><tr><th scope="col">Anúncio</th><th scope="col">Investimento</th><th scope="col">Leads Meta</th><th scope="col">Leads CRM</th><th scope="col">Qualificados</th><th scope="col">Reuniões realizadas</th><th scope="col">Custo por lead</th><th scope="col">Custo por qualificado</th></tr></thead><tbody id="adRows"></tbody></table></div><p class="measurement-note">Custos por lead e qualificado usam as quantidades do CRM. A correspondência ignora maiúsculas e espaços. “Sem correspondência” reúne leads sem anúncio na Meta neste período; seus custos não são atribuíveis. Leads Meta seguem a atribuição da plataforma e podem diferir do CRM.</p></section>
+      <div id="warnings" class="warnings" aria-live="polite"></div>
+      <footer><span id="updatedAt">Atualizado em –</span><span>Fontes: Meta Ads + CRM <b>·</b> Horário de Brasília <b>·</b> Consulta a cada 5 min</span></footer>
+    </div>
+    <noscript><p class="notice">Ative o JavaScript para consultar o dashboard.</p></noscript>
+  </main>
+</body>
+</html>
