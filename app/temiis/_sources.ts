@@ -59,6 +59,8 @@ export async function readMeta(period: Period | null): Promise<Insight[]> {
       console.warn("[temiis] Falha Meta", { status: response.status, code: detail.error?.code, subcode: detail.error?.error_subcode });
       throw new SourceError("meta", detail.error?.code === 190
         ? "O token de leitura da Meta expirou ou foi invalidado. Atualize a credencial no servidor."
+        : detail.error?.code === 200 || detail.error?.code === 10
+        ? "A credencial Meta conectada não tem permissão para ler a conta da Têmiis. Libere acesso à conta e a permissão ads_read."
         : "Não foi possível consultar a Meta. Verifique a validade do token e o acesso à conta da Têmiis.");
     }
     const json = await response.json() as { data?: Insight[]; paging?: { next?: string; cursors?: { after?: string } }; error?: unknown };

@@ -24,3 +24,10 @@ Nenhuma operação no n8n ou envio à API de Conversões é implementado. O conj
 ## Verificação
 
 `node tests/temiis.mjs` valida escada, linhas vazias e referência, cabeçalhos reordenados, datas inválidas, períodos, zeros, privacidade, correspondência, ausência de duplicação de leads Meta, paginação e falhas das fontes com respostas simuladas. Completar com `npx tsc --noEmit`, `npm test`, `npm run build` e verificação da página no navegador e das fontes reais na implantação.
+
+## Estado da validação em 16/11/2026
+
+- Testes específicos, sintaxe do cliente, TypeScript e build passaram. O teste geral `npm test` já falha na expectativa antiga do título da página inicial: espera “Variant Media | Assessoria de performance jurídica”, enquanto o layout atual usa “Variantmidia | Gestor de jornada de compra”. Ambos os arquivos permanecem iguais aos de `origin/main`.
+- Layout desktop e celular (390 px), filtros 7/30 dias, datas personalizadas e período vazio verificados com fonte simulada exclusiva de QA local. Nenhum dado simulado faz parte do dashboard publicado.
+- Implantação isolada com ambiente de produção: Google Sheets respondeu com sucesso; Meta retornou HTTP 403, código 200. Os logs confirmaram `crm: fulfilled`, `meta: rejected`. A credencial existente precisa de acesso à conta da Têmiis e da permissão apropriada. Não é possível concluir a validação dos valores Meta enquanto esse acesso faltar; não há motivo comprovado para exigir um token novo antes de verificar a atribuição da conta.
+- Nenhuma mudança no dashboard Renato, na integração Távora, nos menus, nas planilhas, na Meta ou no n8n.

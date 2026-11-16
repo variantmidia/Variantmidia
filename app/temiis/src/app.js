@@ -7,7 +7,7 @@
   const divide = (total, count) => count > 0 ? total / count : null;
   const dateLabel = value => value.split('-').reverse().join('/');
   const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-  let period = 'all', query = new URLSearchParams({ period }), controller, sequence = 0;
+  let period = 'all', query = new URLSearchParams({ period }), controller, sequence = 0, visibleDays;
   const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(new Date());
   $('until').max = $('since').max = today;
   $('until').value = today;
@@ -38,7 +38,8 @@
   }
   function drawDaily(days) {
     // SVG local: sem biblioteca externa ou envio de dados para terceiros.
-    const width = 1000, height = 250, left = 62, right = 945, top = 15, bottom = 215;
+    visibleDays = days;
+    const width = Math.max(320, $('dailyChart').getBoundingClientRect().width), height = 250, left = 48, right = width - 36, top = 15, bottom = 215;
     const maxSpend = Math.max(1, ...days.map(day => day.spend)) * 1.15;
     const maxLeads = Math.max(1, ...days.map(day => day.leads));
     const step = (right - left) / Math.max(1, days.length);
@@ -55,7 +56,7 @@
     if (days.length) svg += `<path d="${days.map((day, i) => `${i ? 'L' : 'M'}${x(i)},${leadY(day.leads)}`).join(' ')}" fill="none" stroke="#9c7a3c" stroke-width="2.4" vector-effect="non-scaling-stroke"/>`;
     days.forEach((day, i) => {
       if (days.length <= 35) svg += `<circle cx="${x(i)}" cy="${leadY(day.leads)}" r="3" fill="#9c7a3c"/>`;
-      if (i % Math.max(1, Math.ceil(days.length / 7)) === 0 || i === days.length - 1) svg += `<text x="${x(i)}" y="239" text-anchor="middle" fill="#70796f" font-size="10">${dateLabel(day.date).slice(0, 5)}</text>`;
+      if (i % Math.max(1, Math.ceil(days.length / (width < 500 ? 4 : 7))) === 0 || i === days.length - 1) svg += `<text x="${x(i)}" y="239" text-anchor="middle" fill="#70796f" font-size="10">${dateLabel(day.date).slice(0, 5)}</text>`;
       svg += `<rect class="chart-hit" data-day="${i}" x="${left + i * step}" y="${top}" width="${step}" height="${bottom - top}" fill="transparent"><title>${dateLabel(day.date)}: ${money(day.spend)} · ${number(day.leads)} leads CRM</title></rect>`;
     });
     $('dailyChart').innerHTML = `${svg}</svg><div class="chart-tooltip" hidden></div>`;
@@ -82,10 +83,11 @@
       const json = await response.json();
       if (!response.ok) throw new Error(json.error || 'Não foi possível carregar os dados.');
       if (current !== sequence) return;
-      render(json); $('results').hidden = false;
+      $('results').hidden = false; render(json);
       $('connection').textContent = 'Meta + CRM conectados'; $('connection').className = 'connection-status live';
     } catch (error) {
       if (error.name === 'AbortError' || current !== sequence) return;
+      $('results').hidden = true;
       $('notice').replaceChildren(document.createTextNode(error.message || 'Falha ao consultar as fontes.'));
       const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Tentar novamente'; retry.addEventListener('click', load); $('notice').append(retry); $('notice').hidden = false;
       $('connection').textContent = 'Fonte indisponível'; $('connection').className = 'connection-status error';
@@ -109,6 +111,7 @@
   });
   $('until').addEventListener('input', () => $('until').setCustomValidity(''));
   document.querySelectorAll('.nav-item').forEach(link => link.addEventListener('click', () => { document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item === link)); }));
+  window.addEventListener('resize', () => { if (visibleDays && !$('results').hidden) drawDaily(visibleDays); });
   load();
   setInterval(() => { if (!document.hidden) load(); }, 5 * 60 * 1000);
 })();

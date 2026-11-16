@@ -77,4 +77,31 @@ assert.equal(calls[1].url.searchParams.get('date_preset'), 'maximum');
 globalThis.fetch = async () => new Response('{}', { status: 403 });
 await assert.rejects(sources.readCrm(), /conta Google/);
 await assert.rejects(sources.readMeta(null), /token/);
+globalThis.fetch = async () => Response.json({ error: { code: 200 } }, { status: 403 });
+await assert.rejects(sources.readMeta(null), /ads_read/);
+let crmReads = 0, metaReads = 0;
+const { GET } = load('app/temiis/data/route.ts', {
+  '../_model': model,
+  '../_sources': { SourceError: sources.SourceError, readCrm: async () => { crmReads++; return crm; }, readMeta: async () => { metaReads++; return insights; } },
+});
+const { NextRequest } = require('next/server');
+const request = () => new NextRequest('https://exemplo.com/temiis/data?period=custom&since=2026-11-01&until=2026-11-02');
+const [api1, api2] = await Promise.all([GET(request()), GET(request())]);
+assert.equal(api1.status, 200);
+assert.equal(api2.status, 200);
+assert.equal(crmReads, 1);
+assert.equal(metaReads, 1);
+assert.equal(api1.headers.get('x-robots-tag'), 'noindex, nofollow');
+assert.equal(api1.headers.get('cache-control'), 'no-store');
+const payload = await api1.json();
+assert.deepEqual(payload.counts, report.counts);
+assert.ok(!JSON.stringify(payload).includes('PESSOA PRIVADA'));
+assert.equal((await GET(new NextRequest('https://exemplo.com/temiis/data?period=errado'))).status, 400);
+const failing = load('app/temiis/data/route.ts', {
+  '../_model': model,
+  '../_sources': { SourceError: sources.SourceError, readCrm: async () => crm, readMeta: async () => { throw new sources.SourceError('meta', 'Sem permissão de leitura'); } },
+});
+const errorResponse = await failing.GET(request());
+assert.equal(errorResponse.status, 502);
+assert.deepEqual(await errorResponse.json(), { error: 'Sem permissão de leitura', source: 'meta' });
 console.log('Têmiis: funil, atribuição, privacidade, períodos, vazios, paginação, fontes e falhas verificados.');
