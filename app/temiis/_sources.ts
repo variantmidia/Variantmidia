@@ -36,7 +36,7 @@ export async function readCrm() {
   catch { throw new SourceError("crm", "Confira os cabeçalhos da aba Leads: Data e hora, Nome, Etapa, Tentativas e Anúncio."); }
 }
 export async function readMeta(period: Period | null): Promise<Insight[]> {
-  const token = process.env.META_ACCESS_TOKEN;
+  const token = process.env.TEMIIS_META_ACCESS_TOKEN || process.env.META_ACCESS_TOKEN;
   if (!token) throw new SourceError("meta", "Credencial Meta não configurada no servidor.");
   const version = process.env.META_GRAPH_VERSION || "v23.0";
   if (!/^v\d+\.\d+$/.test(version)) throw new SourceError("meta", "Versão da API Meta inválida no servidor.");

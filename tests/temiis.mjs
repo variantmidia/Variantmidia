@@ -74,6 +74,13 @@ assert.equal((await sources.readCrm()).buckets.length, 2);
 assert.equal((await sources.readMeta(null)).length, 2);
 assert.equal(calls.length, 3);
 assert.equal(calls[1].url.searchParams.get('date_preset'), 'maximum');
+process.env.TEMIIS_META_ACCESS_TOKEN = 'CREDENCIAL_EXCLUSIVA_TESTE';
+globalThis.fetch = async (_url, options) => {
+  assert.equal(options.headers.Authorization, 'Bearer CREDENCIAL_EXCLUSIVA_TESTE');
+  return Response.json({ data: [] });
+};
+assert.deepEqual(await sources.readMeta(null), []);
+delete process.env.TEMIIS_META_ACCESS_TOKEN;
 globalThis.fetch = async () => new Response('{}', { status: 403 });
 await assert.rejects(sources.readCrm(), /conta Google/);
 await assert.rejects(sources.readMeta(null), /token/);

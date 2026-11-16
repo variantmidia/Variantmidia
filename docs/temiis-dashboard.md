@@ -4,7 +4,7 @@ Rota pública `/temiis`, endpoint agregado `/temiis/data`. Sem autenticação, s
 
 ## Fontes e credenciais
 
-- Meta: `META_ACCESS_TOKEN` e `META_GRAPH_VERSION`, já cadastrados em produção no projeto Vercel `variantmidia`. GET de Insights, conta fixa `act_2167370950327006`, nível anúncio, incremento diário, filtro `campaign.name CONTAIN [TÊMIIS]`. Paginação por cursor e validação adicional do nome no servidor. A action `lead` tem prioridade; não somar novamente subtipos.
+- Meta: `TEMIIS_META_ACCESS_TOKEN` é a credencial de leitura exclusiva desta rota; quando não configurada, usa `META_ACCESS_TOKEN`. A credencial compartilhada permanece intacta para manter os demais clientes. Versão em `META_GRAPH_VERSION`. GET de Insights, conta fixa `act_2167370950327006`, nível anúncio, incremento diário, filtro `campaign.name CONTAIN [TÊMIIS]`. Paginação por cursor e validação adicional do nome no servidor. A action `lead` tem prioridade; não somar novamente subtipos.
 - Google: mesmo OAuth do Renato (`GOOGLE_SHEETS_ACCESS_TOKEN`, ou `GOOGLE_SHEETS_CLIENT_ID`, `GOOGLE_SHEETS_CLIENT_SECRET`, `GOOGLE_SHEETS_REFRESH_TOKEN`, com fallback às variáveis Google Ads). O POST ao OAuth apenas renova o token; a planilha recebe somente GET.
 - Planilha fixa `1di-EthYG4CVjZNMwXCqzHxmRlMZw_XDC5UzVeLbT7Is`, aba `Leads` inteira. Cabeçalhos por nome; linha 2 ignorada. Nenhuma conta de serviço nova é criada: o acesso depende da conta Google já conectada.
 - Segredos são exclusivos do servidor. O ambiente local não recupera os valores classificados como secretos pela Vercel; o teste com dados reais deve ocorrer em uma implantação com ambiente de produção.
