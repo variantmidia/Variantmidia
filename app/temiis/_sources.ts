@@ -53,7 +53,14 @@ export async function readMeta(period: Period | null): Promise<Insight[]> {
   const signal = AbortSignal.timeout(45000);
   for (let page = 0; page < 100; page++) {
     const response = await fetch(url, { cache: "no-store", signal, headers: { Authorization: `Bearer ${token}` } });
-    if (!response.ok) throw new SourceError("meta", "Não foi possível consultar a Meta. Verifique a validade do token e o acesso à conta da Têmiis.");
+    if (!response.ok) {
+      const detail = await response.json().catch(() => ({})) as { error?: { code?: number; error_subcode?: number } };
+      // Somente códigos técnicos no log; nunca o token ou a mensagem bruta da API.
+      console.warn("[temiis] Falha Meta", { status: response.status, code: detail.error?.code, subcode: detail.error?.error_subcode });
+      throw new SourceError("meta", detail.error?.code === 190
+        ? "O token de leitura da Meta expirou ou foi invalidado. Atualize a credencial no servidor."
+        : "Não foi possível consultar a Meta. Verifique a validade do token e o acesso à conta da Têmiis.");
+    }
     const json = await response.json() as { data?: Insight[]; paging?: { next?: string; cursors?: { after?: string } }; error?: unknown };
     if (json.error || !Array.isArray(json.data)) throw new SourceError("meta", "A Meta retornou uma resposta inesperada.");
     result.push(...json.data);

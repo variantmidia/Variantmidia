@@ -18,8 +18,15 @@ export async function GET(request: NextRequest) {
     let task = pending.get(key);
     if (!task) {
       task = (async () => {
-        const [crm, meta] = await Promise.all([readCrm(), readMeta(period)]);
-        const report = buildReport(crm, meta, period, new Date().toISOString());
+        const [crm, meta] = await Promise.allSettled([readCrm(), readMeta(period)]);
+        const failures = [crm, meta].filter(result => result.status === "rejected");
+        if (failures.length) {
+          console.warn("[temiis] Fontes", { crm: crm.status, meta: meta.status });
+          const messages = failures.map(result => result.status === "rejected" && result.reason instanceof SourceError ? result.reason.message : "Não foi possível carregar uma das fontes.");
+          throw new SourceError(crm.status === "rejected" ? "crm" : "meta", messages.join(" "));
+        }
+        if (crm.status !== "fulfilled" || meta.status !== "fulfilled") throw new Error("Fontes incompletas");
+        const report = buildReport(crm.value, meta.value, period, new Date().toISOString());
         // Cache limitado, apenas com dados agregados; nunca usar snapshot em falhas.
         if (cache.size >= 24) cache.delete(cache.keys().next().value!);
         cache.set(key, { expires: Date.now() + 5 * 60_000, report });
