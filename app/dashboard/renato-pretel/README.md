@@ -2,6 +2,20 @@
 
 Dashboard visual para relatorio executivo da campanha de Google Ads do Renato Pretel.
 
+## Print mensal para automacao
+
+`GET /dashboard/renato-pretel/print?token=<SEGREDO>&mes=2026-10`
+
+- Sem `mes`, seleciona o mes anterior completo no fuso America/Sao_Paulo.
+- Configure `PRINT_TOKEN_RENATO_PRETEL` como Sensitive em Vercel > variantmidia > Settings > Environment Variables > Production. Use 32 bytes aleatorios (64 caracteres hex) e publique novamente apos rotacao.
+- Acesso somente ao HTML de print. Nao cria cookies, nao autentica APIs nem outras paginas. Token ausente/incorreto ou configuracao vazia retorna 404.
+- HTML inclui dados, estilos, logo e Chart.js; nao faz chamadas de dados no navegador. Aguarde `body[data-print-ready="true"]` antes do screenshot full-page, viewport 1200px.
+- Se as fontes de dados falharem, retorna 503 em vez de fotografar dados antigos como atuais. Nao envie a imagem nessas condicoes.
+- O print usa mes-calendario, inclusive para a verba mensal; o dashboard interativo continua usando seu ciclo comercial.
+- Page Views continuam sendo eventos atribuidos do Google Ads. Vendas sem data individual nao sao distribuidas em meses ficticios.
+- Trate a URL como credencial. Guarde o segredo em credencial do n8n; mascare URLs nos logs/historico do n8n e do servico de screenshot. Nao encaminhe o link ao grupo de WhatsApp, apenas a imagem.
+- Testes: `node --experimental-vm-modules tests/renato-print.mjs` e `node tests/renato-print-browser.mjs` (le o segredo local; nunca o imprime).
+
 ## O que ja esta montado
 
 - Visao geral com investimento, verba restante, lead efetivo, lead qualificado e CAC.

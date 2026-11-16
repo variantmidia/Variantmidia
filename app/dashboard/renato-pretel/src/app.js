@@ -111,6 +111,11 @@ const resolveSales = (report, start, end, crmSales) => {
 };
 
 const resolveBudget = (report, today) => {
+  if (report.printMode && report.budgetRange) {
+    const amount = Number(report.budget.monthly) || 0;
+    const spent = sumMetric(filterDaily(report.daily, report.budgetRange.start, report.budgetRange.end), "spend");
+    return { start: report.budgetRange.start, next: report.budgetRange.end, amount, spent, remaining: Math.max(0, amount - spent), usedRatio: amount > 0 ? Math.max(0, Math.min(1, spent / amount)) : 0 };
+  }
   const anchorDay = Number(report.salesConfirmation?.cycle.start.slice(8, 10)) || 1;
   const date = new Date(`${today}T12:00:00Z`);
   const startDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() - (date.getUTCDate() < anchorDay ? 1 : 0), anchorDay, 12));
@@ -123,6 +128,7 @@ const resolveBudget = (report, today) => {
 };
 
 const loadReport = async () => {
+  if (typeof window !== "undefined" && window.__RENATO_PRINT__) return window.__RENATO_PRINT__;
   const response = await fetch("/dashboard/renato-pretel/data", { cache: "no-store" });
   if (!response.ok) throw new Error("Não foi possível carregar os dados do relatório");
   return response.json();
@@ -500,10 +506,12 @@ const syncInputs = () => {
 };
 
 const init = async () => {
+  const printMode = typeof window !== "undefined" && !!window.__RENATO_PRINT__;
   if (typeof Chart !== "undefined") {
     Chart.defaults.color = "#627780";
     Chart.defaults.borderColor = "#e9eff0";
     Chart.defaults.font.family = "DM Sans, sans-serif";
+    if (printMode) { Chart.defaults.animation = false; Chart.defaults.events = []; }
   }
   const report = await loadReport();
   state.report = report;
@@ -513,6 +521,13 @@ const init = async () => {
   if (report.salesConfirmation && state.start === report.salesConfirmation.cycle.start) state.activePreset = "cycle";
 
   showSync(report);
+
+  if (printMode) {
+    applyRange();
+    await document.fonts.ready;
+    document.body.dataset.printReady = "true";
+    return;
+  }
 
   const startInput = document.getElementById("startDate");
   const endInput = document.getElementById("endDate");
