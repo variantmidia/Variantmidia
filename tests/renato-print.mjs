@@ -41,6 +41,7 @@ try {
     assert.equal(response.status, 404);
     assert.equal(await response.text(), '');
   }
+  assert.equal((await GET(request(`?token=${token}&mes=2026-13`))).status, 404);
   const response = await GET(request(`?token=${token}&mes=2026-10`));
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('set-cookie'), null);
@@ -56,6 +57,11 @@ try {
   assert.ok(!html.includes('script src='));
   assert.ok(!html.includes('@import'));
   assert.ok(!html.includes('<form'));
+  report.sync.ads.status = 'error';
+  const unavailable = await GET(request(`?token=${token}`));
+  assert.equal(unavailable.status, 503);
+  assert.ok(!(await unavailable.text()).includes('window.__RENATO_PRINT__'));
+  report.sync.ads.status = 'live';
   process.env.PRINT_TOKEN_RENATO_PRETEL = '';
   const empty = await GET(request(`?token=${token}`));
   assert.equal(empty.status, 404);
