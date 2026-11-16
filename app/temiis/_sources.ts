@@ -1,4 +1,4 @@
-import { aggregateCrm, type Insight, type Period } from "./_model";
+import { aggregateCrm, type Insight, type Period, type SheetCell } from "./_model";
 
 const SHEET_ID = "1di-EthYG4CVjZNMwXCqzHxmRlMZw_XDC5UzVeLbT7Is";
 const ACCOUNT = "act_2167370950327006";
@@ -27,10 +27,12 @@ export async function readCrm() {
   const token = await sheetsToken();
   // Ler a aba inteira evita truncar leads ou depender de letras e colunas ocultas.
   const url = new URL(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent("'Leads'")}`);
-  url.searchParams.set("valueRenderOption", "FORMATTED_VALUE");
+  // O formato visível atual omite o ano. O serial conserva a data completa.
+  url.searchParams.set("valueRenderOption", "UNFORMATTED_VALUE");
+  url.searchParams.set("dateTimeRenderOption", "SERIAL_NUMBER");
   const response = await fetch(url, { ...readOptions(), headers: { Authorization: `Bearer ${token}` } });
   if (!response.ok) throw new SourceError("crm", response.status === 403 || response.status === 404 ? "A conta Google conectada não tem acesso à planilha CRM Inbound Temiis ou à aba Leads." : "A consulta ao CRM falhou. Tente novamente.");
-  const json = await response.json() as { values?: string[][] };
+  const json = await response.json() as { values?: SheetCell[][] };
   // Nenhuma linha individual nem Nome é armazenado no cache ou enviado à página.
   try { return aggregateCrm(json.values || []); }
   catch { throw new SourceError("crm", "Confira os cabeçalhos da aba Leads: Data e hora, Nome, Etapa, Tentativas e Anúncio."); }

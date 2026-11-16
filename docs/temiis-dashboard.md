@@ -11,7 +11,7 @@ Rota pública `/temiis`, endpoint agregado `/temiis/data`. Sem autenticação, s
 
 ## Semântica
 
-Leads e custos dos cartões/funil usam o CRM; leads Meta aparecem separadamente. Filtro de entrada por `Data e hora` em Brasília, com datas inclusivas. As etapas refletem a situação atual dos leads que entraram no período, não a data de realização da reunião ou venda. A escada é definida em `_model.ts` e reproduz os conjuntos especificados, incluindo Perdido em qualificados e Desqualificado em responderam.
+Leads e custos dos cartões/funil usam o CRM; leads Meta aparecem separadamente. Filtro de entrada por `Data e hora` em Brasília, com datas inclusivas. A consulta usa `UNFORMATTED_VALUE` e `SERIAL_NUMBER`: a formatação visual da planilha omite o ano, mas o valor numérico preserva a data completa. O serial representa o calendário local da planilha e não recebe uma segunda conversão de fuso. Datas armazenadas como texto `dd/mm/aaaa hh:mm` também são aceitas. As etapas refletem a situação atual dos leads que entraram no período, não a data de realização da reunião ou venda. A escada é definida em `_model.ts` e reproduz os conjuntos especificados, incluindo Perdido em qualificados e Desqualificado em responderam.
 
 Desde o início usa todo o histórico retornado pela Meta (`date_preset=maximum`) e pelo CRM. O começo exibido é a primeira ocorrência de qualquer das duas fontes; a Meta está sujeita à retenção histórica da própria plataforma. Os presets 7/30 dias incluem hoje.
 

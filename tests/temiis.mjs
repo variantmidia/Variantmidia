@@ -11,6 +11,13 @@ function load(file, imports = {}) {
 }
 const model = load('app/temiis/_model.ts');
 const { aggregateCrm, buildReport, parsePeriod, metaLeads, adKey } = model;
+assert.equal(model.crmDate(46322.60675925926), '2026-10-27');
+assert.equal(model.crmDate(46325.00739583334), '2026-10-30');
+assert.equal(model.crmDate(46325.99999), '2026-10-30');
+assert.equal(model.crmDate('30/10/2026 00:10'), '2026-10-30');
+assert.equal(model.crmDate('27/10 14:33'), null);
+assert.equal(model.crmDate('31/02/2026 10:00'), null);
+assert.equal(model.crmDate(Infinity), null);
 const headers = ['Tentativas', 'Anúncio', 'Etapa', 'Nome', 'Data e hora'];
 const stages = ['Novo', 'Tentando contato', 'Sem resposta', 'Respondeu', 'Qualificado', 'Reunião marcada', 'Reunião aconteceu', 'Teste 7 dias', 'Venda', 'Desqualificado', 'Perdido'];
 const table = [headers, ['99', 'Referência', 'Venda', 'IGNORAR REFERÊNCIA', '01/11/2026 12:00'], ...stages.map((stage, index) => ['2', index === 10 ? 'Outro anúncio' : '  ANÚNCIO   A ', stage, `PESSOA PRIVADA ${index}`, '01/11/2026 23:59']), ['1', 'A', 'Novo', '', '01/11/2026 08:00'], ['1', 'A', 'Venda', 'DATA INVÁLIDA', '31/02/2026 00:00']];
@@ -61,6 +68,8 @@ globalThis.fetch = async (input, options) => {
   if (url.hostname === 'sheets.googleapis.com') {
     assert.ok(url.pathname.includes('1di-EthYG4CVjZNMwXCqzHxmRlMZw_XDC5UzVeLbT7Is'));
     assert.ok(decodeURIComponent(url.pathname).endsWith("/values/'Leads'"));
+    assert.equal(url.searchParams.get('valueRenderOption'), 'UNFORMATTED_VALUE');
+    assert.equal(url.searchParams.get('dateTimeRenderOption'), 'SERIAL_NUMBER');
     return Response.json({ values: table });
   }
   assert.ok(url.pathname.endsWith('/act_2167370950327006/insights'));

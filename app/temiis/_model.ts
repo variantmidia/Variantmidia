@@ -9,6 +9,7 @@ export const STAGES = [
 ] as const;
 export type Counts = Record<typeof STAGES[number]["key"], number>;
 export type Period = { since: string; until: string };
+export type SheetCell = string | number | boolean;
 export type Insight = { date_start: string; campaign_name?: string; ad_name?: string; adset_name?: string; spend?: string; impressions?: string; clicks?: string; ctr?: string; actions?: { action_type: string; value: string }[] };
 export type CrmBucket = Counts & { date: string; adName: string; attemptsSum: number; attemptsCount: number };
 export const emptyCounts = (): Counts => ({ leads: 0, responded: 0, qualified: 0, scheduled: 0, held: 0, sales: 0 });
@@ -34,8 +35,21 @@ export function parsePeriod(params: URLSearchParams, today = todayBR()): Period 
   if (preset !== "custom" || !validDate(since) || !validDate(until) || since > until || until > today || since < "2000-01-01") throw new Error("Período inválido. Confira as datas e escolha um término até hoje.");
   return { since, until };
 }
-export function aggregateCrm(table: string[][]) {
-  const headers = (table[0] || []).map(normalize);
+export function crmDate(value: SheetCell | undefined) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    // Sheets entrega o calendário local da planilha em dias desde 30/12/1899.
+    // Não converter esse serial para Brasília de novo: isso mudaria o dia.
+    const date = new Date(Date.UTC(1899, 11, 30) + Math.floor(value) * 86400000);
+    if (!Number.isFinite(date.getTime())) return null;
+    const iso = date.toISOString().slice(0, 10);
+    return validDate(iso) && iso >= "2000-01-01" && iso <= "2100-01-01" ? iso : null;
+  }
+  const match = String(value || "").trim().match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})(?::\d{2})?$/);
+  const date = match ? `${match[3]}-${match[2]}-${match[1]}` : "";
+  return match && validDate(date) && Number(match[4]) <= 23 && Number(match[5]) <= 59 ? date : null;
+}
+export function aggregateCrm(table: SheetCell[][]) {
+  const headers = (table[0] || []).map(value => normalize(String(value)));
   const required = ["Data e hora", "Nome", "Etapa", "Tentativas", "Anúncio"];
   const columns = required.map(name => headers.indexOf(normalize(name)));
   if (columns.some(index => index < 0)) throw new Error("Cabeçalhos obrigatórios do CRM ausentes.");
@@ -46,9 +60,8 @@ export function aggregateCrm(table: string[][]) {
   // A linha 2 é uma referência, mesmo quando tem nome e data preenchidos.
   for (const row of table.slice(2)) {
     if (!String(row[nameCol] || "").trim()) continue;
-    const match = String(row[dateCol] || "").trim().match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})(?::\d{2})?$/);
-    const date = match ? `${match[3]}-${match[2]}-${match[1]}` : "";
-    if (!validDate(date) || !match || Number(match[4]) > 23 || Number(match[5]) > 59) { invalidDates++; continue; }
+    const date = crmDate(row[dateCol]);
+    if (!date) { invalidDates++; continue; }
     const adName = String(row[adCol] || "").trim();
     const key = JSON.stringify([date, adKey(adName)]);
     const bucket = buckets.get(key) || { ...emptyCounts(), date, adName, attemptsSum: 0, attemptsCount: 0 };
