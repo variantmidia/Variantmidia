@@ -25,6 +25,16 @@
       ['Vendas', number(counts.sales), `Custo por venda: ${money(divide(spend, counts.sales))}`],
     ];
     $('metrics').innerHTML = cards.map(([label, value, note], i) => `<article class="metric-card${i === 4 ? ' featured' : ''}"><div class="metric-label"><span>${label}</span><span class="metric-index">0${i + 1}</span></div><strong>${value}</strong><small>${note}</small></article>`).join('');
+    // Objetivo comercial definido por Matheus: o denominador é o total qualificado.
+    const bookingRate = divide(counts.scheduled * 100, counts.qualified);
+    const bookingTarget = Math.ceil(counts.qualified * 0.25);
+    const remainingBookings = Math.max(0, bookingTarget - counts.scheduled);
+    $('bookingRate').textContent = percent(bookingRate);
+    $('bookingBase').textContent = `${quantity(counts.scheduled, 'reunião agendada', 'reuniões agendadas')} / ${quantity(counts.qualified, 'lead qualificado', 'leads qualificados')}`;
+    $('bookingProgress').style.width = `${Math.min(100, Math.max(0, bookingRate || 0))}%`;
+    $('bookingStatus').textContent = bookingRate === null ? 'Aguardando leads qualificados no período.' : bookingRate >= 25 ? 'Objetivo de 25% alcançado neste período.' : `Falta${remainingBookings === 1 ? '' : 'm'} ${quantity(remainingBookings, 'agendamento', 'agendamentos')} para atingir o objetivo.`;
+    $('bookingStatus').classList.toggle('goal-reached', bookingRate !== null && bookingRate >= 25);
+    $('bookingTarget').textContent = counts.qualified ? `Para esta base, o objetivo mínimo é ${quantity(bookingTarget, 'reunião agendada', 'reuniões agendadas')}.` : 'A meta será calculada automaticamente quando houver qualificados.';
     $('funnel').innerHTML = report.funnel.map((stage, i) => `<div class="funnel-row${stage.key === 'held' ? ' main-stage' : ''}"><div class="funnel-track"><div class="funnel-fill" style="width:${counts.leads ? stage.count / counts.leads * 100 : 0}%"></div><div class="funnel-content"><span>${esc(stage.label)}</span><strong>${number(stage.count)}</strong></div></div><div class="funnel-cost">${money(stage.cost)}<small>${i === 0 ? 'por lead' : `${percent(stage.conversion)} da anterior`}</small></div></div>`).join('');
     $('responseRate').textContent = percent(report.contact.responseRate);
     $('responseArc').style.strokeDashoffset = String(364.425 * (1 - (report.contact.responseRate || 0) / 100));

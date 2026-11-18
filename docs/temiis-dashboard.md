@@ -23,6 +23,8 @@ Nenhuma operação no n8n ou envio à API de Conversões é implementado. O conj
 
 ## Verificação
 
+Em 18/11/2026, foi incluído o objetivo comercial definido por Matheus: agendar pelo menos 25% dos leads qualificados. A interface calcula agendadas/qualificadas a partir do mesmo funil acumulado e do período selecionado, com arredondamento para cima da quantidade mínima de reuniões e estado sem base quando não há qualificados. O objetivo de ligar em até cinco minutos é uma orientação operacional, não uma medição de tempo disponível na planilha. O relato comercial (aproximadamente 15 leads, 3 conversas, 1 agendamento e 1 reunião realizada) e o plano de reativação às 12h/18h estão identificados como registro histórico de 18/11; não substituem contagens do CRM nem variam com os filtros.
+
 `node tests/temiis.mjs` valida escada, linhas vazias e referência, cabeçalhos reordenados, datas inválidas, períodos, zeros, privacidade, correspondência, ausência de duplicação de leads Meta, paginação e falhas das fontes com respostas simuladas. Completar com `npx tsc --noEmit`, `npm test`, `npm run build` e verificação da página no navegador e das fontes reais na implantação.
 
 ## Estado da validação em 16/11/2026
