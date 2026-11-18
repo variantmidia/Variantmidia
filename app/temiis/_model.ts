@@ -121,6 +121,15 @@ export function buildReport(crm: ReturnType<typeof aggregateCrm>, insights: Insi
   }
   return {
     period, updatedAt, spend, counts, metaLeads: leadsMeta, impressions, clicks,
+    // A meta usa todos os leads reais do CRM, nunca estimativas ou só qualificados.
+    booking: {
+      targetRate: 25,
+      baseLeads: counts.leads,
+      scheduled: counts.scheduled,
+      rate: cost(counts.scheduled * 100, counts.leads),
+      targetCount: Math.ceil(counts.leads * 0.25),
+      remainingCount: Math.max(0, Math.ceil(counts.leads * 0.25) - counts.scheduled),
+    },
     ctr: impressions ? clicks / impressions * 100 : null,
     funnel: STAGES.map((stage, index) => ({ key: stage.key, label: stage.label, count: counts[stage.key], cost: cost(spend, counts[stage.key]), conversion: index === 0 ? null : cost(counts[stage.key] * 100, counts[STAGES[index - 1].key]) })),
     daily: [...daily.values()],

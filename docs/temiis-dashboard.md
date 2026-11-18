@@ -23,7 +23,9 @@ Nenhuma operação no n8n ou envio à API de Conversões é implementado. O conj
 
 ## Verificação
 
-Em 18/11/2026, foi incluído o objetivo comercial definido por Matheus: agendar pelo menos 25% dos leads qualificados. A interface calcula agendadas/qualificadas a partir do mesmo funil acumulado e do período selecionado, com arredondamento para cima da quantidade mínima de reuniões e estado sem base quando não há qualificados. O objetivo de ligar em até cinco minutos é uma orientação operacional, não uma medição de tempo disponível na planilha. O relato comercial (aproximadamente 15 leads, 3 conversas, 1 agendamento e 1 reunião realizada) e o plano de reativação às 12h/18h estão identificados como registro histórico de 18/11; não substituem contagens do CRM nem variam com os filtros.
+O objetivo comercial definido por Matheus é agendar pelo menos 25% de todos os leads recebidos no CRM. O servidor calcula `booking` com base no total real do período (`counts.leads`), incluindo não qualificados. A quantidade mínima de agendamentos é arredondada para cima. A interface mostra a base real e a contagem Meta separada; não há estimativas ou totais comerciais fixados manualmente. Testes de regressão cobrem bases de 15, 20 e 25 leads com apenas um qualificado, além de períodos sem leads. Na conferência direta da aba Leads em 18/11/2026 foram encontrados 15 nomes preenchidos, 13 em Novo, 1 em Respondeu e 1 em Reunião aconteceu: 1/15 = 6,7%, mínimo de 4 agendamentos, faltam 3. Esse resultado é uma constatação datada, não uma base fixa no código.
+
+O objetivo de ligar em até cinco minutos é uma orientação operacional, não uma medição de tempo disponível na planilha. O plano relatado de reativação às 12h/18h está identificado com a data de 18/11.
 
 `node tests/temiis.mjs` valida escada, linhas vazias e referência, cabeçalhos reordenados, datas inválidas, períodos, zeros, privacidade, correspondência, ausência de duplicação de leads Meta, paginação e falhas das fontes com respostas simuladas. Completar com `npx tsc --noEmit`, `npm test`, `npm run build` e verificação da página no navegador e das fontes reais na implantação.
 

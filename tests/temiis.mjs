@@ -55,6 +55,22 @@ const empty = buildReport(aggregateCrm([headers, []]), [], { since: '2026-11-01'
 assert.ok(empty.funnel.every(stage => stage.cost === null));
 assert.equal(empty.contact.averageAttempts, null);
 assert.equal(empty.contact.responseRate, null);
+assert.equal(empty.booking.rate, null);
+assert.equal(empty.booking.targetCount, 0);
+// Regressão: a base é o total recebido, mesmo quando só um lead é qualificado.
+for (const [total, expectedRate, target, remaining] of [[15, 100 / 15, 4, 3], [20, 5, 5, 4], [25, 4, 7, 6]]) {
+  const rows = Array.from({length: total}, (_, index) => [0, 'Anúncio A', index === 0 ? 'Reunião aconteceu' : 'Novo', 'Privado', '01/11/2026 12:00']);
+  const actual = buildReport(aggregateCrm([headers, [], ...rows]), insights, {since:'2026-11-01',until:'2026-11-02'}, 'now');
+  assert.equal(actual.counts.qualified, 1);
+  assert.equal(actual.booking.baseLeads, total);
+  assert.equal(actual.booking.scheduled, 1);
+  assert.equal(actual.booking.rate, expectedRate);
+  assert.equal(actual.booking.targetCount, target);
+  assert.equal(actual.booking.remainingCount, remaining);
+}
+const filteredBooking = buildReport(crm, insights, {since:'2026-11-02',until:'2026-11-02'}, 'now');
+assert.equal(filteredBooking.booking.baseLeads, 0);
+assert.equal(filteredBooking.booking.rate, null);
 const missing = aggregateCrm([headers, [], ['', 'A', 'Venda', 'Privado', '01/11/2026 01:00']]);
 assert.equal(buildReport(missing, [], { since: '2026-11-01', until: '2026-11-01' }, 'now').contact.missingAttempts, 1);
 assert.throws(() => aggregateCrm([['Nome'], []]), /Cabeçalhos/);
